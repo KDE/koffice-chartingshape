@@ -16,8 +16,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KDCHART_EXPORT_H
-#define KDCHART_EXPORT_H
+#ifndef KCHART_EXPORT_H
+#define KCHART_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
@@ -25,19 +25,19 @@
 /* We use _WIN32/_WIN64 instead of Q_OS_WIN so that this header can be used from C files too */
 #if defined _WIN32 || defined _WIN64
 
-#ifndef KDCHART_EXPORT
-# if defined(MAKE_KDCHART_LIB)
+#ifndef KCHART_EXPORT
+# if defined(MAKE_KCHARTCOMMON_LIB)
    /* We are building this library */ 
-#  define KDCHART_EXPORT KDE_EXPORT
+#  define KCHART_EXPORT KDE_EXPORT
 # else
    /* We are using this library */ 
-#  define KDCHART_EXPORT KDE_IMPORT
+#  define KCHART_EXPORT KDE_IMPORT
 # endif
 #endif
 
 #else /* UNIX */
 
-#define KDCHART_EXPORT KDE_EXPORT
+#define KCHART_EXPORT KDE_EXPORT
 
 #endif
 
