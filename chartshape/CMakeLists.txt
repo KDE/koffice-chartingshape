@@ -1,11 +1,10 @@
 add_subdirectory( kdchart )
 add_subdirectory( tests )
 
-include_directories( ${CMAKE_SOURCE_DIR}/plugins/chartshape
-                     ${CMAKE_SOURCE_DIR}/plugins/chartshape/kdchart/include
-                     ${CMAKE_SOURCE_DIR}/plugins/chartshape/dialogs
-                     ${CMAKE_SOURCE_DIR}/interfaces
-                     ${KOMAIN_INCLUDES}
+include_directories( ${CMAKE_SOURCE_DIR}/chartshape
+                     ${CMAKE_SOURCE_DIR}/chartshape/kdchart/include
+                     ${CMAKE_SOURCE_DIR}/chartshape/dialogs
+                     ${KOFFICELIBS_INCLUDE_DIR}
 )
 
 ########### Flake Plugin library ###############
@@ -53,14 +52,13 @@ kde4_add_ui_files(chartshape_LIB_SRCS
 )
 
 kde4_add_library(chartshapelib SHARED ${chartshape_LIB_SRCS})
-target_link_libraries(chartshapelib kdchart komain)
-target_link_libraries(chartshapelib LINK_INTERFACE_LIBRARIES kdchart)
-set_target_properties(chartshapelib PROPERTIES VERSION ${GENERIC_KOFFICE_LIB_VERSION} SOVERSION ${GENERIC_KOFFICE_LIB_SOVERSION} )
+target_link_libraries(chartshapelib kdchart ${KOMAIN_LIBS})
+target_link_libraries(chartshapelib LINK_INTERFACE_LIBRARIES kdchart ${KOMAIN_LIBS})
 
 install(TARGETS chartshapelib ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 kde4_add_plugin(chartshape ChartShapeFactory.cpp )
-target_link_libraries(chartshape chartshapelib kdchart flake)
+target_link_libraries(chartshape chartshapelib ${FLAKE_LIBS})
 install(TARGETS chartshape DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############

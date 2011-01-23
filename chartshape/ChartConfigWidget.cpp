@@ -39,7 +39,7 @@
 #include <KColorButton>
 
 // KOffice
-#include <interfaces/KoChartModel.h>
+#include <KoChartModel.h>
 
 // KDChart
 #include <KDChartChart>

@@ -29,7 +29,7 @@
 #include <QStandardItemModel>
 
 // Interface
-#include <interfaces/KoChartModel.h>
+#include <KoChartModel.h>
 
 // KChart
 #include "ChartShape.h"

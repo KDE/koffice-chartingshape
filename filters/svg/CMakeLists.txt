@@ -1,11 +1,8 @@
 
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/libs/flake
-    ${CMAKE_SOURCE_DIR}/kchart
-    ${CMAKE_SOURCE_DIR}/kchart/shape
-    ${CMAKE_SOURCE_DIR}/kchart/kdchart/include
-    ${CMAKE_SOURCE_DIR}/interfaces
+    ${CMAKE_SOURCE_DIR}/chartshape
+    ${CMAKE_SOURCE_DIR}/chartshape/kdchart/include
     ${KDE4_INCLUDES}
 )
 

@@ -87,7 +87,7 @@
 #include <KoSelection.h>
 #include <KoShapeBackground.h>
 #include <KoInsets.h>
-#include <KoShapeBorderModel.h>
+#include <KoShapeBorderBase.h>
 #include <KoColorBackground.h>
 #include <KoLineBorder.h>
 #include <KoOdfWorkaround.h>

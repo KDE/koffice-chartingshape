@@ -28,7 +28,7 @@
 #include <QStandardItemModel>
 
 // KChart
-#include "TableSource.h"
+#include "../TableSource.h"
 
 using namespace KChart;
 

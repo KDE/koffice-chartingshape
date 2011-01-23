@@ -40,7 +40,7 @@
 #include <KoOdfLoadingContext.h>
 #include <KoOdfStylesReader.h>
 #include <KoOdfGraphicStyles.h>
-#include <interfaces/KoChartModel.h>
+#include <KoChartModel.h>
 
 // KChart
 #include "Axis.h"

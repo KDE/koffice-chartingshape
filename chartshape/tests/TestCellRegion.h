@@ -28,8 +28,8 @@
 #include <QStandardItemModel>
 
 // KChart
-#include "CellRegion.h"
-#include "TableSource.h"
+#include "../CellRegion.h"
+#include "../TableSource.h"
 
 using namespace KChart;
 

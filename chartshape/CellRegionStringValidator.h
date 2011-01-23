@@ -25,7 +25,7 @@
 #include <QValidator>
 
 // Interface
-#include <interfaces/KoChartModel.h>
+#include <KoChartModel.h>
 
 namespace KChart {
 
