@@ -1,3 +1,7 @@
 [Desktop Entry]
 Name=Charts
+Name[pt]=Gráficos
+Name[pt_BR]=Gráficos
+Name[sv]=Diagram
+Name[x-test]=xxChartsxx
 X-KDE-DefaultTab=true

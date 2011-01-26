@@ -1,5 +1,9 @@
 [Desktop Entry]
 Name=KOffice Chart Component
+Name[pt]=Componente de Gráficos do KOffice
+Name[pt_BR]=Componente de gráficos do KOffice
+Name[sv]=Koffice-diagramkomponent
+Name[x-test]=xxKOffice Chart Componentxx
 X-KDE-Library=kchartpart
 Type=Service
 MimeType=application/vnd.oasis.opendocument.chart;application/vnd.oasis.opendocument.chart-template;application/x-kchart;
@@ -8,4 +12,8 @@ X-KDE-NativeMimeType=application/vnd.oasis.opendocument.chart
 X-KDE-NativeOasisMimeType=application/vnd.oasis.opendocument.chart
 X-KDE-ExtraNativeMimeTypes=application/vnd.oasis.opendocument.chart,application/vnd.oasis.opendocument.chart-template
 GenericName=Chart
+GenericName[pt]=Gráfico
+GenericName[pt_BR]=Gráfico
+GenericName[sv]=Diagram
+GenericName[x-test]=xxChartxx
 Icon=kchart
