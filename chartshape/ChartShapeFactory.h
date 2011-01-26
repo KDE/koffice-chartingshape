@@ -41,7 +41,7 @@ class ChartShapePlugin : public QObject
     Q_OBJECT
 public:
 
-    ChartShapePlugin( QObject * parent,  const QVariantList & );
+    ChartShapePlugin(QObject * parent,  const QVariantList &);
     ~ChartShapePlugin() {}
 };
 
@@ -50,7 +50,7 @@ class ChartShapeFactory : public KoShapeFactoryBase
 {
     Q_OBJECT
 public:
-    ChartShapeFactory( QObject* parent );
+    ChartShapeFactory(QObject* parent);
     ~ChartShapeFactory() {}
 
     bool supports(const KoXmlElement &element, KoShapeLoadingContext &context) const;

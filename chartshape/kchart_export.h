@@ -25,30 +25,30 @@
 
 #ifndef KCHART_EXPORT
 # if defined(MAKE_KCHART_LIB)
-   /* We are building this library */ 
+   /* We are building this library */
 #  define KCHART_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
+   /* We are using this library */
 #  define KCHART_EXPORT KDE_IMPORT
 # endif
 #endif
 
 #ifndef KCHARTCOMMON_EXPORT
 # if defined(MAKE_KCHARTCOMMON_LIB)
-   /* We are building this library */ 
+   /* We are building this library */
 #  define KCHARTCOMMON_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
+   /* We are using this library */
 #  define KCHARTCOMMON_EXPORT KDE_IMPORT
 # endif
 #endif
 
 #ifndef CHARTSHAPELIB_EXPORT
 # if defined(MAKE_CHARTSHAPELIB_LIB)
-   /* We are building this library */ 
+   /* We are building this library */
 #  define CHARTSHAPELIB_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
+   /* We are using this library */
 #  define CHARTSHAPELIB_EXPORT KDE_IMPORT
 # endif
 #endif

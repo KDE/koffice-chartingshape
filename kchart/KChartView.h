@@ -53,7 +53,7 @@ class KChartView : public KoView
 {
     Q_OBJECT
 public:
-    explicit KChartView( KChartPart* part, QWidget* parent = 0 );
+    explicit KChartView(KChartPart* part, QWidget* parent = 0);
     ~KChartView();
 
     virtual ViewAdaptor* dbusObject();
@@ -76,18 +76,18 @@ public slots:
     void  extraCreateTemplate();
 
     void selectionChanged();
-    void documentViewRectChanged( const QRectF &viewRect );
-    void zoomChanged( KoZoomMode::Mode mode, qreal zoom );
+    void documentViewRectChanged(const QRectF &viewRect);
+    void zoomChanged(KoZoomMode::Mode mode, qreal zoom);
 
 signals:
     void selectionChange();
 
 protected:
-    void          paintEvent( QPaintEvent* );
+    void          paintEvent(QPaintEvent*);
 
-    virtual void  updateReadWrite( bool readwrite );
+    virtual void  updateReadWrite(bool readwrite);
 
-    virtual void  mousePressEvent ( QMouseEvent * );
+    virtual void  mousePressEvent (QMouseEvent *);
 
     virtual KoPrintJob * createPrintJob();
 

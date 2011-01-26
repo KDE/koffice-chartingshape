@@ -50,35 +50,35 @@ public:
      * Constructor
      * @param parent the parent widget
      */
-    KChartCanvas( KChartView *view, KChartPart *parent );
+    KChartCanvas(KChartView *view, KChartPart *parent);
     ~KChartCanvas();
 
-    virtual void gridSize( qreal*, qreal* ) const;
+    virtual void gridSize(qreal*, qreal*) const;
     virtual bool snapToGrid() const;
-    virtual void addCommand( QUndoCommand* );
+    virtual void addCommand(QUndoCommand*);
     virtual KoShapeManager *shapeManager() const;
-    virtual void updateCanvas( const QRectF& );
+    virtual void updateCanvas(const QRectF&);
     virtual KoToolProxy *toolProxy() const;
     virtual const KoViewConverter *viewConverter() const;
     virtual KoUnit unit() const;
     virtual void updateInputMethodInfo();
 
     QRectF documentViewRect();
-    QPoint widgetToView( const QPoint &point );
-    QPoint viewToWidget( const QPoint &point );
-    QRect  widgetToView( const QRect &rect );
-    QRect  viewToWidget( const QRect &rect );
+    QPoint widgetToView(const QPoint &point);
+    QPoint viewToWidget(const QPoint &point);
+    QRect  widgetToView(const QRect &rect);
+    QRect  viewToWidget(const QRect &rect);
 
     QWidget *canvasWidget() { return this; }
     const QWidget *canvasWidget() const { return this; }
 
 public slots:
     void adjustOrigin();
-    void setDocumentOffset( const QPoint &point );
+    void setDocumentOffset(const QPoint &point);
 
 signals:
-    void documentViewRectChanged( const QRectF &viewRect );
-    void documentOriginChanged( const QPoint &origin );
+    void documentViewRectChanged(const QRectF &viewRect);
+    void documentOriginChanged(const QPoint &origin);
 
 protected:
     void paintEvent(QPaintEvent * ev);
@@ -88,11 +88,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
-    void tabletEvent( QTabletEvent *e );
-    void wheelEvent( QWheelEvent *e );
-    void resizeEvent( QResizeEvent *e );
-    virtual QVariant inputMethodQuery( Qt::InputMethodQuery query ) const;
-    virtual void inputMethodEvent( QInputMethodEvent *e );
+    void tabletEvent(QTabletEvent *e);
+    void wheelEvent(QWheelEvent *e);
+    void resizeEvent(QResizeEvent *e);
+    virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
+    virtual void inputMethodEvent(QInputMethodEvent *e);
 
 private:
     KChartPart     *m_part;

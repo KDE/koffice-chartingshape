@@ -40,14 +40,14 @@ namespace KChart {
 
 /**
  * @brief The PlotArea class is the central chart element. It plots the data and draws the axes.
- * 
+ *
  * There always exists exactly one instance of this class, owned by
  * the chart shape. The plot area itself takes ownership of the axes
  * and the chart wall.
- * 
+ *
  * 3D support is not yet fully implemented, a chart floor is not
  * supported at all yet.
- * 
+ *
  * This class also plays a central role when loading from or saving to
  * ODF. Though it does not handle anything in particular itself, it
  * utilizes the DataSet, ChartTableModel, Axis, Surface, and
@@ -60,25 +60,25 @@ class CHARTSHAPELIB_EXPORT PlotArea : public QObject, public KoShape
     friend class Surface;
     friend class Axis;
     Q_OBJECT
-    
+
 public:
-    PlotArea( ChartShape *parent );
+    PlotArea(ChartShape *parent);
     ~PlotArea();
-    
+
     void plotAreaInit();
-    
+
     ChartProxyModel *proxyModel() const;
 
     ChartType    chartType() const;
     ChartSubtype chartSubType() const;
-    void         setChartType( ChartType type );
-    void         setChartSubType( ChartSubtype subType );
-    
+    void         setChartType(ChartType type);
+    void         setChartSubType(ChartSubtype subType);
+
     QList<Axis*>    axes() const;
     QList<DataSet*> dataSets() const;
     int             dataSetCount() const;
-    bool            addAxis( Axis *axis );
-    bool            removeAxis( Axis *axis );
+    bool            addAxis(Axis *axis);
+    bool            removeAxis(Axis *axis);
 
     ThreeDScene *threeDScene() const;
     // TODO: Rename this into primaryXAxis()
@@ -116,61 +116,61 @@ public:
      */
     qreal pieAngleOffset() const;
 
-    void setGapBetweenBars( int percent );
-    void setGapBetweenSets( int percent );
+    void setGapBetweenBars(int percent);
+    void setGapBetweenSets(int percent);
 
     /**
      * @see pieAngleOffset
      */
-    void setPieAngleOffset( qreal angle );
+    void setPieAngleOffset(qreal angle);
 
-    bool loadOdf( const KoXmlElement &plotAreaElement, KoShapeLoadingContext &context );
-    bool loadOdfSeries( const KoXmlElement &seriesElement, KoShapeLoadingContext &context );
-    
-    void saveOdf( KoShapeSavingContext &context ) const;
-    void saveOdfSubType( KoXmlWriter &bodyWriter, KoGenStyle &plotAreaStyle ) const;
-    
-    
-    void setThreeD( bool threeD );
+    bool loadOdf(const KoXmlElement &plotAreaElement, KoShapeLoadingContext &context);
+    bool loadOdfSeries(const KoXmlElement &seriesElement, KoShapeLoadingContext &context);
+
+    void saveOdf(KoShapeSavingContext &context) const;
+    void saveOdfSubType(KoXmlWriter &bodyWriter, KoGenStyle &plotAreaStyle) const;
+
+
+    void setThreeD(bool threeD);
 
     /**
      * @see cellRangeAddress
      */
-    void setCellRangeAddress( const CellRegion &region );
+    void setCellRangeAddress(const CellRegion &region);
 
     /**
      * @see isVertical
      */
-    void setVertical( bool vertical );
-    
+    void setVertical(bool vertical);
+
     ChartShape *parent() const;
 
-    void paint( QPainter &painter, const KoViewConverter &converter );
-    
-    bool registerKdDiagram( KDChart::AbstractDiagram *diagram );
-    bool deregisterKdDiagram( KDChart::AbstractDiagram *diagram );
-    
+    void paint(QPainter &painter, const KoViewConverter &converter);
+
+    bool registerKdDiagram(KDChart::AbstractDiagram *diagram);
+    bool deregisterKdDiagram(KDChart::AbstractDiagram *diagram);
+
     void relayout() const;
-    
+
 public slots:
     void requestRepaint() const;
     void proxyModelStructureChanged();
     void plotAreaUpdate() const;
-    
+
 signals:
-    void gapBetweenBarsChanged( int );
-    void gapBetweenSetsChanged( int );
-    void pieAngleOffsetChanged( qreal );
+    void gapBetweenBarsChanged(int);
+    void gapBetweenSetsChanged(int);
+    void pieAngleOffsetChanged(qreal);
 
 private:
-    void paintPixmap( QPainter &painter, const KoViewConverter &converter );
+    void paintPixmap(QPainter &painter, const KoViewConverter &converter);
 
     // For class Axis
-    KDChart::CartesianCoordinatePlane *kdCartesianPlane( Axis *axis = 0 ) const;
+    KDChart::CartesianCoordinatePlane *kdCartesianPlane(Axis *axis = 0) const;
     KDChart::PolarCoordinatePlane *kdPolarPlane() const;
     KDChart::RadarCoordinatePlane *kdRadarPlane() const;
     KDChart::Chart *kdChart() const;
-    
+
     class Private;
     Private *const d;
 };

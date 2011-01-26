@@ -37,13 +37,13 @@ class TestDataSet : public QObject
 
 public:
     TestDataSet();
-    
+
 private slots:
     void initTestCase();
 
     // Tests DataSet::*Data() methods
     void testFooData();
-    
+
 private:
     // m_source must be initialized before m_proxyModel
     TableSource m_source;
@@ -51,5 +51,5 @@ private:
     ChartTableModel m_sourceModel;
     Table *m_table;
 };
-    
+
 #endif // KCHART_TESTDATASET_H

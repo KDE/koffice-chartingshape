@@ -36,7 +36,7 @@ class KCPageLayout : public KDialog
 {
     Q_OBJECT
 public:
-    KCPageLayout( KChartPart* _part, QWidget* parent);
+    KCPageLayout(KChartPart* _part, QWidget* parent);
 public slots:
     void slotOk();
     void slotApply();

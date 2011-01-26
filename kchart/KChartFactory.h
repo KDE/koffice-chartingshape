@@ -38,7 +38,7 @@ class KCHARTCOMMON_EXPORT KChartFactory : public KPluginFactory
 {
     Q_OBJECT
 public:
-    explicit KChartFactory( QObject* parent = 0 );
+    explicit KChartFactory(QObject* parent = 0);
     virtual ~KChartFactory();
 
     virtual QObject* create(const char* iface, QWidget* parentWidget, QObject *parent, const QVariantList& args, const QString& keyword);

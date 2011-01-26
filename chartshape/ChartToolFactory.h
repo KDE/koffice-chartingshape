@@ -33,10 +33,10 @@ class CHARTSHAPELIB_EXPORT ChartToolFactory : public KoToolFactoryBase
     Q_OBJECT
 
 public:
-    explicit ChartToolFactory( QObject *parent );
+    explicit ChartToolFactory(QObject *parent);
     ~ChartToolFactory();
 
-    KoToolBase * createTool( KoCanvasBase *canvas );
+    KoToolBase * createTool(KoCanvasBase *canvas);
 };
 
 } // namespace KChart

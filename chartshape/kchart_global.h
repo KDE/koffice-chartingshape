@@ -43,11 +43,11 @@ enum ChartType {
     // it is assigned its own chart type or not, which can be done otherwise.
     LastChartType               // Not an actual type, just a place holder
 };
-const int NUM_CHARTTYPES = int ( LastChartType );
+const int NUM_CHARTTYPES = int (LastChartType);
 
-bool isPolar( ChartType type );
-bool isCartesian( ChartType type );
-int numDimensions( ChartType type );
+bool isPolar(ChartType type);
+bool isCartesian(ChartType type);
+int numDimensions(ChartType type);
 
 
 // Chart subtypes, applicable to Bar, Line, Area, and Radar

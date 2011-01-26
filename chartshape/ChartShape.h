@@ -90,8 +90,8 @@ extern const char *ODF_CHARTTYPES[ NUM_CHARTTYPES ];
 
 extern const ChartSubtype defaultSubtypes[ NUM_CHARTTYPES ];
 
-extern QString saveOdfFont( KoGenStyles& mainStyles, const QFont& font, const QColor& color );
-extern QColor defaultDataSetColor( int dataSetNum );
+extern QString saveOdfFont(KoGenStyles& mainStyles, const QFont& font, const QColor& color);
+extern QColor defaultDataSetColor(int dataSetNum);
 
 
 class CHARTSHAPELIB_EXPORT ChartShape
@@ -144,7 +144,7 @@ public:
      * This method will assume that @a model has already been added to this
      * chart's TableSource.
      */
-    void setInternalModel( QAbstractItemModel *model );
+    void setInternalModel(QAbstractItemModel *model);
 
     /**
      * Returns a "map" containing all tables that are being used,
@@ -163,7 +163,7 @@ public:
      * For the first case, this method returns false, for the latter true.
      */
     bool usesInternalModelOnly() const;
-    void setUsesInternalModelOnly( bool doesSo );
+    void setUsesInternalModelOnly(bool doesSo);
 
     ChartType     chartType() const;
     ChartSubtype  chartSubType() const;
@@ -178,7 +178,7 @@ public:
      *
      * See kspread/SheetAccessModel.h for details.
      */
-    void setSheetAccessModel( QAbstractItemModel* model );
+    void setSheetAccessModel(QAbstractItemModel* model);
 
     /**
      * Re-initializes the chart with data from an arbitrary region.
@@ -191,37 +191,37 @@ public:
      *
      * @see ChartProxyModel::init()
      */
-    void reset( const QString& region,
+    void reset(const QString& region,
                 bool firstRowIsLabel,
                 bool firstColumnIsLabel,
-                Qt::Orientation dataDirection );
+                Qt::Orientation dataDirection);
 
-    void setChartType( ChartType type );
-    void setChartSubType( ChartSubtype subType );
-    void setThreeD( bool threeD );
-
-    /// reimplemented
-    void paintComponent( QPainter &painter, const KoViewConverter &converter );
-    void paintDecorations( QPainter &painter, const KoViewConverter &converter,
-                           const KoCanvasBase *canvas );
+    void setChartType(ChartType type);
+    void setChartSubType(ChartSubtype subType);
+    void setThreeD(bool threeD);
 
     /// reimplemented
-    bool loadOdf( const KoXmlElement &element, KoShapeLoadingContext &context );
-    bool loadOdfFrameElement( const KoXmlElement &element, KoShapeLoadingContext &context );
-    bool loadOdfData( const KoXmlElement &tableElement, KoShapeLoadingContext &context );
+    void paintComponent(QPainter &painter, const KoViewConverter &converter);
+    void paintDecorations(QPainter &painter, const KoViewConverter &converter,
+                           const KoCanvasBase *canvas);
 
-    bool loadEmbeddedDocument( KoStore *store, const KoXmlElement &objectElement, const KoXmlDocument &manifestDocument );
-    bool loadOdfChartElement( const KoXmlElement &chartElement, KoShapeLoadingContext &context );
     /// reimplemented
-    void saveOdf( KoShapeSavingContext &context ) const;
-    void saveOdfData( KoXmlWriter &bodyWriter, KoGenStyles &mainStyles ) const;
+    bool loadOdf(const KoXmlElement &element, KoShapeLoadingContext &context);
+    bool loadOdfFrameElement(const KoXmlElement &element, KoShapeLoadingContext &context);
+    bool loadOdfData(const KoXmlElement &tableElement, KoShapeLoadingContext &context);
+
+    bool loadEmbeddedDocument(KoStore *store, const KoXmlElement &objectElement, const KoXmlDocument &manifestDocument);
+    bool loadOdfChartElement(const KoXmlElement &chartElement, KoShapeLoadingContext &context);
+    /// reimplemented
+    void saveOdf(KoShapeSavingContext &context) const;
+    void saveOdfData(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) const;
 
     /**
      * Used by unit tests to disable popping up of message boxes.
      *
      * User interaction is enabled by default.
      */
-    static void setEnableUserInteraction( bool enable );
+    static void setEnableUserInteraction(bool enable);
 
     using KoShapeContainer::update;
     /// reimplemented
@@ -234,7 +234,7 @@ public:
     KoResourceManager *resourceManager() const;
 
 signals:
-    void chartTypeChanged( ChartType );
+    void chartTypeChanged(ChartType);
 
 private:
     class Private;

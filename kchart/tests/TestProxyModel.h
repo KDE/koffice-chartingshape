@@ -36,7 +36,7 @@ class TestProxyModel : public QObject
 
 public:
     TestProxyModel();
-    
+
 private slots:
     void initTestCase();
 
@@ -44,10 +44,10 @@ private slots:
     void testFirstRowAsLabel();
     void testFirstColumnAsLabel();
     void testFirstRowAndColumnAsLabels();
-    
+
 private:
     ChartTableModel *m_sourceModel;
     ChartProxyModel *m_proxyModel;
 };
-    
+
 #endif // KCHART_TESTPROXYMODEL_H

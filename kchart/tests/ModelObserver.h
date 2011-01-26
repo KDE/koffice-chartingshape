@@ -31,13 +31,13 @@ class ModelObserver : public QObject
     Q_OBJECT
 
 public:
-    ModelObserver( QAbstractItemModel *source );
+    ModelObserver(QAbstractItemModel *source);
 
 private slots:
-    void slotRowsInserted( const QModelIndex & parent, int start, int end );
-    void slotColumnsInserted( const QModelIndex & parent, int start, int end );
-    void slotRowsRemoved( const QModelIndex & parent, int start, int end );
-    void slotColumnsRemoved( const QModelIndex & parent, int start, int end );
+    void slotRowsInserted(const QModelIndex & parent, int start, int end);
+    void slotColumnsInserted(const QModelIndex & parent, int start, int end);
+    void slotRowsRemoved(const QModelIndex & parent, int start, int end);
+    void slotColumnsRemoved(const QModelIndex & parent, int start, int end);
     void slotModelReset();
 
 public:

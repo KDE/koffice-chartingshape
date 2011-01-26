@@ -66,25 +66,25 @@ class KCHARTCOMMON_EXPORT KChartPart : public KoChart::Part, public KoShapeContr
     Q_OBJECT
 
 public:
-    explicit KChartPart( QWidget *parentWidget = 0,
+    explicit KChartPart(QWidget *parentWidget = 0,
 			 QObject* parent = 0,
-			 bool singleViewMode = false );
+			 bool singleViewMode = false);
     ~KChartPart();
 
     // Methods inherited from KoDocument:
-    virtual void  paintContent( QPainter& painter, const QRect& rect);
+    virtual void  paintContent(QPainter& painter, const QRect& rect);
 
-    virtual void addShape( KoShape* );
-    virtual void removeShape( KoShape* );
+    virtual void addShape(KoShape*);
+    virtual void removeShape(KoShape*);
 
     // Methods unique to KChart, and available in the new interface
     // (see /interfaces/koChart.h.)
 
-    virtual void  setCanChangeValue( bool b )  { m_bCanChangeValue = b;    }
+    virtual void  setCanChangeValue(bool b)  { m_bCanChangeValue = b;    }
 
     // ----------------------------------------------------------------
 
-    void  analyzeHeaders( const QStandardItemModel &data );
+    void  analyzeHeaders(const QStandardItemModel &data);
 
     void loadConfig(KConfig *conf);
     void saveConfig(KConfig *conf);
@@ -99,9 +99,9 @@ public:
 
     // Save and load
     virtual QDomDocument  saveXML();
-    virtual bool loadXML( const KoXmlDocument& doc, KoStore *store );
-    virtual bool          loadOdf( KoOdfReadStore & odfStore );
-    virtual bool          saveOdf( SavingContext &documentContext );
+    virtual bool loadXML(const KoXmlDocument& doc, KoStore *store);
+    virtual bool          loadOdf(KoOdfReadStore & odfStore);
+    virtual bool          saveOdf(SavingContext &documentContext);
 
     bool  canChangeValue()   const             { return m_bCanChangeValue; }
 
@@ -117,16 +117,16 @@ signals:
     void docChanged();
 
 protected:
-    virtual KoView* createViewInstance( QWidget* parent );
+    virtual KoView* createViewInstance(QWidget* parent);
 
-    bool  loadOasisData( const KoXmlElement& tableElem );
-    void writeAutomaticStyles( KoXmlWriter& contentWriter,
-                               KoGenStyles& mainStyles ) const;
+    bool  loadOasisData(const KoXmlElement& tableElem);
+    void writeAutomaticStyles(KoXmlWriter& contentWriter,
+                               KoGenStyles& mainStyles) const;
 
 private:
     // Helper methods for painting.
-    void         createLabelsAndLegend( QStringList  &longLabels,
-					QStringList  &shortLabels );
+    void         createLabelsAndLegend(QStringList  &longLabels,
+					QStringList  &shortLabels);
 
 
     QDomElement  createElement(const QString &tagName,
