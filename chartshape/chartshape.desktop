@@ -3,6 +3,7 @@ Name=Chart Shape
 Name[pt]=Forma do Gráfico
 Name[pt_BR]=Forma do gráfico
 Name[sv]=Diagramform
+Name[uk]=Форма діаграми
 Name[x-test]=xxChart Shapexx
 X-KDE-ServiceTypes=KOffice/Shape
 Type=Service

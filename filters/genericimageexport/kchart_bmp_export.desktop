@@ -4,6 +4,7 @@ Name=KChart BMP Export Filter
 Name[pt]=Filtro de Exportação de BMP para o KChart
 Name[pt_BR]=Filtro de exportação BMP para o KChart
 Name[sv]=Kchart BMP-exportfilter
+Name[uk]=Фільтр експорту BMP для KChart
 Name[x-test]=xxKChart BMP Export Filterxx
 X-KDE-Import=application/x-kchart
 X-KDE-Export=image/x-bmp

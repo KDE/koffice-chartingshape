@@ -4,6 +4,7 @@ Name=KChart SVG Export Filter
 Name[pt]=Filtro de Exportação de SVG para o KChart
 Name[pt_BR]=Filtro de exportação SVG para o KChart
 Name[sv]=Kchart SVG-exportfilter
+Name[uk]=Фільтр експорту SVG для KChart
 Name[x-test]=xxKChart SVG Export Filterxx
 X-KDE-Import=application/x-kchart
 X-KDE-Export=image/svg+xml
