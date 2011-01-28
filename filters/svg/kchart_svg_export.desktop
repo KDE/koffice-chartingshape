@@ -1,6 +1,8 @@
 [Desktop Entry]
 Type=Service
 Name=KChart SVG Export Filter
+Name[cs]=Exportní filtr do formátu SVG pro KChart
+Name[nds]=SVG-Exportfilter för KChart
 Name[pt]=Filtro de Exportação de SVG para o KChart
 Name[pt_BR]=Filtro de exportação SVG para o KChart
 Name[sv]=Kchart SVG-exportfilter
