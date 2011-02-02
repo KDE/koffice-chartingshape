@@ -2,6 +2,7 @@
 Name=KOffice Chart Component
 Name[cs]=Komponenta grafu KOffice
 Name[nds]=Diagrammkomponent för KOffice
+Name[nl]=Grafiekcomponent voor KOffice
 Name[pt]=Componente de Gráficos do KOffice
 Name[pt_BR]=Componente de gráficos do KOffice
 Name[sv]=Koffice-diagramkomponent
@@ -17,6 +18,7 @@ X-KDE-ExtraNativeMimeTypes=application/vnd.oasis.opendocument.chart,application/
 GenericName=Chart
 GenericName[cs]=Graf
 GenericName[nds]=Diagramm
+GenericName[nl]=Grafiek
 GenericName[pt]=Gráfico
 GenericName[pt_BR]=Gráfico
 GenericName[sv]=Diagram

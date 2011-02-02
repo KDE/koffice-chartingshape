@@ -3,6 +3,7 @@ Type=Service
 Name=KChart XPM Export Filter
 Name[cs]=Exportní filtr do formátu XPM pro KChart
 Name[nds]=XPM-Exportfilter för KChart
+Name[nl]=XPM-exportfilter voor KChart 
 Name[pt]=Filtro de Exportação de XPM para o KChart
 Name[pt_BR]=Filtro de exportação XPM para o KChart
 Name[sv]=Kchart XPM-exportfilter

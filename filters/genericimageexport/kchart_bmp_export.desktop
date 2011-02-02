@@ -3,6 +3,7 @@ Type=Service
 Name=KChart BMP Export Filter
 Name[cs]=Exportní filtr do formátu BMP pro KChart
 Name[nds]=BMP-Exportfilter för KChart
+Name[nl]=BMP-exportfilter voor KChart
 Name[pt]=Filtro de Exportação de BMP para o KChart
 Name[pt_BR]=Filtro de exportação BMP para o KChart
 Name[sv]=Kchart BMP-exportfilter
