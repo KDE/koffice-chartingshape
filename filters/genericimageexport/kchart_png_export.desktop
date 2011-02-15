@@ -2,6 +2,7 @@
 Type=Service
 Name=KChart PNG Export Filter
 Name[cs]=Exportní filtr do formátu PNG pro KChart
+Name[et]=KCharti PNG ekspordifilter
 Name[nds]=PNG-Exportfilter för KChart
 Name[nl]=PNG-exportfilter voor KChart
 Name[pt]=Filtro de Exportação de PNG para o KChart

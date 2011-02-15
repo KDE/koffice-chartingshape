@@ -7,6 +7,7 @@ X-KDE-Library=kchartgenericimageexport
 X-KDE-ServiceTypes=KOfficeFilter
 Name=KChart MNG Export Filter
 Name[cs]=Exportní filtr do formátu MNG pro KChart
+Name[et]=KCharti MNG ekspordifilter
 Name[nds]=KMNG-Exportfilter för KChart
 Name[nl]=MNG-exportfilter voor KChart
 Name[pt]=Filtro de Exportação de MNG para o KChart

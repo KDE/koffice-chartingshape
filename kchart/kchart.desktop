@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KChart
 Name[cs]=KChart
+Name[et]=KChart
 Name[nds]=KChart
 Name[nl]=KChart
 Name[pt]=KChart
@@ -10,6 +11,7 @@ Name[uk]=KChart
 Name[x-test]=xxKChartxx
 GenericName=Chart Generator
 GenericName[cs]=Generátor grafů
+GenericName[et]=Diagrammigeneraator
 GenericName[nds]=Diagramm-Maker
 GenericName[nl]=Grafiekgenerator
 GenericName[pt]=Geração de Gráficos
@@ -19,6 +21,7 @@ GenericName[uk]=Створення діаграм
 GenericName[x-test]=xxChart Generatorxx
 Comment=Create graphics and charts
 Comment[cs]=Vytvářejte grafiku a grafy
+Comment[et]=Diagrammide loomine
 Comment[nds]=Grafiken un Diagrammen opstellen
 Comment[nl]=Grafieken en diagrammen maken
 Comment[pt]=Criar imagens e gráficos
