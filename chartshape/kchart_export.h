@@ -17,31 +17,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KCHART_EXPORT_H
-#define KCHART_EXPORT_H
+#ifndef CHARTSHAPE_EXPORT_H
+#define CHARTSHAPE_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
-
-#ifndef KCHART_EXPORT
-# if defined(MAKE_KCHART_LIB)
-   /* We are building this library */
-#  define KCHART_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define KCHART_EXPORT KDE_IMPORT
-# endif
-#endif
-
-#ifndef KCHARTCOMMON_EXPORT
-# if defined(MAKE_KCHARTCOMMON_LIB)
-   /* We are building this library */
-#  define KCHARTCOMMON_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define KCHARTCOMMON_EXPORT KDE_IMPORT
-# endif
-#endif
 
 #ifndef CHARTSHAPELIB_EXPORT
 # if defined(MAKE_CHARTSHAPELIB_LIB)
