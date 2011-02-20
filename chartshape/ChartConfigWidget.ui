@@ -11,7 +11,7 @@
     <height>454</height>
    </rect>
   </property>
-  <layout class="QGridLayout">
+  <layout class="QGridLayout" name="gridLayout_1">
    <item row="0" column="1">
     <widget class="QCheckBox" name="threeDLook">
      <property name="text">
@@ -41,7 +41,7 @@
       <attribute name="title">
        <string>Plot Area</string>
       </attribute>
-      <layout class="QGridLayout">
+      <layout class="QGridLayout" name="gridLayout_2">
        <item row="1" column="0" colspan="3">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
@@ -184,7 +184,7 @@ p, li { white-space: pre-wrap; }
       <attribute name="title">
        <string>Data Sets</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
+      <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0" colspan="3">
         <widget class="QComboBox" name="dataSets">
          <property name="toolTip">
