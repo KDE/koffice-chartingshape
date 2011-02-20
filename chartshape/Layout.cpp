@@ -28,8 +28,6 @@
 // KOffice
 #include <KoShapeContainer.h>
 
-using namespace KChart;
-
 
 // Static helper methods (defined at end of file)
 static QPointF itemPosition(KoShape *shape);

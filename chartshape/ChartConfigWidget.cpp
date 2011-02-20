@@ -67,8 +67,6 @@
 #include "ChartTableModel.h"
 #include "TableSource.h"
 
-using namespace KChart;
-
 
 class ChartConfigWidget::Private
 {
@@ -185,8 +183,8 @@ ChartConfigWidget::Private::Private(QWidget *parent)
     shape = 0;
     tableSource = 0;
 
-    type = KChart::LastChartType;
-    subtype = KChart::NoChartSubtype;
+    type = LastChartType;
+    subtype = NoChartSubtype;
     threeDMode = false;
 
     isExternalDataSource = false;

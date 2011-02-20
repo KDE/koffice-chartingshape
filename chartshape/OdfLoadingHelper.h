@@ -36,8 +36,6 @@
 class KoStyleStack;
 class KoodfStylesReader;
 
-namespace KChart {
-
 class OdfLoadingHelper : public KoSharedLoadingData
 {
 public:
@@ -50,7 +48,5 @@ public:
     // a way to tell it that it will find it in the axis.
     bool         categoryRegionSpecifiedInXAxis;
 };
-
-} // namespace KChart
 
 #endif // KCHART_ODF_LOADING_HELPER_H

@@ -72,8 +72,6 @@ class KoTextShapeData;
 #define OdfLoadingHelperId "OdfLoadingHelperId"
 typedef KoTextShapeData TextLabelData;
 
-namespace KChart {
-
 class DataSet;
 class ChartProxyModel;
 class Legend;
@@ -240,7 +238,5 @@ private:
     class Private;
     Private *const d;
 };
-
-} // Namespace KChart
 
 #endif

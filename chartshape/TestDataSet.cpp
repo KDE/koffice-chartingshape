@@ -42,8 +42,6 @@ namespace QTest {
     }
 }
 
-using namespace KChart;
-
 TestDataSet::TestDataSet()
     : m_source()
     , m_proxyModel(&m_source)

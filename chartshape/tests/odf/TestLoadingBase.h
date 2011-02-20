@@ -35,8 +35,6 @@
 
 class KoShape;
 
-namespace KChart {
-
 class ChartShape;
 class Table;
 class TableSource;
@@ -99,11 +97,9 @@ protected:
     ChartShape *m_chart;
 };
 
-} // namespace KChart
-
 namespace QTest {
     template<>
-    char *toString(const KChart::CellRegion &region);
+    char *toString(const CellRegion &region);
 }
 
 #endif // KCHART_TESTLOADING_BASE

@@ -34,8 +34,6 @@
 #include "ChartTableView.h"
 
 
-using namespace KChart;
-
 TableEditorDialog::TableEditorDialog()
     : QDialog(0)
     , m_tableView(new ChartTableView)

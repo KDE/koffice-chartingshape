@@ -36,8 +36,6 @@ namespace KDChart {
 }
 
 
-namespace KChart {
-
 /**
  * @brief The PlotArea class is the central chart element. It plots the data and draws the axes.
  *
@@ -174,8 +172,6 @@ private:
     class Private;
     Private *const d;
 };
-
-} // Namespace KChart
 
 #endif // KCHART_PLOTAREA_H
 

@@ -27,8 +27,6 @@
 // Interface
 #include <KoChartModel.h>
 
-namespace KChart {
-
 class CellRegionStringValidator : public QValidator
 {
  public:
@@ -41,7 +39,5 @@ class CellRegionStringValidator : public QValidator
     class Private;
     Private *const d;
 };
-
-}
 
 #endif // KCHART_CELLREGIONSTRINGVALIDATOR_H

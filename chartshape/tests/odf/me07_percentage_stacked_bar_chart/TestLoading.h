@@ -25,8 +25,6 @@
 
 #include <QStandardItemModel>
 
-namespace KChart {
-
 class TestLoading : public TestLoadingBase
 {
     Q_OBJECT
@@ -44,7 +42,5 @@ private:
     /// Faked data model of sheet embedding this chart
     QStandardItemModel m_sheet;
 };
-
-} // namespace KChart
 
 #endif // KCHART_TESTLOADING_H_ME07_PERCENTAGE_STACKED_BAR_CHART

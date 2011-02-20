@@ -64,8 +64,6 @@
 #include <KoGenStyles.h>
 #include <KoXmlWriter.h>
 
-using namespace KChart;
-
 const int numDefaultMarkerTypes = 8;
 
 const KDChart::MarkerAttributes::MarkerStyle defaultMarkerTypes[]= { 

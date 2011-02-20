@@ -48,8 +48,6 @@
 #include <KDChartAbstractDiagram>
 #include <KDChartLegend>
 
-using namespace KChart;
-
 TestLoadingBase::TestLoadingBase()
     : QObject()
 {
@@ -192,7 +190,7 @@ TableSource *TestLoadingBase::tableSource()
 
 namespace QTest {
     template<>
-    char *toString(const KChart::CellRegion &region) {
+    char *toString(const CellRegion &region) {
         return qstrdup(region.toString().toAscii().data());
     }
 }

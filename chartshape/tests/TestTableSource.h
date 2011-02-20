@@ -30,8 +30,6 @@
 // KChart
 #include "../TableSource.h"
 
-using namespace KChart;
-
 class TestTableSource : public QObject
 {
     Q_OBJECT

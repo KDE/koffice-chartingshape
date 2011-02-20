@@ -32,8 +32,6 @@
 #include <QRectF>
 #include <QRect>
 
-using namespace KChart;
-
 qreal ScreenConversions::pxToPtX(qreal px)
 {
     return KoUnit(KoUnit::Inch).fromUserValue(px / KoDpi::dpiX());

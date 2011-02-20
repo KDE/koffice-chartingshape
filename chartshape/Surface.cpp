@@ -56,8 +56,6 @@
 #include "PlotArea.h"
 
 
-using namespace KChart;
-
 class Surface::Private
 {
 public:

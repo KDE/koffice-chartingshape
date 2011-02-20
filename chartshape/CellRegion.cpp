@@ -41,7 +41,6 @@
 
 
 using std::pow;
-using namespace KChart;
 
 static QString columnName(uint column);
 //static int rangeCharToInt(char c);

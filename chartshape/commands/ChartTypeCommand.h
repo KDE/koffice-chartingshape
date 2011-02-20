@@ -25,21 +25,6 @@
 
 // KChart
 #include "kchart_global.h"
-//#include "ChartShape.h"
-
-
-#if 0
-namespace KDChart
-{
-class AbstractCoordinatePlane;
-class AbstractDiagram;
-class Chart;
-}
-#endif
-
-
-namespace KChart
-{
 
 class ChartShape;
 
@@ -85,7 +70,5 @@ private:
     //KDChart::AbstractCoordinatePlane  *m_oldCoordinatePlane;
     //KDChart::AbstractDiagram          *m_oldDiagram;
 };
-
-} // namespace KChart
 
 #endif // KCHART_CHART_TYPE_COMMAND

@@ -23,8 +23,6 @@
 #include "ThreeDTransformation.h"
 
 
-using namespace KChart;
-
 ThreeDTransformation::ThreeDTransformation()
 {
 }

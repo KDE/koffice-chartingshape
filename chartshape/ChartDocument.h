@@ -33,8 +33,6 @@ class QPainter;
 class QWidget;
 class KoShapeLoadingContext;
 
-namespace KChart {
-
 class ChartShape;
 
 class ChartDocument : public KoDocument
@@ -55,8 +53,6 @@ private:
     class Private;
     Private * const d;
 };
-
-} // namespace KChart
 
 #endif // KCHART_CHARTDOCUMENT_H
 

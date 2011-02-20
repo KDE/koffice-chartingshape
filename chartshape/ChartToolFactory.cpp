@@ -29,9 +29,6 @@
 #include "ChartShape.h"
 
 
-using namespace KChart;
-
-
 ChartToolFactory::ChartToolFactory(QObject *parent)
     : KoToolFactoryBase(parent, "ChartToolFactory_ID")
 {

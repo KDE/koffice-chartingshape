@@ -28,14 +28,10 @@
 // KOffice
 #include <KoShapeContainerModel.h>
 
-// KChart
 #include "kchart_global.h"
-
 
 class QSizeF;
 
-
-namespace KChart {
 
 /**
  * A generic chart-style layout with 10 possible positions:
@@ -193,7 +189,5 @@ private:
     QSizeF m_containerSize;
     QMap<KoShape*, LayoutData*> m_layoutItems;
 };
-
-} // namespace KChart
 
 #endif // KCHART_CHARTLAYOUT_H

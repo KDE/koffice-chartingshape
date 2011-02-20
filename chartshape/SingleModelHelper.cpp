@@ -29,8 +29,6 @@
 #include "ChartProxyModel.h"
 #include "CellRegion.h"
 
-using namespace KChart;
-
 SingleModelHelper::SingleModelHelper(Table *table, ChartProxyModel *proxyModel)
     : m_table(table)
     , m_proxyModel(proxyModel)

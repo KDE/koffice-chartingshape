@@ -27,8 +27,6 @@
 // KChart
 #include "CellRegion.h"
 
-using namespace KChart;
-
 class CellRegionStringValidator::Private
 {
 public:

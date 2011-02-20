@@ -25,9 +25,6 @@
 
 #include <KoToolFactoryBase.h>
 
-namespace KChart
-{
-
 class CHARTSHAPE_TEST_EXPORT ChartToolFactory : public KoToolFactoryBase
 {
     Q_OBJECT
@@ -38,8 +35,6 @@ public:
 
     KoToolBase * createTool(KoCanvasBase *canvas);
 };
-
-} // namespace KChart
 
 
 #endif

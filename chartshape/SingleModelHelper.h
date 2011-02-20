@@ -24,8 +24,6 @@
 // Qt
 #include <QObject>
 
-namespace KChart {
-
 class ChartProxyModel;
 class Table;
 
@@ -43,7 +41,5 @@ private:
     Table *const m_table;
     ChartProxyModel *const m_proxyModel;
 };
-
-} // namespace KChart
 
 #endif // KCHART_SINGLE_MODEL_HELPER_H

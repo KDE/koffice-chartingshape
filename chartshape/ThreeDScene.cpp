@@ -24,8 +24,6 @@
 #include "ThreeDScene.h"
 
 
-using namespace KChart;
-
 class ThreeDScene::Private
 {
 public:
@@ -43,8 +41,6 @@ ThreeDScene::Private::~Private()
 {
 }
 
-
-using namespace KChart;
 
 ThreeDScene::ThreeDScene()
     : d(new Private)

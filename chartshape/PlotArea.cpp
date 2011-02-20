@@ -78,8 +78,6 @@
 #include "ScreenConversions.h"
 #include "Layout.h"
 
-using namespace KChart;
-
 const int MAX_PIXMAP_SIZE = 1000;
 
 Q_DECLARE_METATYPE(QPointer<QAbstractItemModel>);

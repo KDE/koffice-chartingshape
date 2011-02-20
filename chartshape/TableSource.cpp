@@ -25,8 +25,6 @@
 #include <QSet>
 #include <Qt>
 
-using namespace KChart;
-
 Table::Table(const QString &name, QAbstractItemModel *model)
     : m_name(name)
     , m_model(model)

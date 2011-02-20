@@ -27,8 +27,6 @@
 // KChart
 #include "ChartShape.h"
 
-using namespace KChart;
-
 TestLoading::TestLoading()
     : TestLoadingBase()
 {

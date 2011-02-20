@@ -31,8 +31,6 @@ class QModelIndex;
 class QAction;
 
 
-namespace KChart {
-
 class ChartTableView;
 class ChartProxyModel;
 
@@ -68,8 +66,6 @@ private:
     QAction         *m_insertRowsAction;
     QAction         *m_insertColumnsAction;
 };
-
-} // Namespace KChart
 
 #endif // KCHART_AXIS_SCALING_DIALOG_H
 

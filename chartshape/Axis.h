@@ -26,11 +26,8 @@
 // Qt
 #include <QObject>
 
-// KChart
 #include "ChartShape.h"
 
-
-namespace KChart {
 
 enum OdfGridClass {
     OdfMajorGrid,
@@ -143,7 +140,5 @@ private:
     class Private;
     Private *const d;
 };
-
-} // Namespace KChart
 
 #endif

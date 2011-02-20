@@ -27,14 +27,11 @@
 #include <QVector>
 #include <QRect>
 
-// KChart
 #include "ChartShape.h"
 
 
 class QRect;
 class QPoint;
-
-namespace KChart {
 
 /**
  * @brief A CellRegion represents a selection of cells in a table.
@@ -127,7 +124,5 @@ private:
     class Private;
     Private *const d;
 };
-
-}
 
 #endif // KCHART_CELLREGION_H

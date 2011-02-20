@@ -41,8 +41,6 @@ namespace KDChart {
 
 class KoShapeLoadingContext;
 
-namespace KChart {
-
 class KDChartModel;
 
 
@@ -231,8 +229,6 @@ private:
     class Private;
     Private *const d;
 };
-
-} // Namespace KChart
 
 #endif // KCHART_DATASET_H
 

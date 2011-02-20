@@ -48,8 +48,6 @@
 #include "TableSource.h"
 #include "OdfLoadingHelper.h"
 
-using namespace KChart;
-
 
 // ================================================================
 //                     Class ChartProxyModel::Private

@@ -22,9 +22,6 @@
 #ifndef KCHART_GLOBAL_H
 #define KCHART_GLOBAL_H
 
-namespace KChart
-{
-
 // Chart types for OpenDocument
 enum ChartType {
     BarChartType,
@@ -104,7 +101,5 @@ enum LabelType {
     SubTitleLabelType,
     FooterLabelType
 };
-
-} // Namespace KChart
 
 #endif

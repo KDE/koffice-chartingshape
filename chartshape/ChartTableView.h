@@ -23,8 +23,6 @@
 
 #include <QTableView>
 
-namespace KChart {
-
 class ChartTableView : public QTableView
 {
     Q_OBJECT
@@ -39,7 +37,5 @@ signals:
 protected slots:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 };
-
-}
 
 #endif

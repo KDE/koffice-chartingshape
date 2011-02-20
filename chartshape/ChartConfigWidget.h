@@ -40,8 +40,6 @@ namespace KDChart
     class CartesianAxis;
 }
 
-namespace KChart
-{
 class ChartShape;
 
 /**
@@ -176,8 +174,6 @@ private:
     class Private;
     Private * const d;
 };
-
-}  // namespace KChart
 
 
 #endif // KCHART_CHART_TYPE_CONFIG_WIDGET

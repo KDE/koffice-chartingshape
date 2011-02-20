@@ -32,10 +32,8 @@
 #include "KDChartPolarDiagram"
 #include "KDChartRingDiagram"
 
-// KChart
 #include "ChartShape.h"
 
-using namespace KChart;
 using namespace KDChart;
 
 

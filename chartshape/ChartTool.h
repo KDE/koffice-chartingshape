@@ -31,11 +31,6 @@
 
 class QAction;
 
-
-namespace KChart
-{
-
-
 /**
  * This is the tool for the chart shape, which is a flake-based plugin.
  */
@@ -123,8 +118,6 @@ private:
     class Private;
     Private * const d;
 };
-
-} // namespace KChart
 
 
 #endif // KCHART_CHARTTOOL_H

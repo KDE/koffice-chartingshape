@@ -20,8 +20,6 @@
 
 #include "kchart_global.h"
 
-namespace KChart {
-
 bool isPolar(ChartType type)
 {
     switch (type)
@@ -76,5 +74,3 @@ int numDimensions(ChartType type)
 
     return dimensions;
 }
-
-} // namespace KChart

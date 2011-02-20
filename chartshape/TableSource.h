@@ -32,8 +32,6 @@
 class QString;
 
 
-namespace KChart {
-
 class Table
 {
     friend class TableSource;
@@ -154,7 +152,5 @@ private:
     class Private;
     Private *const d;
 };
-
-} // namespace KChart
 
 #endif // KCHART_TABLESOURCE_H

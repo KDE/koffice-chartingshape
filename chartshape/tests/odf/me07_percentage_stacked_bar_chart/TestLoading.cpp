@@ -32,8 +32,6 @@
 #include "TableSource.h"
 #include "Legend.h"
 
-using namespace KChart;
-
 TestLoading::TestLoading()
     : TestLoadingBase()
 {

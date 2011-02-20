@@ -29,8 +29,6 @@ class KoStyleStack;
 class KoOdfLoadingContext;
 class QSizeF;
 
-namespace KChart {
-
 
 /**
  * @brief The Surface class represents either a chart wall, or chart floor.
@@ -69,8 +67,6 @@ private:
     class Private;
     Private *const d;
 };
-
-}
 
 #endif
 

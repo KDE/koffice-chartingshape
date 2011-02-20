@@ -59,8 +59,6 @@
 #include "Layout.h"
 #include "OdfLoadingHelper.h"
 
-using namespace KChart;
-
 class Legend::Private {
 public:
     Private();

@@ -28,11 +28,8 @@
 // KOffice
 #include <KoShape.h>
 
-// KChart
 #include "ChartShape.h"
 
-
-namespace KChart {
 
 class CHARTSHAPE_TEST_EXPORT Legend : public QObject, public KoShape
 {
@@ -91,8 +88,6 @@ private:
     class Private;
     Private *const d;
 };
-
-}
 
 #endif // KCHART_LEGEND_H
 

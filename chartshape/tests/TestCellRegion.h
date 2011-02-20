@@ -31,8 +31,6 @@
 #include "../CellRegion.h"
 #include "../TableSource.h"
 
-using namespace KChart;
-
 class TestCellRegion : public QObject
 {
     Q_OBJECT

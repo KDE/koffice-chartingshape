@@ -24,8 +24,6 @@
 #define KCHART_THREEDSCENE_H
 
 
-namespace KChart {
-
 /**
  * @brief The ThreeDScene class is used to store properties of a 3D scene.
  *
@@ -45,8 +43,6 @@ private:
     class Private;
     Private *const d;
 };
-
-} // Namespace KChart
 
 #endif // KCHART_THREEDSCENE_H
 

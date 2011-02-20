@@ -32,8 +32,6 @@
 #include "PlotArea.h"
 #include "Legend.h"
 
-using namespace KChart;
-
 TestLoading::TestLoading()
     : TestLoadingBase()
 {

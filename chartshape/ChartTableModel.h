@@ -39,8 +39,6 @@ class QString;
 
 // FIXME: Should it inherit QAbstractTableModel instead?
 
-namespace KChart {
-
 /**
  * @brief The ChartTableModel class is used to store a data table inside a chart document.  It's main difference to a normal table model is that it can load and store to ODF.
  */
@@ -65,7 +63,5 @@ public:
                   KoShapeLoadingContext &context);
     bool saveOdf(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) const;
 };
-
-}
 
 #endif // KCHART_TABLEMODEL_H

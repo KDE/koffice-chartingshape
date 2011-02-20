@@ -79,8 +79,6 @@
 #include "OdfLoadingHelper.h"
 
 
-using namespace KChart;
-
 class Axis::Private
 {
 public:

@@ -23,16 +23,12 @@
 #define KCHART_THREEDTRANSFORMATION_H
 
 
-namespace KChart {
-
 class ThreeDTransformation
 {
 public:
     ThreeDTransformation();
     ~ThreeDTransformation();
 };
-
-} // Namespace KChart
 
 #endif // KCHART_THREEDTRANSFORMATION_H
 

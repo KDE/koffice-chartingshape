@@ -28,8 +28,6 @@
 #include "ModelObserver.h"
 #include "TableSource.h"
 
-using namespace KChart;
-
 class TestKDChartModel : public QObject
 {
     Q_OBJECT

@@ -29,8 +29,6 @@ class QSizeF;
 class QRect;
 class QRectF;
 
-namespace KChart {
-
 class ScreenConversions
 {
 public:
@@ -47,7 +45,5 @@ public:
     static qreal pxToPtY(qreal px);
     static QSizeF scaleFromPxToPt(const QSize &size);
 };
-
-} // namespace KChart
 
 #endif // KCHART_SCREEN_CONVERSIONS_H

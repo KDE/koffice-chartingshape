@@ -23,8 +23,6 @@
 
 #include "../TestLoadingBase.h"
 
-namespace KChart {
-
 class TestLoading : public TestLoadingBase
 {
     Q_OBJECT
@@ -41,7 +39,5 @@ private slots:
     // More tests go here, e.g.
     // void testPlotArea();
 };
-
-} // namespace KChart
 
 #endif // KCHART_TESTLOADING_H_@@UPPERCASE_NAME@@

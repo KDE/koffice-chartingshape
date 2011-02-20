@@ -29,8 +29,6 @@
 #include "ChartTableModel.h"
 #include "TableSource.h"
 
-using namespace KChart;
-
 class TestDataSet : public QObject
 {
     Q_OBJECT

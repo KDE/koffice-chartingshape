@@ -37,8 +37,6 @@
 #include <KDChartPieAttributes>
 #include <KDChartDataValueAttributes>
 
-using namespace KChart;
-
 class KDChartModel::Private {
 public:
     Private(KDChartModel *parent);

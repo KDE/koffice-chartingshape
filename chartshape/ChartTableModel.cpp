@@ -47,8 +47,6 @@
 #include "OdfLoadingHelper.h"
 
 
-namespace KChart {
-
 ChartTableModel::ChartTableModel(QObject *parent /* = 0 */)
     : QStandardItemModel(parent)
 {
@@ -189,6 +187,4 @@ bool ChartTableModel::saveOdf(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) 
     Q_UNUSED(mainStyles);
     // The save logic is in ChartShape::saveOdf
     return true;
-}
-
 }

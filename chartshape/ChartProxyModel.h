@@ -40,8 +40,6 @@ namespace KoChart
 #include <QAbstractTableModel>
 
 
-namespace KChart {
-
 /**
  * @brief The ChartProxyModel is a factory for the DataSet's and decorates the ChartTableModel.
  *
@@ -212,7 +210,5 @@ private:
     class Private;
     Private *const d;
 };
-
-} // namespace KChart
 
 #endif // KCHART_PROXYMODEL_H

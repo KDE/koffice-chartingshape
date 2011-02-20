@@ -63,9 +63,6 @@
 #include "KDChartConvertions.h"
 
 
-using namespace KChart;
-
-
 class ChartTool::Private
 {
 public:

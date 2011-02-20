@@ -45,8 +45,6 @@
 #include "TableSource.h"
 
 
-using namespace KChart;
-
 K_PLUGIN_FACTORY(ChartShapePluginFactory, registerPlugin<ChartShapePlugin>();)
 K_EXPORT_PLUGIN(ChartShapePluginFactory("ChartShape"))
 
