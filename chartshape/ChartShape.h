@@ -94,7 +94,7 @@ extern QString saveOdfFont(KoGenStyles& mainStyles, const QFont& font, const QCo
 extern QColor defaultDataSetColor(int dataSetNum);
 
 
-class CHARTSHAPELIB_EXPORT ChartShape
+class CHARTSHAPE_TEST_EXPORT ChartShape
     : public QObject
     , public KoChart::ChartInterface // The public interface within KOffice
     , public KoFrameShape            // For saving as a frame

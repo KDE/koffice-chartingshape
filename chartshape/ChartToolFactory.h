@@ -28,7 +28,7 @@
 namespace KChart
 {
 
-class CHARTSHAPELIB_EXPORT ChartToolFactory : public KoToolFactoryBase
+class CHARTSHAPE_TEST_EXPORT ChartToolFactory : public KoToolFactoryBase
 {
     Q_OBJECT
 

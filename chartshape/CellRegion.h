@@ -71,7 +71,7 @@ namespace KChart {
 // Definition in TableSource.h
 class Table;
 
-class CHARTSHAPELIB_EXPORT CellRegion
+class CHARTSHAPE_TEST_EXPORT CellRegion
 {
 public:
     CellRegion();

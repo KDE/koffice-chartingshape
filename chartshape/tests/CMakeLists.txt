@@ -1,4 +1,5 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_DIRECTORY} )
+add_definitions(-DCOMPILING_TESTS)
 
 include_directories( ${CMAKE_SOURCE_DIR}/chartshape
                      ${CMAKE_SOURCE_DIR}/chartshape/kdchart/include

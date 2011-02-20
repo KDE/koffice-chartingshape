@@ -50,7 +50,7 @@ namespace KChart {
  * QAbstractItemModel part, and another one that handles CellRegions for
  * all the data points.
  */
-class CHARTSHAPELIB_EXPORT ChartProxyModel : public QAbstractTableModel
+class CHARTSHAPE_TEST_EXPORT ChartProxyModel : public QAbstractTableModel
 {
     Q_OBJECT
 

@@ -7,6 +7,11 @@ include_directories( ${CMAKE_SOURCE_DIR}/chartshape
                      ${KOFFICELIBS_INCLUDE_DIR}
 )
 
+if (KDE4_BUILD_TESTS)
+    # only with this definition will the FOO_TEST_EXPORT macro do something
+    add_definitions(-DCOMPILING_TESTS)
+endif(KDE4_BUILD_TESTS)
+
 ########### Flake Plugin library ###############
 
 SET (chartshape_SRCS

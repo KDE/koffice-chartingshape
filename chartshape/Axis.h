@@ -45,7 +45,7 @@ enum OdfGridClass {
  * in which the data of a series is visualized.
  */
 
-class CHARTSHAPELIB_EXPORT Axis : public QObject
+class CHARTSHAPE_TEST_EXPORT Axis : public QObject
 {
     Q_OBJECT
 
