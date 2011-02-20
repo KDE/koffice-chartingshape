@@ -57,17 +57,12 @@ kde4_add_ui_files(chartshape_SRCS
     dialogs/CellRegionDialog.ui
 )
 
-kde4_add_library(chartshape SHARED ${chartshape_SRCS})
+kde4_add_plugin(chartshape ${chartshape_SRCS})
 target_link_libraries(chartshape kdchart ${KOMAIN_LIBS})
 target_link_libraries(chartshape LINK_INTERFACE_LIBRARIES kdchart ${KOMAIN_LIBS})
 
-install(TARGETS chartshape ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-#kde4_add_plugin(chartshape ChartShapeFactory.cpp )
-#target_link_libraries(chartshape chartshapelib ${FLAKE_LIBS})
-#install(TARGETS chartshape DESTINATION ${PLUGIN_INSTALL_DIR})
-
 ########### install files ###############
 
+install(TARGETS chartshape DESTINATION ${PLUGIN_INSTALL_DIR})
 install( FILES chartshape.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 kde4_install_icons( ${DATA_INSTALL_DIR}/koffice/icons )
