@@ -9,7 +9,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/chartshape
 
 ########### Flake Plugin library ###############
 
-SET (chartshape_LIB_SRCS
+SET (chartshape_SRCS
     kchart_global.cpp
     KDChartConvertions.cpp
     Axis.cpp
@@ -41,9 +41,10 @@ SET (chartshape_LIB_SRCS
     dialogs/AxisScalingDialog.cpp
     dialogs/CellRegionDialog.cpp
     commands/ChartTypeCommand.cpp
+    ChartShapeFactory.cpp
 )
 
-kde4_add_ui_files(chartshape_LIB_SRCS
+kde4_add_ui_files(chartshape_SRCS
     ChartConfigWidget.ui
     dialogs/ChartTableEditor.ui
     dialogs/NewAxisDialog.ui
@@ -51,18 +52,17 @@ kde4_add_ui_files(chartshape_LIB_SRCS
     dialogs/CellRegionDialog.ui
 )
 
-kde4_add_library(chartshapelib SHARED ${chartshape_LIB_SRCS})
-target_link_libraries(chartshapelib kdchart ${KOMAIN_LIBS})
-target_link_libraries(chartshapelib LINK_INTERFACE_LIBRARIES kdchart ${KOMAIN_LIBS})
+kde4_add_library(chartshape SHARED ${chartshape_SRCS})
+target_link_libraries(chartshape kdchart ${KOMAIN_LIBS})
+target_link_libraries(chartshape LINK_INTERFACE_LIBRARIES kdchart ${KOMAIN_LIBS})
 
-install(TARGETS chartshapelib ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS chartshape ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-kde4_add_plugin(chartshape ChartShapeFactory.cpp )
-target_link_libraries(chartshape chartshapelib ${FLAKE_LIBS})
-install(TARGETS chartshape DESTINATION ${PLUGIN_INSTALL_DIR})
+#kde4_add_plugin(chartshape ChartShapeFactory.cpp )
+#target_link_libraries(chartshape chartshapelib ${FLAKE_LIBS})
+#install(TARGETS chartshape DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
 install( FILES chartshape.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES kchartpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 kde4_install_icons( ${DATA_INSTALL_DIR}/koffice/icons )
