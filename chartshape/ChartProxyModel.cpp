@@ -57,7 +57,7 @@ using namespace KChart;
 
 class ChartProxyModel::Private {
 public:
-    Private( ChartProxyModel *parent, TableSource *source );
+    Private(ChartProxyModel *parent, TableSource *source);
     ~Private();
 
     ChartProxyModel *const q;
@@ -97,14 +97,14 @@ public:
      * As a side effect, this method sets d->categoryDataRegion if
      * overrideCategories is true.
      */
-    QList<DataSet*> createDataSetsFromRegion( QList<DataSet*> *dataSetsToRecycle,
-                                              bool overrideCategories = true );
+    QList<DataSet*> createDataSetsFromRegion(QList<DataSet*> *dataSetsToRecycle,
+                                              bool overrideCategories = true);
 };
 
-ChartProxyModel::Private::Private( ChartProxyModel *parent, TableSource *source )
-    : q( parent )
-    , tableSource( source )
-    , isLoading( false )
+ChartProxyModel::Private::Private(ChartProxyModel *parent, TableSource *source)
+    : q(parent)
+    , tableSource(source)
+    , isLoading(false)
 {
     firstRowIsLabel    = false;
     firstColumnIsLabel = false;
@@ -120,8 +120,8 @@ ChartProxyModel::Private::Private( ChartProxyModel *parent, TableSource *source 
 
 ChartProxyModel::Private::~Private()
 {
-    qDeleteAll( dataSets );
-    qDeleteAll( removedDataSets );
+    qDeleteAll(dataSets);
+    qDeleteAll(removedDataSets);
 }
 
 
@@ -129,14 +129,14 @@ ChartProxyModel::Private::~Private()
 //                          Class ChartProxyModel
 
 
-ChartProxyModel::ChartProxyModel( TableSource *source )
+ChartProxyModel::ChartProxyModel(TableSource *source)
     : QAbstractTableModel(),
-      d( new Private( this, source ) )
+      d(new Private(this, source))
 {
-    connect( source, SIGNAL( tableAdded( Table* ) ),
-             this,   SLOT( addTable( Table* ) ) );
-    connect( source, SIGNAL( tableRemoved( Table* ) ),
-             this,   SLOT( removeTable( Table* ) ) );
+    connect(source, SIGNAL(tableAdded(Table*)),
+             this,   SLOT(addTable(Table*)));
+    connect(source, SIGNAL(tableRemoved(Table*)),
+             this,   SLOT(removeTable(Table*)));
 }
 
 ChartProxyModel::~ChartProxyModel()
@@ -144,7 +144,7 @@ ChartProxyModel::~ChartProxyModel()
     delete d;
 }
 
-void ChartProxyModel::reset( const CellRegion& region )
+void ChartProxyModel::reset(const CellRegion& region)
 {
     d->selection = region;
     d->rebuildDataMap();
@@ -161,34 +161,34 @@ void ChartProxyModel::Private::rebuildDataMap()
     // method only once in endLoading(), however the approach is actually
     // incorrect as it would potentially override a data set's regions
     // set by "somebody" else in the meantime.
-    // if ( isLoading )
+    // if (isLoading)
     //     return;
     q->beginResetModel();
     q->invalidateDataSets();
-    dataSets = createDataSetsFromRegion( &removedDataSets );
+    dataSets = createDataSetsFromRegion(&removedDataSets);
     q->endResetModel();
 }
 
-void ChartProxyModel::addTable( Table *table )
+void ChartProxyModel::addTable(Table *table)
 {
     QAbstractItemModel *model = table->model();
-    connect( model, SIGNAL( dataChanged( QModelIndex, QModelIndex ) ),
-             this,  SLOT( dataChanged( QModelIndex, QModelIndex ) ) );
+    connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+             this,  SLOT(dataChanged(QModelIndex, QModelIndex)));
 }
 
-void ChartProxyModel::removeTable( Table *table )
+void ChartProxyModel::removeTable(Table *table)
 {
     QAbstractItemModel *model = table->model();
-    model->disconnect( this );
+    model->disconnect(this);
 }
 
 /**
  * Returns a row of a given region (i.e. a part of it with height 1), cutting
  * off the first @a colOffset cells in that row.
  *
- * Examples: extractRow( A1:C2, 0, 0 ) --> A1:C1
- *           extractRow( A1:C2, 1, 0 ) --> A2:C2
- *           extractRow( A1:C2, 0, 1 ) --> B1:C1
+ * Examples: extractRow(A1:C2, 0, 0) --> A1:C1
+ *           extractRow(A1:C2, 1, 0) --> A2:C2
+ *           extractRow(A1:C2, 0, 1) --> B1:C1
  *
  * See notes in createDataSetsFromRegion() for further details.
  *
@@ -196,16 +196,16 @@ void ChartProxyModel::removeTable( Table *table )
  * @param row The number of the row, starting with 0
  * @param colOffset How many of the first columns to cut from the resulting row
  */
-static CellRegion extractRow( const CellRegion &region, int row, int colOffset )
+static CellRegion extractRow(const CellRegion &region, int row, int colOffset)
 {
-    foreach( const QRect &rect, region.rects() ) {
-        if ( row >= rect.height() ) {
+    foreach(const QRect &rect, region.rects()) {
+        if (row >= rect.height()) {
             row -= rect.height();
             continue;
         }
-        QPoint topLeft = rect.topLeft() + QPoint( colOffset, row );
-        QRect row( topLeft, QSize( rect.width() - colOffset, 1 ) );
-        return CellRegion( region.table(), row );
+        QPoint topLeft = rect.topLeft() + QPoint(colOffset, row);
+        QRect row(topLeft, QSize(rect.width() - colOffset, 1));
+        return CellRegion(region.table(), row);
     }
 
     return CellRegion();
@@ -215,8 +215,8 @@ static CellRegion extractRow( const CellRegion &region, int row, int colOffset )
  * Returns a column of a given region, cutting off the first @a rowOffset
  * rows in that column.
  *
- * Examples: extractColumn( A1:C2, 0, 0 )       --> A1:A2
- *           extractColumn( A1:C2;D1;F2, 0, 0 ) --> A1:A2;D1:D2
+ * Examples: extractColumn(A1:C2, 0, 0)       --> A1:A2
+ *           extractColumn(A1:C2;D1;F2, 0, 0) --> A1:A2;D1:D2
  *
  * See notes in createDataSetsFromRegion() for further details.
  *
@@ -224,24 +224,24 @@ static CellRegion extractRow( const CellRegion &region, int row, int colOffset )
  * @param col The number of the column, starting with 0
  * @param rowOffset How many of the first rows to cut from the resulting column
  */
-static CellRegion extractColumn( const CellRegion &region, int col, int rowOffset )
+static CellRegion extractColumn(const CellRegion &region, int col, int rowOffset)
 {
-    CellRegion result( region.table() );
-    foreach( const QRect &rect, region.rects() ) {
-        if ( col >= rect.width() )
+    CellRegion result(region.table());
+    foreach(const QRect &rect, region.rects()) {
+        if (col >= rect.width())
             continue;
-        QPoint topLeft = rect.topLeft() + QPoint( col, rowOffset );
-        QRect col( topLeft, QSize( 1, rect.height() - rowOffset ) );
-        result.add( col );
+        QPoint topLeft = rect.topLeft() + QPoint(col, rowOffset);
+        QRect col(topLeft, QSize(1, rect.height() - rowOffset));
+        result.add(col);
     }
 
     return result;
 }
 
-QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion( QList<DataSet*> *dataSetsToRecycle,
-                                                                    bool overrideCategories )
+QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion(QList<DataSet*> *dataSetsToRecycle,
+                                                                    bool overrideCategories)
 {
-    if ( !selection.isValid() )
+    if (!selection.isValid())
         return QList<DataSet*>();
 
     QList<DataSet*> createdDataSets;
@@ -266,13 +266,13 @@ QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion( QList<DataSe
     // the rows and columns from this very construct.
     int rows = 0;
     int cols = 0;
-    foreach( const QRect &rect, selection.rects() ) {
+    foreach(const QRect &rect, selection.rects()) {
         rows += rect.height();
-        cols = qMax( cols, rect.width() );
+        cols = qMax(cols, rect.width());
     }
 
     // In the end, the contents of this list will look something like this:
-    // ( Category-Data, X-Data, Y-Data, Y-Data, Y-Data )
+    // (Category-Data, X-Data, Y-Data, Y-Data, Y-Data)
     // Semantic seperation of the regions will follow later.
     QList<CellRegion> dataRegions;
     // This region exlusively contains (global) data set labels, i.e.
@@ -282,7 +282,7 @@ QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion( QList<DataSe
     // Determines how many individual rows/columns will be assigned per data set.
     // It is at least one, but if there's more than one data dimension, the x
     // data is shared among all data sets, thus - 1.
-    int regionsPerDataSet = qMax( 1, dataDimensions - 1 );
+    int regionsPerDataSet = qMax(1, dataDimensions - 1);
 
     // Fill dataRegions and set categoryRegion.
     // Note that here, we don't exactly know yet what region will be used for
@@ -299,23 +299,23 @@ QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion( QList<DataSe
                         (dataRegions.size() - 1) % regionsPerDataSet == 0;
 
     // When x data is present, it occupies the first non-header row/column
-    if ( extractXData && dataDirection == Qt::Horizontal )
+    if (extractXData && dataDirection == Qt::Horizontal)
         rowOffset++;
-    if ( extractXData && dataDirection == Qt::Vertical )
+    if (extractXData && dataDirection == Qt::Vertical)
         colOffset++;
 
     // This is the logic that extracts all the subregions from selection
     // that are later used for the data sets
-    if ( dataDirection == Qt::Horizontal ) {
-        if ( firstColumnIsLabel )
-            labelRegion = extractColumn( selection, 0, rowOffset );
-        for ( int i = 0; i < rows; i++ )
-            dataRegions.append( extractRow( selection, i, colOffset ) );
+    if (dataDirection == Qt::Horizontal) {
+        if (firstColumnIsLabel)
+            labelRegion = extractColumn(selection, 0, rowOffset);
+        for (int i = 0; i < rows; i++)
+            dataRegions.append(extractRow(selection, i, colOffset));
     } else {
-        if ( firstRowIsLabel )
-            labelRegion = extractRow( selection, 0, colOffset);
-        for ( int i = 0; i < cols; i++ )
-            dataRegions.append( extractColumn( selection, i, rowOffset ) );
+        if (firstRowIsLabel)
+            labelRegion = extractRow(selection, 0, colOffset);
+        for (int i = 0; i < cols; i++)
+            dataRegions.append(extractColumn(selection, i, rowOffset));
     }
 
     bool useCategories =
@@ -323,51 +323,51 @@ QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion( QList<DataSe
             (dataDirection == Qt::Vertical && firstColumnIsLabel);
 
     // Regions shared by all data sets: categories and x-data
-    if ( overrideCategories )
+    if (overrideCategories)
         categoryDataRegion = CellRegion();
     CellRegion xData;
-    if ( !dataRegions.isEmpty() && useCategories ) {
-        if ( overrideCategories )
+    if (!dataRegions.isEmpty() && useCategories) {
+        if (overrideCategories)
             categoryDataRegion = dataRegions.takeFirst();
         else
             dataRegions.removeFirst();
     }
-    if ( !dataRegions.isEmpty() && extractXData )
+    if (!dataRegions.isEmpty() && extractXData)
         xData = dataRegions.takeFirst();
 
     int dataSetNumber = 0;
     // Now assign all dataRegions to a number of data sets.
     // Here they're semantically seperated into x data, y data, etc.
-    while ( !dataRegions.isEmpty() ) {
+    while (!dataRegions.isEmpty()) {
         // Get a data set instance we can use
         DataSet *dataSet;
-        if ( !dataSetsToRecycle->isEmpty() )
+        if (!dataSetsToRecycle->isEmpty())
             dataSet = dataSetsToRecycle->takeFirst();
         else
-            dataSet = new DataSet( dataSetNumber );
+            dataSet = new DataSet(dataSetNumber);
 
         // category and x data are "global" regions shared among all data sets
-        dataSet->setCategoryDataRegion( categoryDataRegion );
-        dataSet->setXDataRegion( xData );
+        dataSet->setCategoryDataRegion(categoryDataRegion);
+        dataSet->setXDataRegion(xData);
         // Last row/column of this data set contains label (row/column
         // immediately before the next data set, thus (.. + 1) * .. - 1)
         int labelRowCol = (dataSetNumber + 1) * regionsPerDataSet - 1;
-        if ( labelRegion.hasPointAtIndex( labelRowCol ) ) {
-            QPoint point( labelRegion.pointAtIndex( labelRowCol ) );
-            dataSet->setLabelDataRegion( CellRegion( selection.table(), point ) );
+        if (labelRegion.hasPointAtIndex(labelRowCol)) {
+            QPoint point(labelRegion.pointAtIndex(labelRowCol));
+            dataSet->setLabelDataRegion(CellRegion(selection.table(), point));
         }
         else
-            dataSet->setLabelDataRegion( CellRegion() );
+            dataSet->setLabelDataRegion(CellRegion());
 
         // regions per data set: y data, custom data (e.g. bubble width)
-        dataSet->setYDataRegion( dataRegions.takeFirst() );
+        dataSet->setYDataRegion(dataRegions.takeFirst());
 
-        if ( !dataRegions.isEmpty() && dataDimensions > 2 )
-            dataSet->setCustomDataRegion( dataRegions.takeFirst() );
+        if (!dataRegions.isEmpty() && dataDimensions > 2)
+            dataSet->setCustomDataRegion(dataRegions.takeFirst());
         else
-            dataSet->setCustomDataRegion( CellRegion() );
+            dataSet->setCustomDataRegion(CellRegion());
 
-        createdDataSets.append( dataSet );
+        createdDataSets.append(dataSet);
 
         // Increment number at the very end!
         dataSetNumber++;
@@ -376,20 +376,20 @@ QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion( QList<DataSe
     return createdDataSets;
 }
 
-void ChartProxyModel::saveOdf( KoShapeSavingContext &context ) const
+void ChartProxyModel::saveOdf(KoShapeSavingContext &context) const
 {
-    foreach ( DataSet *dataSet, d->dataSets )
-        dataSet->saveOdf( context );
+    foreach (DataSet *dataSet, d->dataSets)
+        dataSet->saveOdf(context);
 }
 
 // This loads the properties of the datasets (chart:series).
 // FIXME: This is a strange place to load them (the proxy model)
-bool ChartProxyModel::loadOdf( const KoXmlElement &element,
-                               KoShapeLoadingContext &context )
+bool ChartProxyModel::loadOdf(const KoXmlElement &element,
+                               KoShapeLoadingContext &context)
 {
-    Q_ASSERT( d->isLoading );
+    Q_ASSERT(d->isLoading);
 
-    OdfLoadingHelper *helper = (OdfLoadingHelper*)context.sharedData( OdfLoadingHelperId );
+    OdfLoadingHelper *helper = (OdfLoadingHelper*)context.sharedData(OdfLoadingHelperId);
     bool ignoreCellRanges = helper->chartUsesInternalModelOnly;
 // Some OOo documents save incorrect cell ranges. For those this fix was intended.
 // Find out which documents exactly and only use fix for as few cases as possible.
@@ -402,18 +402,18 @@ bool ChartProxyModel::loadOdf( const KoXmlElement &element,
 
     beginResetModel();
 
-    if ( element.hasAttributeNS( KoXmlNS::chart, "style-name" ) ) {
+    if (element.hasAttributeNS(KoXmlNS::chart, "style-name")) {
         KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
         styleStack.clear();
-        context.odfLoadingContext().fillStyleStack( element, KoXmlNS::chart, "style-name", "chart" );
+        context.odfLoadingContext().fillStyleStack(element, KoXmlNS::chart, "style-name", "chart");
 
         // Data direction: It's in the plotarea style.
-        if ( styleStack.hasProperty( KoXmlNS::chart, "series-source" ) ) {
-            QString seriesSource = styleStack.property( KoXmlNS::chart, "series-source" );
+        if (styleStack.hasProperty(KoXmlNS::chart, "series-source")) {
+            QString seriesSource = styleStack.property(KoXmlNS::chart, "series-source");
             // Check if the direction for data series is vertical or horizontal.
-            if ( seriesSource == "rows" )
+            if (seriesSource == "rows")
                 d->dataDirection = Qt::Horizontal;
-            else if ( seriesSource == "columns" )
+            else if (seriesSource == "columns")
                 d->dataDirection = Qt::Vertical;
             // Otherwise leave our default value
         }
@@ -429,16 +429,16 @@ bool ChartProxyModel::loadOdf( const KoXmlElement &element,
     // contains the chart:categories element, the category data region
     // will automatically be set on every data set attached to that
     // axis. See Axis::attachDataSet().
-    if ( element.hasAttributeNS( KoXmlNS::chart, "data-source-has-labels" ) ) {
+    if (element.hasAttributeNS(KoXmlNS::chart, "data-source-has-labels")) {
         const QString dataSourceHasLabels
-            = element.attributeNS( KoXmlNS::chart, "data-source-has-labels" );
-        if ( dataSourceHasLabels == "both" ) {
+            = element.attributeNS(KoXmlNS::chart, "data-source-has-labels");
+        if (dataSourceHasLabels == "both") {
             d->firstRowIsLabel = true;
             d->firstColumnIsLabel = true;
-        } else if ( dataSourceHasLabels == "row" ) {
+        } else if (dataSourceHasLabels == "row") {
             d->firstRowIsLabel = true;
             d->firstColumnIsLabel = false;
-        } else if ( dataSourceHasLabels == "column" ) {
+        } else if (dataSourceHasLabels == "column") {
             d->firstRowIsLabel = false;
             d->firstColumnIsLabel = true;
         } else {
@@ -463,28 +463,28 @@ bool ChartProxyModel::loadOdf( const KoXmlElement &element,
     // data series, they'll be overwritten by these values.
     // Note: In case ignoreCellRanges is true, ChartShape::loadOdf() has
     // already made sure the proxy is reset with data from the internal model.
-    if ( !ignoreCellRanges &&
-         element.hasAttributeNS( KoXmlNS::table, "cell-range-address" ) )
+    if (!ignoreCellRanges &&
+         element.hasAttributeNS(KoXmlNS::table, "cell-range-address"))
     {
-        QString cellRangeAddress = element.attributeNS( KoXmlNS::table, "cell-range-address" );
-        d->selection = CellRegion( d->tableSource, cellRangeAddress );
+        QString cellRangeAddress = element.attributeNS(KoXmlNS::table, "cell-range-address");
+        d->selection = CellRegion(d->tableSource, cellRangeAddress);
     // Otherwise use all data from internal table
-    } else if ( helper->chartUsesInternalModelOnly ) {
+    } else if (helper->chartUsesInternalModelOnly) {
         QList<Table*> tables = helper->tableSource->tableMap().values();
-        Q_ASSERT( tables.count() == 1 );
+        Q_ASSERT(tables.count() == 1);
         Table *internalTable = tables.first();
-        Q_ASSERT( internalTable->model() );
+        Q_ASSERT(internalTable->model());
         int rowCount = internalTable->model()->rowCount();
         int colCount = internalTable->model()->columnCount();
-        d->selection = CellRegion( internalTable, QRect( 1, 1, colCount, rowCount ) );
+        d->selection = CellRegion(internalTable, QRect(1, 1, colCount, rowCount));
     }
 
     // This is what we'll use as basis for the data sets we "produce" from ODF.
     // This might be data sets that were "instantiated" from the internal
     // table or from an arbitrary selection of other tables as specified
     // in the PlotArea's table:cell-range-address attribute (parsed above).
-    QList<DataSet*> createdDataSets = d->createDataSetsFromRegion( &d->removedDataSets,
-                                                                   !helper->categoryRegionSpecifiedInXAxis );
+    QList<DataSet*> createdDataSets = d->createDataSetsFromRegion(&d->removedDataSets,
+                                                                   !helper->categoryRegionSpecifiedInXAxis);
 
     int loadedDataSetCount = 0;
 
@@ -493,65 +493,65 @@ bool ChartProxyModel::loadOdf( const KoXmlElement &element,
     QBrush brush;
     bool penLoaded = false;
     bool brushLoaded = false;
-    forEachElement ( n, element ) {
-        if ( n.namespaceURI() != KoXmlNS::chart )
+    forEachElement (n, element) {
+        if (n.namespaceURI() != KoXmlNS::chart)
             continue;
 
-        if ( n.localName() == "series" ) {
+        if (n.localName() == "series") {
             DataSet *dataSet;
-            if ( loadedDataSetCount < createdDataSets.size() ) {
+            if (loadedDataSetCount < createdDataSets.size()) {
                 dataSet = createdDataSets[loadedDataSetCount];
             } else {
                 // the datasetnumber needs to be known at construction time, to ensure
                 // default colors are set correctly
-                dataSet = new DataSet( d->dataSets.size() );
+                dataSet = new DataSet(d->dataSets.size());
             }
-            d->dataSets.append( dataSet );
-            if ( d->categoryDataRegion.isValid() )
+            d->dataSets.append(dataSet);
+            if (d->categoryDataRegion.isValid())
             {
-                dataSet->setCategoryDataRegion( d->categoryDataRegion );
+                dataSet->setCategoryDataRegion(d->categoryDataRegion);
             }
-            dataSet->loadOdf( n, context );
-            if ( penLoaded )
-                dataSet->setPen( p );
-            if ( brushLoaded )
-                dataSet->setBrush( brush );
+            dataSet->loadOdf(n, context);
+            if (penLoaded)
+                dataSet->setPen(p);
+            if (brushLoaded)
+                dataSet->setBrush(brush);
 
             ++loadedDataSetCount;
-        } else if ( n.localName() == "stock-range-line" ) {
+        } else if (n.localName() == "stock-range-line") {
             KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
             styleStack.clear();
 
-            context.odfLoadingContext().fillStyleStack( n, KoXmlNS::chart, "style-name", "chart" );
-            if ( n.hasAttributeNS( KoXmlNS::chart, "style-name" ) ) {
+            context.odfLoadingContext().fillStyleStack(n, KoXmlNS::chart, "style-name", "chart");
+            if (n.hasAttributeNS(KoXmlNS::chart, "style-name")) {
                 KoOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
                 brushLoaded = false;
                 penLoaded = false;
 
-                styleStack.setTypeProperties( "graphic" );
+                styleStack.setTypeProperties("graphic");
 
-                if ( styleStack.hasProperty( KoXmlNS::svg, "stroke-color" ) ) {
-                    QString stroke = "solid";/*styleStack.property( KoXmlNS::svg, "stroke-color" );*/
-                    p = KoOdfGraphicStyles::loadOdfStrokeStyle( styleStack, stroke, odfLoadingContext.stylesReader() );
+                if (styleStack.hasProperty(KoXmlNS::svg, "stroke-color")) {
+                    QString stroke = "solid";/*styleStack.property(KoXmlNS::svg, "stroke-color");*/
+                    p = KoOdfGraphicStyles::loadOdfStrokeStyle(styleStack, stroke, odfLoadingContext.stylesReader());
                     penLoaded = true;
-                    Q_FOREACH( DataSet* set, d->dataSets )
+                    Q_FOREACH(DataSet* set, d->dataSets)
                     {
-                        set->setPen( p );
+                        set->setPen(p);
                     }
                 }
 
-                if ( styleStack.hasProperty( KoXmlNS::draw, "fill" ) ) {
-                    QString fill = styleStack.property( KoXmlNS::draw, "fill" );
-                    if ( fill == "solid" || fill == "hatch" ) {
-                        brush = KoOdfGraphicStyles::loadOdfFillStyle( styleStack, fill, odfLoadingContext.stylesReader() );
+                if (styleStack.hasProperty(KoXmlNS::draw, "fill")) {
+                    QString fill = styleStack.property(KoXmlNS::draw, "fill");
+                    if (fill == "solid" || fill == "hatch") {
+                        brush = KoOdfGraphicStyles::loadOdfFillStyle(styleStack, fill, odfLoadingContext.stylesReader());
                         brushLoaded = true;
-                    } else if ( fill == "gradient" ) {
-                        brush = KoOdfGraphicStyles::loadOdfGradientStyle( styleStack, odfLoadingContext.stylesReader(), QSizeF( 5.0, 60.0 ) );
+                    } else if (fill == "gradient") {
+                        brush = KoOdfGraphicStyles::loadOdfGradientStyle(styleStack, odfLoadingContext.stylesReader(), QSizeF(5.0, 60.0));
                         brushLoaded = true;
                     }
-                    Q_FOREACH( DataSet* set, d->dataSets )
+                    Q_FOREACH(DataSet* set, d->dataSets)
                     {
-                        set->setBrush( brush );
+                        set->setBrush(brush);
                     }
                 }
             }
@@ -567,87 +567,87 @@ bool ChartProxyModel::loadOdf( const KoXmlElement &element,
 }
 
 
-QVariant ChartProxyModel::data( const QModelIndex &index,
-                                int role ) const
+QVariant ChartProxyModel::data(const QModelIndex &index,
+                                int role) const
 {
-    Q_UNUSED( index );
-    Q_UNUSED( role );
-    Q_ASSERT( "To be implemented" );
+    Q_UNUSED(index);
+    Q_UNUSED(role);
+    Q_ASSERT("To be implemented");
     return QVariant();
 }
 
-void ChartProxyModel::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+void ChartProxyModel::dataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
-    QPoint topLeftPoint( topLeft.column() + 1, topLeft.row() + 1 );
+    QPoint topLeftPoint(topLeft.column() + 1, topLeft.row() + 1);
 
     // Excerpt from the Qt reference for QRect::bottomRight() which is
     // used for calculating bottomRight.  Note that for historical
     // reasons this function returns
     //   QPoint(left() + width() -1, top() + height() - 1).
-    QPoint bottomRightPoint( bottomRight.column() + 1, bottomRight.row() + 1 );
-    QRect dataChangedRect = QRect( topLeftPoint,
-                                   QSize( bottomRightPoint.x() - topLeftPoint.x() + 1,
-                                          bottomRightPoint.y() - topLeftPoint.y() + 1 ) );
+    QPoint bottomRightPoint(bottomRight.column() + 1, bottomRight.row() + 1);
+    QRect dataChangedRect = QRect(topLeftPoint,
+                                   QSize(bottomRightPoint.x() - topLeftPoint.x() + 1,
+                                          bottomRightPoint.y() - topLeftPoint.y() + 1));
     // Precisely determine what data in what table changed so that we don't
     // do unnecessary, expensive updates.
-    Table *table = d->tableSource->get( topLeft.model() );
-    CellRegion dataChangedRegion( table, dataChangedRect );
+    Table *table = d->tableSource->get(topLeft.model());
+    CellRegion dataChangedRegion(table, dataChangedRect);
 
-    foreach ( DataSet *dataSet, d->dataSets ) {
-        if ( dataSet->xDataRegion().intersects( dataChangedRegion ) )
-            dataSet->xDataChanged( QRect() );
+    foreach (DataSet *dataSet, d->dataSets) {
+        if (dataSet->xDataRegion().intersects(dataChangedRegion))
+            dataSet->xDataChanged(QRect());
 
-        if ( dataSet->yDataRegion().intersects( dataChangedRegion ) )
-            dataSet->yDataChanged( QRect() );
+        if (dataSet->yDataRegion().intersects(dataChangedRegion))
+            dataSet->yDataChanged(QRect());
 
-        if ( dataSet->categoryDataRegion().intersects( dataChangedRegion ) )
-            dataSet->categoryDataChanged( QRect() );
+        if (dataSet->categoryDataRegion().intersects(dataChangedRegion))
+            dataSet->categoryDataChanged(QRect());
 
-        if ( dataSet->labelDataRegion().intersects( dataChangedRegion ) )
-            dataSet->labelDataChanged( QRect() );
+        if (dataSet->labelDataRegion().intersects(dataChangedRegion))
+            dataSet->labelDataChanged(QRect());
 
-        if ( dataSet->customDataRegion().intersects( dataChangedRegion ) )
-            dataSet->customDataChanged( QRect() );
+        if (dataSet->customDataRegion().intersects(dataChangedRegion))
+            dataSet->customDataChanged(QRect());
     }
 
     emit dataChanged();
 }
 
 
-QVariant ChartProxyModel::headerData( int section,
+QVariant ChartProxyModel::headerData(int section,
                                       Qt::Orientation orientation,
-                                      int role /* = Qt::DisplayRole */ ) const
+                                      int role /* = Qt::DisplayRole */) const
 {
-    Q_UNUSED( section );
-    Q_UNUSED( orientation );
-    Q_UNUSED( role );
-    Q_ASSERT( "To be implemented" );
+    Q_UNUSED(section);
+    Q_UNUSED(orientation);
+    Q_UNUSED(role);
+    Q_ASSERT("To be implemented");
     return QVariant();
 }
 
 
-QModelIndex ChartProxyModel::parent( const QModelIndex &index ) const
+QModelIndex ChartProxyModel::parent(const QModelIndex &index) const
 {
-    Q_UNUSED( index );
+    Q_UNUSED(index);
 
     return QModelIndex();
 }
 
-int ChartProxyModel::rowCount( const QModelIndex &/*parent  = QModelIndex() */ ) const
+int ChartProxyModel::rowCount(const QModelIndex &/*parent  = QModelIndex() */) const
 {
     return d->dataSets.count();
 }
 
 
-int ChartProxyModel::columnCount( const QModelIndex &/*parent = QModelIndex() */ ) const
+int ChartProxyModel::columnCount(const QModelIndex &/*parent = QModelIndex() */) const
 {
     // FIXME: Replace this by the actual column count once the proxy is properly being used.
     return INT_MAX;
 }
 
-void ChartProxyModel::setFirstRowIsLabel( bool b )
+void ChartProxyModel::setFirstRowIsLabel(bool b)
 {
-    if ( b == d->firstRowIsLabel )
+    if (b == d->firstRowIsLabel)
         return;
 
     d->firstRowIsLabel = b;
@@ -655,9 +655,9 @@ void ChartProxyModel::setFirstRowIsLabel( bool b )
 }
 
 
-void ChartProxyModel::setFirstColumnIsLabel( bool b )
+void ChartProxyModel::setFirstColumnIsLabel(bool b)
 {
-    if ( b == d->firstColumnIsLabel )
+    if (b == d->firstColumnIsLabel)
         return;
 
     d->firstColumnIsLabel = b;
@@ -677,7 +677,7 @@ void ChartProxyModel::invalidateDataSets()
 
 void ChartProxyModel::beginLoading()
 {
-    Q_ASSERT( !d->isLoading );
+    Q_ASSERT(!d->isLoading);
     // FIXME: invalidateDataSets() used to be called explicitly at the beginning
     // of ChartShape::loadOdf(). Now beginLoading() is called instead.
     // So, is invalidateDataSets() still necessary here?
@@ -687,7 +687,7 @@ void ChartProxyModel::beginLoading()
 
 void ChartProxyModel::endLoading()
 {
-    Q_ASSERT( d->isLoading );
+    Q_ASSERT(d->isLoading);
     d->isLoading = false;
 
     // Doing this here is wrong, the data set's cell regions set in
@@ -695,18 +695,18 @@ void ChartProxyModel::endLoading()
     // d->rebuildDataMap();
 }
 
-void ChartProxyModel::setDataDirection( Qt::Orientation orientation )
+void ChartProxyModel::setDataDirection(Qt::Orientation orientation)
 {
-    if ( d->dataDirection == orientation )
+    if (d->dataDirection == orientation)
         return;
 
     d->dataDirection = orientation;
     d->rebuildDataMap();
 }
 
-void ChartProxyModel::setDataDimensions( int dimensions )
+void ChartProxyModel::setDataDimensions(int dimensions)
 {
-    if ( d->dataDimensions == dimensions )
+    if (d->dataDimensions == dimensions)
         return;
 
     d->dataDimensions = dimensions;
@@ -728,7 +728,7 @@ CellRegion ChartProxyModel::categoryDataRegion() const
     return d->categoryDataRegion;
 }
 
-void ChartProxyModel::setCategoryDataRegion( const CellRegion &region )
+void ChartProxyModel::setCategoryDataRegion(const CellRegion &region)
 {
     d->categoryDataRegion = region;
 }

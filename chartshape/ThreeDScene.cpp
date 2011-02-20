@@ -47,7 +47,7 @@ ThreeDScene::Private::~Private()
 using namespace KChart;
 
 ThreeDScene::ThreeDScene()
-    : d( new Private )
+    : d(new Private)
 {
 }
 

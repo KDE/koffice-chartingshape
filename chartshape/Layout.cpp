@@ -32,9 +32,9 @@ using namespace KChart;
 
 
 // Static helper methods (defined at end of file)
-static QPointF itemPosition( KoShape *shape );
-static QSizeF itemSize( KoShape *shape );
-static void setItemPosition( KoShape *shape, const QPointF& pos );
+static QPointF itemPosition(KoShape *shape);
+static QSizeF itemSize(KoShape *shape);
+static void setItemPosition(KoShape *shape, const QPointF& pos);
 
 class Layout::LayoutData
 {
@@ -44,59 +44,59 @@ public:
     bool clipped;
     bool inheritsTransform;
 
-    LayoutData( Position _pos, int _weight )
-        : pos( _pos ),
-          weight( _weight ),
-          clipped( true ),
+    LayoutData(Position _pos, int _weight)
+        : pos(_pos),
+          weight(_weight),
+          clipped(true),
           inheritsTransform(true) {}
 };
 
 Layout::Layout()
-    : m_doingLayout( false )
-    , m_relayoutScheduled( false )
+    : m_doingLayout(false)
+    , m_relayoutScheduled(false)
 {
 }
 
 Layout::~Layout()
 {
-    foreach( LayoutData *data, m_layoutItems.values() )
+    foreach(LayoutData *data, m_layoutItems.values())
         delete data;
 }
 
-void Layout::add( KoShape *shape )
+void Layout::add(KoShape *shape)
 {
-    Q_ASSERT( !m_layoutItems.contains( shape ) );
-    m_layoutItems.insert( shape, new LayoutData( FloatingPosition, 0 ) );
+    Q_ASSERT(!m_layoutItems.contains(shape));
+    m_layoutItems.insert(shape, new LayoutData(FloatingPosition, 0));
     scheduleRelayout();
 }
 
-void Layout::add( KoShape *shape, Position pos, int weight )
+void Layout::add(KoShape *shape, Position pos, int weight)
 {
-    Q_ASSERT( !m_layoutItems.contains( shape ) );
-    m_layoutItems.insert( shape, new LayoutData( pos, weight ) );
+    Q_ASSERT(!m_layoutItems.contains(shape));
+    m_layoutItems.insert(shape, new LayoutData(pos, weight));
     scheduleRelayout();
 }
 
-void Layout::remove( KoShape *shape )
+void Layout::remove(KoShape *shape)
 {
-    if ( m_layoutItems.contains( shape ) ) {
+    if (m_layoutItems.contains(shape)) {
         // delete LayoutData
-        delete m_layoutItems.value( shape );
-        m_layoutItems.remove( shape );
+        delete m_layoutItems.value(shape);
+        m_layoutItems.remove(shape);
         scheduleRelayout();
     }
 }
 
-void Layout::setClipped( const KoShape *shape, bool clipping )
+void Layout::setClipped(const KoShape *shape, bool clipping)
 {
-    Q_ASSERT( m_layoutItems.contains( const_cast<KoShape*>(shape) ) );
-    m_layoutItems.value( const_cast<KoShape*>(shape) )->clipped = clipping;
+    Q_ASSERT(m_layoutItems.contains(const_cast<KoShape*>(shape)));
+    m_layoutItems.value(const_cast<KoShape*>(shape))->clipped = clipping;
 }
 
-bool Layout::isClipped( const KoShape *shape ) const
+bool Layout::isClipped(const KoShape *shape) const
 {
-    Q_ASSERT( m_layoutItems.contains( const_cast<KoShape*>(shape) ) );
-    return m_layoutItems.value( const_cast<KoShape*>(shape) )->clipped;
+    Q_ASSERT(m_layoutItems.contains(const_cast<KoShape*>(shape)));
+    return m_layoutItems.value(const_cast<KoShape*>(shape))->clipped;
 }
 
 void Layout::setInheritsTransform(const KoShape *shape, bool inherit)
@@ -119,9 +119,9 @@ QList<KoShape*> Layout::shapes() const
     return m_layoutItems.keys();
 }
 
-void Layout::containerChanged( KoShapeContainer *container, KoShape::ChangeType type )
+void Layout::containerChanged(KoShapeContainer *container, KoShape::ChangeType type)
 {
-    switch( type ) {
+    switch(type) {
     case KoShape::SizeChanged:
         m_containerSize = container->size();
         scheduleRelayout();
@@ -131,31 +131,31 @@ void Layout::containerChanged( KoShapeContainer *container, KoShape::ChangeType 
     }
 }
 
-bool Layout::isChildLocked( const KoShape *shape ) const
+bool Layout::isChildLocked(const KoShape *shape) const
 {
     return shape->isGeometryProtected();
 }
 
-void Layout::setPosition( const KoShape *shape, Position pos, int weight )
+void Layout::setPosition(const KoShape *shape, Position pos, int weight)
 {
-    Q_ASSERT( m_layoutItems.contains( const_cast<KoShape*>(shape) ) );
-    LayoutData *data = m_layoutItems.value( const_cast<KoShape*>(shape) );
+    Q_ASSERT(m_layoutItems.contains(const_cast<KoShape*>(shape)));
+    LayoutData *data = m_layoutItems.value(const_cast<KoShape*>(shape));
     data->pos = pos;
     data->weight = weight;
     scheduleRelayout();
 }
 
-void Layout::childChanged( KoShape *shape, KoShape::ChangeType type )
+void Layout::childChanged(KoShape *shape, KoShape::ChangeType type)
 {
-    Q_UNUSED( shape );
+    Q_UNUSED(shape);
 
     // Do not relayout again if we're currently in the process of a relayout.
     // Repositioning a layout item or resizing it will result in a cull of this method.
-    if ( m_doingLayout )
+    if (m_doingLayout)
         return;
 
     // This can be fine-tuned, but right now, simply everything will be re-layouted.
-    switch ( type ) {
+    switch (type) {
     case KoShape::PositionChanged:
     case KoShape::SizeChanged:
         scheduleRelayout();
@@ -173,9 +173,9 @@ void Layout::scheduleRelayout()
 
 void Layout::layout()
 {
-    Q_ASSERT( !m_doingLayout );
+    Q_ASSERT(!m_doingLayout);
 
-    if ( !m_relayoutScheduled )
+    if (!m_relayoutScheduled)
         return;
 
     m_doingLayout = true;
@@ -187,25 +187,25 @@ void Layout::layout()
             *bottomEnd   = 0,
             *p      = 0;
 
-    QMapIterator<KoShape*, LayoutData*> it( m_layoutItems );
-    while ( it.hasNext() ) {
+    QMapIterator<KoShape*, LayoutData*> it(m_layoutItems);
+    while (it.hasNext()) {
         it.next();
         KoShape *shape = it.key();
-        if ( !shape->isVisible() )
+        if (!shape->isVisible())
             continue;
         LayoutData *data = it.value();
-        switch ( data->pos ) {
+        switch (data->pos) {
         case TopPosition:
-            top.insert( data->weight, shape );
+            top.insert(data->weight, shape);
             break;
         case BottomPosition:
-            bottom.insert( data->weight, shape );
+            bottom.insert(data->weight, shape);
             break;
         case StartPosition:
-            start.insert( data->weight, shape );
+            start.insert(data->weight, shape);
             break;
         case EndPosition:
-            end.insert( data->weight, shape );
+            end.insert(data->weight, shape);
             break;
         case TopStartPosition:
             topStart = shape;
@@ -228,19 +228,19 @@ void Layout::layout()
         }
     }
 
-    qreal topY = layoutTop( top );
-    qreal bottomY = layoutBottom( bottom );
-    qreal startX = layoutStart( start );
-    qreal endX = layoutEnd( end );
-    if ( p ) {
-        setItemPosition( p, QPointF( startX, topY ) );
-        p->setSize( QSizeF( endX - startX, bottomY - topY ) );
+    qreal topY = layoutTop(top);
+    qreal bottomY = layoutBottom(bottom);
+    qreal startX = layoutStart(start);
+    qreal endX = layoutEnd(end);
+    if (p) {
+        setItemPosition(p, QPointF(startX, topY));
+        p->setSize(QSizeF(endX - startX, bottomY - topY));
     }
 
-    layoutTopStart( topStart );
-    layoutBottomStart( bottomStart );
-    layoutTopEnd( topEnd );
-    layoutBottomEnd( bottomEnd );
+    layoutTopStart(topStart);
+    layoutBottomStart(bottomStart);
+    layoutTopEnd(topEnd);
+    layoutBottomEnd(bottomEnd);
 
     m_doingLayout = false;
     m_relayoutScheduled = false;
@@ -252,101 +252,101 @@ void Layout::layout()
 
 
 
-qreal Layout::layoutTop( const QMap<int, KoShape*>& shapes )
+qreal Layout::layoutTop(const QMap<int, KoShape*>& shapes)
 {
     qreal top = 0.0;
     qreal pX = m_containerSize.width() / 2.0;
-    foreach( KoShape *shape, shapes ) {
-        QSizeF size = itemSize( shape );
-        setItemPosition( shape, QPointF( pX - size.width() / 2.0, top ) );
+    foreach(KoShape *shape, shapes) {
+        QSizeF size = itemSize(shape);
+        setItemPosition(shape, QPointF(pX - size.width() / 2.0, top));
         top += size.height();
     }
     return top;
 }
 
-qreal Layout::layoutBottom( const QMap<int, KoShape*>& shapes )
+qreal Layout::layoutBottom(const QMap<int, KoShape*>& shapes)
 {
     qreal bottom = m_containerSize.height();
     qreal pX = m_containerSize.width() / 2.0;
-    foreach( KoShape *shape, shapes ) {
-        QSizeF size = itemSize( shape );
+    foreach(KoShape *shape, shapes) {
+        QSizeF size = itemSize(shape);
         bottom -= size.height();
-        setItemPosition( shape, QPointF( pX - size.width() / 2.0, bottom ) );
+        setItemPosition(shape, QPointF(pX - size.width() / 2.0, bottom));
     }
     return bottom;
 }
 
-qreal Layout::layoutStart( const QMap<int, KoShape*>& shapes )
+qreal Layout::layoutStart(const QMap<int, KoShape*>& shapes)
 {
     qreal start = 0.0;
     qreal pY = m_containerSize.height() / 2.0;
-    foreach( KoShape *shape, shapes ) {
-        QSizeF size = itemSize( shape );
-        setItemPosition( shape, QPointF( start, pY - size.height() / 2.0 ) );
+    foreach(KoShape *shape, shapes) {
+        QSizeF size = itemSize(shape);
+        setItemPosition(shape, QPointF(start, pY - size.height() / 2.0));
         start += size.width();
     }
     return start;
 }
 
-qreal Layout::layoutEnd( const QMap<int, KoShape*>& shapes )
+qreal Layout::layoutEnd(const QMap<int, KoShape*>& shapes)
 {
     qreal end = m_containerSize.width();
     qreal pY = m_containerSize.height() / 2.0;
-    foreach( KoShape *shape, shapes ) {
-        QSizeF size = itemSize( shape );
+    foreach(KoShape *shape, shapes) {
+        QSizeF size = itemSize(shape);
         end -= size.width();
-        setItemPosition( shape, QPointF( end, pY - size.height() / 2.0 ) );
+        setItemPosition(shape, QPointF(end, pY - size.height() / 2.0));
     }
     return end;
 }
 
-void Layout::layoutTopStart( KoShape *shape )
+void Layout::layoutTopStart(KoShape *shape)
 {
-    if ( !shape )
+    if (!shape)
         return;
-    setItemPosition( shape, QPointF( 0, 0 ) );
+    setItemPosition(shape, QPointF(0, 0));
 }
 
-void Layout::layoutBottomStart( KoShape *shape )
+void Layout::layoutBottomStart(KoShape *shape)
 {
-    if ( !shape )
+    if (!shape)
         return;
-    setItemPosition( shape, QPointF( 0, m_containerSize.height() - itemSize( shape ).height() ) );
+    setItemPosition(shape, QPointF(0, m_containerSize.height() - itemSize(shape).height()));
 }
 
-void Layout::layoutTopEnd( KoShape *shape )
+void Layout::layoutTopEnd(KoShape *shape)
 {
-    if ( !shape )
+    if (!shape)
         return;
-    setItemPosition( shape, QPointF( m_containerSize.width() - itemSize( shape ).width(), 0 ) );
+    setItemPosition(shape, QPointF(m_containerSize.width() - itemSize(shape).width(), 0));
 }
 
-void Layout::layoutBottomEnd( KoShape *shape )
+void Layout::layoutBottomEnd(KoShape *shape)
 {
-    if ( !shape )
+    if (!shape)
         return;
-    const QSizeF size = itemSize( shape );
-    setItemPosition( shape, QPointF( m_containerSize.width()  - size.width(),
-                                     m_containerSize.height() - size.height() ) );
+    const QSizeF size = itemSize(shape);
+    setItemPosition(shape, QPointF(m_containerSize.width()  - size.width(),
+                                     m_containerSize.height() - size.height()));
 }
 
 
 /// Static Helper Methods
 
-static QPointF itemPosition( KoShape *shape )
+static QPointF itemPosition(KoShape *shape)
 {
-    const QRectF boundingRect = QRectF( QPointF( 0, 0 ), shape->size() );
-    return shape->transformation().mapRect( boundingRect ).topLeft();
+    const QRectF boundingRect = QRectF(QPointF(0, 0), shape->size());
+    return shape->transformation().mapRect(boundingRect).topLeft();
 }
 
-static QSizeF itemSize( KoShape *shape )
+static QSizeF itemSize(KoShape *shape)
 {
-    const QRectF boundingRect = QRectF( QPointF( 0, 0 ), shape->size() );
-    return shape->transformation().mapRect( boundingRect ).size();
+    const QRectF boundingRect = QRectF(QPointF(0, 0), shape->size());
+    return shape->transformation().mapRect(boundingRect).size();
 }
 
-static void setItemPosition( KoShape *shape, const QPointF& pos )
+static void setItemPosition(KoShape *shape, const QPointF& pos)
 {
-    const QPointF offset =  shape->position() - itemPosition( shape );
-    shape->setPosition( pos + offset );
+    const QPointF offset =  shape->position() - itemPosition(shape);
+    shape->setPosition(pos + offset);
 }

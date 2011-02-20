@@ -49,7 +49,7 @@
 
 namespace KChart {
 
-ChartTableModel::ChartTableModel( QObject *parent /* = 0 */)
+ChartTableModel::ChartTableModel(QObject *parent /* = 0 */)
     : QStandardItemModel(parent)
 {
 }
@@ -65,15 +65,15 @@ QHash<QString, QVector<QRect> > ChartTableModel::cellRegion() const
     return QHash<QString, QVector<QRect> >();
 }
 
-bool ChartTableModel::setCellRegion( const QString& /*regionName*/ )
+bool ChartTableModel::setCellRegion(const QString& /*regionName*/)
 {
 #if 0 // FIXME: What does this code do?
     int result = 0;
 
     const int size = regionName.size();
-    for ( int i = 0; i < size; i++ ) {
-        result += ( CellRegion::rangeCharToInt( regionName[i].toAscii() )
-                    * std::pow( 10.0, ( size - i - 1 ) ) );
+    for (int i = 0; i < size; i++) {
+        result += (CellRegion::rangeCharToInt(regionName[i].toAscii())
+                    * std::pow(10.0, (size - i - 1)));
     }
 
     return result;
@@ -81,22 +81,22 @@ bool ChartTableModel::setCellRegion( const QString& /*regionName*/ )
     return true;
 }
 
-bool ChartTableModel::isCellRegionValid( const QString& regionName ) const
+bool ChartTableModel::isCellRegionValid(const QString& regionName) const
 {
-    Q_UNUSED( regionName );
+    Q_UNUSED(regionName);
 
     return true;
 }
 
-bool ChartTableModel::loadOdf( const KoXmlElement &tableElement,
-                               KoShapeLoadingContext &context )
+bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
+                               KoShapeLoadingContext &context)
 {
-    Q_UNUSED( context );
+    Q_UNUSED(context);
 
-    setRowCount( 0 );
-    setColumnCount( 0 );
+    setRowCount(0);
+    setColumnCount(0);
 
-    ///const QDomNode &node = tableElement.asQDomNode( QDomDocument() );
+    ///const QDomNode &node = tableElement.asQDomNode(QDomDocument());
 
     //QTextStream stream(stdout);
     //stream << node;
@@ -107,49 +107,49 @@ bool ChartTableModel::loadOdf( const KoXmlElement &tableElement,
     int           row = 0;
     KoXmlElement  n;
     int           found = false;
-    forEachElement ( n, tableElement ) {
-        if ( n.namespaceURI() != KoXmlNS::table )
+    forEachElement (n, tableElement) {
+        if (n.namespaceURI() != KoXmlNS::table)
             continue;
 
-        if ( n.localName() == "table-rows"
-             || n.localName() == "table-header-rows" )
+        if (n.localName() == "table-rows"
+             || n.localName() == "table-header-rows")
         {
             found = true;
 
             KoXmlElement  _n;
-            forEachElement ( _n, n ) {
+            forEachElement (_n, n) {
 
                 // Must be a table:table-row, else go to next element.
-                if ( _n.namespaceURI() != KoXmlNS::table
-                     || _n.localName() != "table-row" )
+                if (_n.namespaceURI() != KoXmlNS::table
+                     || _n.localName() != "table-row")
                     continue;
 
                 // Add a row to the internal representation.
-                setRowCount( rowCount() + 1 );
+                setRowCount(rowCount() + 1);
 
                 // Loop through all cells in a table row.
                 int           column = 0;
                 KoXmlElement  __n;
-                forEachElement ( __n, _n ) {
+                forEachElement (__n, _n) {
 
                     // Must be a table:table-cell, otherwise go to
                     // next element.
-                    if ( __n.namespaceURI() == KoXmlNS::table
-                         && __n.localName() == "table-cell" )
+                    if (__n.namespaceURI() == KoXmlNS::table
+                         && __n.localName() == "table-cell")
                     {
 //                         continue;
 
                     // If this row is wider than any previous one,
                     // then add another column.
                     // Is this efficient enough?
-                    if ( column >= columnCount() )
-                        setColumnCount( columnCount() + 1 );
+                    if (column >= columnCount())
+                        setColumnCount(columnCount() + 1);
 
-                    const QString valueType = __n.attributeNS( KoXmlNS::office, "value-type" );
+                    const QString valueType = __n.attributeNS(KoXmlNS::office, "value-type");
 
-                    QString valueString = __n.attributeNS( KoXmlNS::office, "value" );
-                    const KoXmlElement valueElement = __n.namedItemNS( KoXmlNS::text, "p" ).toElement();
-                    if ( ( valueElement.isNull() || !valueElement.isElement() ) && valueString.isEmpty() )
+                    QString valueString = __n.attributeNS(KoXmlNS::office, "value");
+                    const KoXmlElement valueElement = __n.namedItemNS(KoXmlNS::text, "p").toElement();
+                    if ((valueElement.isNull() || !valueElement.isElement()) && valueString.isEmpty())
                     {
                         qWarning() << "ChartTableModel::loadOdf(): Cell contains no valid <text:p> element, cannnot load cell data.";
                         // Even if it doesn't contain any value, it's still a cell.
@@ -159,16 +159,16 @@ bool ChartTableModel::loadOdf( const KoXmlElement &tableElement,
 
                     // Read the actual value in the cell.
                     QVariant value;
-                    if ( valueString.isEmpty() )
+                    if (valueString.isEmpty())
                         valueString = valueElement.text();
-                    if ( valueType == "float" )
+                    if (valueType == "float")
                         value = valueString.toDouble();
-                    else if ( valueType == "boolean" )
+                    else if (valueType == "boolean")
                         value = (bool)valueString.toInt();
-                    else // if ( valueType == "string" )
+                    else // if (valueType == "string")
                         value = valueString;
 
-                    setData( index( row, column ), value );
+                    setData(index(row, column), value);
 
                     ++column;
                     }
@@ -183,7 +183,7 @@ bool ChartTableModel::loadOdf( const KoXmlElement &tableElement,
     return found;
 }
 
-bool ChartTableModel::saveOdf( KoXmlWriter &bodyWriter, KoGenStyles &mainStyles ) const
+bool ChartTableModel::saveOdf(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) const
 {
     Q_UNUSED(bodyWriter);
     Q_UNUSED(mainStyles);
