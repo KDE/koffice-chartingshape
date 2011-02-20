@@ -12,5 +12,4 @@ add_subdirectory(chartshape)
 
 # The following two dirs have been disabled since before the conversion to git
 # add_subdirectory(filters)
-# add_subdirectory(kchart)
 
