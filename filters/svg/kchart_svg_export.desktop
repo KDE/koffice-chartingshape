@@ -2,6 +2,7 @@
 Type=Service
 Name=KChart SVG Export Filter
 Name[cs]=Exportní filtr do formátu SVG pro KChart
+Name[de]=KChart-SVG-Exportfilter
 Name[et]=KCharti SVG ekspordifilter
 Name[nds]=SVG-Exportfilter för KChart
 Name[nl]=SVG-exportfilter voor KChart
