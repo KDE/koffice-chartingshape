@@ -224,7 +224,7 @@ void ChartTool::mouseReleaseEvent(KoPointerEvent *event)
 
 void ChartTool::activate(ToolActivation, const QSet<KoShape*> &)
 {
-    useCursor(Qt::ArrowCursor);
+    setCursor(Qt::ArrowCursor);
 }
 
 void ChartTool::deactivate()
