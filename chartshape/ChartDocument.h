@@ -23,8 +23,6 @@
 
 // KOffice
 #include <KoDocument.h>
-#include <KoXmlReaderForward.h>
-
 
 class QIODevice;
 class KoView;

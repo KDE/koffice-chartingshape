@@ -51,10 +51,10 @@ class KoResourceManager;
 class KoShapeLoadingContext;
 class KoShapeSavingContext;
 class KoStore;
-#include "KoXmlReaderForward.h"
 class KoXmlWriter;
 class KoGenStyles;
 class KoOdfStylesReader;
+class KoXmlDocument;
 
 // FIXME: Remove all mentions of KDChart from the public API.
 namespace KDChart {
