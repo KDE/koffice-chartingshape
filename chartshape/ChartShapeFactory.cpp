@@ -66,12 +66,6 @@ ChartShapeFactory::ChartShapeFactory(QObject* parent)
 
     KIconLoader::global()->addAppDir("kchart");
     setIcon("kchart");
-
-    // Default 'app specific' config pages i.e. unless an app defines
-    // other config pages, these are used.
-    QList<KoShapeConfigFactoryBase*> panelFactories;
-    // panelFactories.append(new ChartDataConfigFactory());
-    setOptionPanels(panelFactories);
 }
 
 
