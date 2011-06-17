@@ -30,7 +30,7 @@
 
 
 ChartToolFactory::ChartToolFactory(QObject *parent)
-    : KoToolFactoryBase(parent, "ChartToolFactory_ID")
+    : KToolFactoryBase(parent, "ChartToolFactory_ID")
 {
     setToolTip (i18n("Chart Editing Tool"));
     setToolType (dynamicToolType());
@@ -43,7 +43,7 @@ ChartToolFactory::~ChartToolFactory()
 {
 }
 
-KoToolBase *ChartToolFactory::createTool(KoCanvasBase *canvas)
+KToolBase *ChartToolFactory::createTool(KCanvasBase *canvas)
 {
     return new ChartTool(canvas);
 }

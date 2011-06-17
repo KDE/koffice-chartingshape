@@ -28,22 +28,22 @@
 #include <QTextDocument>
 
 // KOffice
-#include <KoShapeLoadingContext.h>
-#include <KoShapeSavingContext.h>
-#include <KoShapeRegistry.h>
-#include <KoXmlReader.h>
-#include <KoXmlWriter.h>
-#include <KoGenStyles.h>
-#include <KoXmlNS.h>
-#include <KoTextShapeData.h>
-#include <KoOdfStylesReader.h>
-#include <KoUnit.h>
-#include <KoStyleStack.h>
-#include <KoOdfLoadingContext.h>
-#include <KoCharacterStyle.h>
-#include <KoOdfGraphicStyles.h>
+#include <KShapeLoadingContext.h>
+#include <KShapeSavingContext.h>
+#include <KShapeRegistry.h>
+#include <KXmlReader.h>
+#include <KXmlWriter.h>
+#include <KOdfGenericStyles.h>
+#include <KOdfXmlNS.h>
+#include <KTextShapeData.h>
+#include <KOdfStylesReader.h>
+#include <KUnit.h>
+#include <KOdfStyleStack.h>
+#include <KOdfLoadingContext.h>
+#include <KCharacterStyle.h>
+#include <KOdf.h>
 #include <KoOdfWorkaround.h>
-#include <KoTextDocumentLayout.h>
+#include <KTextDocumentLayout.h>
 
 // KDChart
 #include <KDChartChart>
@@ -118,7 +118,7 @@ public:
 
     const AxisDimension dimension;
 
-    KoShape *title;
+    KShape *title;
     TextLabelData *titleData;
 
     /// FIXME: Unused variable 'id', including id() getter
@@ -792,7 +792,7 @@ Axis::Axis(PlotArea *parent, AxisDimension dimension)
     d->plotAreaChartType    = d->plotArea->chartType();
     d->plotAreaChartSubType = d->plotArea->chartSubType();
 
-    KoShapeFactoryBase *textShapeFactory = KoShapeRegistry::instance()->value(TextShapeId);
+    KShapeFactoryBase *textShapeFactory = KShapeRegistry::instance()->value(TextShapeId);
     if (textShapeFactory)
         d->title = textShapeFactory->createDefaultShape(parent->parent()->resourceManager());
     if (d->title) {
@@ -809,7 +809,7 @@ Axis::Axis(PlotArea *parent, AxisDimension dimension)
     else {
         d->title = new TextLabelDummy;
         d->titleData = new TextLabelData;
-        KoTextDocumentLayout *documentLayout = new KoTextDocumentLayout(d->titleData->document());
+        KTextDocumentLayout *documentLayout = new KTextDocumentLayout(d->titleData->document());
         d->titleData->document()->setDocumentLayout(documentLayout);
         d->title->setUserData(d->titleData);
     }
@@ -832,7 +832,7 @@ Axis::Axis(PlotArea *parent, AxisDimension dimension)
 Axis::~Axis()
 {
     Q_ASSERT(d->plotArea);
-    d->plotArea->parent()->KoShapeContainer::removeShape(d->title);
+    d->plotArea->parent()->KShapeContainer::removeShape(d->title);
 
     Q_ASSERT(d->title);
     if (d->title)
@@ -846,7 +846,7 @@ PlotArea* Axis::plotArea() const
     return d->plotArea;
 }
 
-KoShape *Axis::title() const
+KShape *Axis::title() const
 {
     return d->title;
 }
@@ -1151,9 +1151,9 @@ Qt::Orientation Axis::orientation()
     return horizontal ? Qt::Horizontal : Qt::Vertical;
 }
 
-bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &context)
+bool Axis::loadOdf(const KXmlElement &axisElement, KShapeLoadingContext &context)
 {
-    KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+    KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
     OdfLoadingHelper *helper = (OdfLoadingHelper*)context.sharedData(OdfLoadingHelperId);
 
     d->title->setVisible(false);
@@ -1174,41 +1174,41 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
     setMinorInterval(0.0);
 
     if (!axisElement.isNull()) {
-        KoXmlElement n;
+        KXmlElement n;
         forEachElement (n, axisElement) {
-            if (n.namespaceURI() != KoXmlNS::chart)
+            if (n.namespaceURI() != KOdfXmlNS::chart)
                 continue;
             if (n.localName() == "title") {
-                if (n.hasAttributeNS(KoXmlNS::svg, "x")
-                     && n.hasAttributeNS(KoXmlNS::svg, "y"))
+                if (n.hasAttributeNS(KOdfXmlNS::svg, "x")
+                     && n.hasAttributeNS(KOdfXmlNS::svg, "y"))
                 {
-                    const qreal x = KoUnit::parseValue(n.attributeNS(KoXmlNS::svg, "x"));
-                    const qreal y = KoUnit::parseValue(n.attributeNS(KoXmlNS::svg, "y"));
+                    const qreal x = KUnit::parseValue(n.attributeNS(KOdfXmlNS::svg, "x"));
+                    const qreal y = KUnit::parseValue(n.attributeNS(KOdfXmlNS::svg, "y"));
                     d->title->setPosition(QPointF(x, y));
                 }
 
-                if (n.hasAttributeNS(KoXmlNS::svg, "width")
-                     && n.hasAttributeNS(KoXmlNS::svg, "height"))
+                if (n.hasAttributeNS(KOdfXmlNS::svg, "width")
+                     && n.hasAttributeNS(KOdfXmlNS::svg, "height"))
                 {
-                    const qreal width = KoUnit::parseValue(n.attributeNS(KoXmlNS::svg, "width"));
-                    const qreal height = KoUnit::parseValue(n.attributeNS(KoXmlNS::svg, "height"));
+                    const qreal width = KUnit::parseValue(n.attributeNS(KOdfXmlNS::svg, "width"));
+                    const qreal height = KUnit::parseValue(n.attributeNS(KOdfXmlNS::svg, "height"));
                     d->title->setSize(QSizeF(width, height));
                 }
 
-                if (n.hasAttributeNS(KoXmlNS::chart, "style-name")) {
+                if (n.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
                     styleStack.clear();
-                    context.odfLoadingContext().fillStyleStack(n, KoXmlNS::chart, "style-name", "chart");
+                    context.odfLoadingContext().fillStyleStack(n, KOdfXmlNS::chart, "style-name", "chart");
                     styleStack.setTypeProperties("text");
 
-                    if (styleStack.hasProperty(KoXmlNS::fo, "font-size")) {
-                        const qreal fontSize = KoUnit::parseValue(styleStack.property(KoXmlNS::fo, "font-size"));
+                    if (styleStack.hasProperty(KOdfXmlNS::fo, "font-size")) {
+                        const qreal fontSize = KUnit::parseValue(styleStack.property(KOdfXmlNS::fo, "font-size"));
                         QFont font = d->titleData->document()->defaultFont();
                         font.setPointSizeF(fontSize);
                         d->titleData->document()->setDefaultFont(font);
                     }
                 }
 
-                const KoXmlElement textElement = KoXml::namedItemNS(n, KoXmlNS::text, "p");
+                const KXmlElement textElement = KoXml::namedItemNS(n, KOdfXmlNS::text, "p");
                 if (!textElement.isNull()) {
                     d->title->setVisible(true);
                     setTitleText(textElement.text());
@@ -1219,8 +1219,8 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
             }
             else if (n.localName() == "grid") {
                 bool major = false;
-                if (n.hasAttributeNS(KoXmlNS::chart, "class")) {
-                    const QString className = n.attributeNS(KoXmlNS::chart, "class");
+                if (n.hasAttributeNS(KOdfXmlNS::chart, "class")) {
+                    const QString className = n.attributeNS(KOdfXmlNS::chart, "class");
                     if (className == "major")
                         major = true;
                 } else {
@@ -1234,12 +1234,12 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
                     d->showMinorGrid = true;
                 }
 
-                if (n.hasAttributeNS(KoXmlNS::chart, "style-name")) {
+                if (n.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
                     styleStack.clear();
-                    context.odfLoadingContext().fillStyleStack(n, KoXmlNS::style, "style-name", "chart");
+                    context.odfLoadingContext().fillStyleStack(n, KOdfXmlNS::style, "style-name", "chart");
                     styleStack.setTypeProperties("graphic");
-                    if (styleStack.hasProperty(KoXmlNS::svg, "stroke-color")) {
-                        const QString strokeColor = styleStack.property(KoXmlNS::svg, "stroke-color");
+                    if (styleStack.hasProperty(KOdfXmlNS::svg, "stroke-color")) {
+                        const QString strokeColor = styleStack.property(KOdfXmlNS::svg, "stroke-color");
                         //d->showMajorGrid = true;
                         if (major)
                             gridPen = QPen(QColor(strokeColor));
@@ -1249,16 +1249,16 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
                 }
             }
             else if (n.localName() == "categories") {
-                if (n.hasAttributeNS(KoXmlNS::table, "cell-range-address")) {
-                    const CellRegion region = CellRegion(helper->tableSource, n.attributeNS(KoXmlNS::table, "cell-range-address"));
+                if (n.hasAttributeNS(KOdfXmlNS::table, "cell-range-address")) {
+                    const CellRegion region = CellRegion(helper->tableSource, n.attributeNS(KOdfXmlNS::table, "cell-range-address"));
                     helper->categoryRegionSpecifiedInXAxis = true;
                     plotArea()->proxyModel()->setCategoryDataRegion(region);
                 }
             }
         }
 
-        if (axisElement.hasAttributeNS(KoXmlNS::chart, "axis-name")) {
-            const QString name = axisElement.attributeNS(KoXmlNS::chart, "axis-name", QString());
+        if (axisElement.hasAttributeNS(KOdfXmlNS::chart, "axis-name")) {
+            const QString name = axisElement.attributeNS(KOdfXmlNS::chart, "axis-name", QString());
             //setTitleText(name);
         }
 
@@ -1266,33 +1266,33 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
         // explicitly in the constructor.
     }
 
-    if (axisElement.hasAttributeNS(KoXmlNS::chart, "style-name")) {
+    if (axisElement.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
         styleStack.clear();
-        context.odfLoadingContext().fillStyleStack(axisElement, KoXmlNS::chart, "style-name", "chart");
+        context.odfLoadingContext().fillStyleStack(axisElement, KOdfXmlNS::chart, "style-name", "chart");
         styleStack.setTypeProperties("text");
 
-        KoCharacterStyle charStyle;
+        KCharacterStyle charStyle;
         charStyle.loadOdf(context);
         setFont(charStyle.font());
 
         styleStack.setTypeProperties("chart");
 
-        if (styleStack.hasProperty(KoXmlNS::chart, "logarithmic")
-             && styleStack.property(KoXmlNS::chart, "logarithmic") == "true")
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "logarithmic")
+             && styleStack.property(KOdfXmlNS::chart, "logarithmic") == "true")
         {
             setScalingLogarithmic(true);
         }
 
-        if (styleStack.hasProperty(KoXmlNS::chart, "interval-major"))
-            setMajorInterval(KoUnit::parseValue(styleStack.property(KoXmlNS::chart, "interval-major")));
-        if (styleStack.hasProperty(KoXmlNS::chart, "interval-minor-divisor"))
-            setMinorIntervalDivisor(KoUnit::parseValue(styleStack.property(KoXmlNS::chart, "interval-minor-divisor")));
-        if (styleStack.hasProperty(KoXmlNS::chart, "display-label"))
-            setShowLabels(styleStack.property(KoXmlNS::chart, "display-label") != "false");
-        if (styleStack.hasProperty(KoXmlNS::chart, "visible"))
-            setVisible(styleStack.property(KoXmlNS::chart, "visible")  != "false");
-        if (styleStack.hasProperty(KoXmlNS::chart, "minimum")) {
-            const qreal minimum = styleStack.property(KoXmlNS::chart, "minimum").toDouble();
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "interval-major"))
+            setMajorInterval(KUnit::parseValue(styleStack.property(KOdfXmlNS::chart, "interval-major")));
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "interval-minor-divisor"))
+            setMinorIntervalDivisor(KUnit::parseValue(styleStack.property(KOdfXmlNS::chart, "interval-minor-divisor")));
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "display-label"))
+            setShowLabels(styleStack.property(KOdfXmlNS::chart, "display-label") != "false");
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "visible"))
+            setVisible(styleStack.property(KOdfXmlNS::chart, "visible")  != "false");
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "minimum")) {
+            const qreal minimum = styleStack.property(KOdfXmlNS::chart, "minimum").toDouble();
             const qreal maximum = orientation() == Qt::Vertical
                                     ? d->kdPlane->verticalRange().second
                                     : d->kdPlane->horizontalRange().second;
@@ -1301,11 +1301,11 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
             else
                 d->kdPlane->setHorizontalRange(qMakePair(minimum, maximum));
         }
-        if (styleStack.hasProperty(KoXmlNS::chart, "maximum")) {
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "maximum")) {
             const qreal minimum = orientation() == Qt::Vertical
                                     ? d->kdPlane->verticalRange().first
                                     : d->kdPlane->horizontalRange().first;
-            const qreal maximum = styleStack.property(KoXmlNS::chart, "maximum").toDouble();
+            const qreal maximum = styleStack.property(KOdfXmlNS::chart, "maximum").toDouble();
             if (orientation() == Qt::Vertical)
                 d->kdPlane->setVerticalRange(qMakePair(minimum, maximum));
             else
@@ -1359,32 +1359,32 @@ bool Axis::loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &conte
     return true;
 }
 
-bool Axis::loadOdfChartSubtypeProperties(const KoXmlElement &axisElement,
-                                          KoShapeLoadingContext &context)
+bool Axis::loadOdfChartSubtypeProperties(const KXmlElement &axisElement,
+                                          KShapeLoadingContext &context)
 {
     Q_UNUSED(axisElement);
-    KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+    KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
     styleStack.setTypeProperties("chart");
 
     // Load these attributes regardless of the actual chart type. They'll have
     // no effect if their respective chart type is not in use.
     // However, they'll be saved back to ODF that way.
-    if (styleStack.hasProperty(KoXmlNS::chart, "gap-width"))
-        setGapBetweenSets(KoUnit::parseValue(styleStack.property(KoXmlNS::chart, "gap-width")));
-    if (styleStack.hasProperty(KoXmlNS::chart, "overlap"))
+    if (styleStack.hasProperty(KOdfXmlNS::chart, "gap-width"))
+        setGapBetweenSets(KUnit::parseValue(styleStack.property(KOdfXmlNS::chart, "gap-width")));
+    if (styleStack.hasProperty(KOdfXmlNS::chart, "overlap"))
         // The minus is intended!
-        setGapBetweenBars(-KoUnit::parseValue(styleStack.property(KoXmlNS::chart, "overlap")));
+        setGapBetweenBars(-KUnit::parseValue(styleStack.property(KOdfXmlNS::chart, "overlap")));
 
     return true;
 }
 
-void Axis::saveOdf(KoShapeSavingContext &context)
+void Axis::saveOdf(KShapeSavingContext &context)
 {
-    KoXmlWriter &bodyWriter = context.xmlWriter();
-    KoGenStyles &mainStyles = context.mainStyles();
+    KXmlWriter &bodyWriter = context.xmlWriter();
+    KOdfGenericStyles &mainStyles = context.mainStyles();
     bodyWriter.startElement("chart:axis");
 
-    KoGenStyle axisStyle(KoGenStyle::ParagraphAutoStyle, "chart");
+    KOdfGenericStyle axisStyle(KOdfGenericStyle::ParagraphAutoStyle, "chart");
     axisStyle.addProperty("chart:display-label", "true");
 
     const QString styleName = mainStyles.insert(axisStyle, "ch");
@@ -1453,16 +1453,16 @@ void Axis::saveOdf(KoShapeSavingContext &context)
     bodyWriter.endElement(); // chart:axis
 }
 
-void Axis::saveOdfGrid(KoShapeSavingContext &context, OdfGridClass gridClass)
+void Axis::saveOdfGrid(KShapeSavingContext &context, OdfGridClass gridClass)
 {
-    KoXmlWriter &bodyWriter = context.xmlWriter();
-    KoGenStyles &mainStyles = context.mainStyles();
+    KXmlWriter &bodyWriter = context.xmlWriter();
+    KOdfGenericStyles &mainStyles = context.mainStyles();
 
-    KoGenStyle gridStyle(KoGenStyle::GraphicAutoStyle, "chart");
+    KOdfGenericStyle gridStyle(KOdfGenericStyle::GraphicAutoStyle, "chart");
 
     KDChart::GridAttributes attributes = d->kdPlane->gridAttributes(orientation());
     QPen gridPen = (gridClass == OdfMinorGrid ? attributes.subGridPen() : attributes.gridPen());
-    KoOdfGraphicStyles::saveOdfStrokeStyle(gridStyle, mainStyles, gridPen);
+    KOdf::saveOdfStrokeStyle(gridStyle, mainStyles, gridPen);
 
     bodyWriter.startElement("chart:grid");
     bodyWriter.addAttribute("chart:class", gridClass == OdfMinorGrid ? "minor" : "major");

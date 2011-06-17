@@ -34,13 +34,13 @@
 #include <KDebug>
 
 // KOffice
-#include <KoXmlReader.h>
-#include <KoXmlWriter.h>
-#include <KoGenStyles.h>
-#include <KoXmlNS.h>
-#include <KoOdfLoadingContext.h>
-#include <KoOdfStylesReader.h>
-#include <KoShapeLoadingContext.h>
+#include <KXmlReader.h>
+#include <KXmlWriter.h>
+#include <KOdfGenericStyles.h>
+#include <KOdfXmlNS.h>
+#include <KOdfLoadingContext.h>
+#include <KOdfStylesReader.h>
+#include <KShapeLoadingContext.h>
 
 // KChart
 #include "CellRegion.h"
@@ -86,8 +86,8 @@ bool ChartTableModel::isCellRegionValid(const QString& regionName) const
     return true;
 }
 
-bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
-                               KoShapeLoadingContext &context)
+bool ChartTableModel::loadOdf(const KXmlElement &tableElement,
+                               KShapeLoadingContext &context)
 {
     Q_UNUSED(context);
 
@@ -103,10 +103,10 @@ bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
     //        only be one table-rows and one table-header-rows element
     //        in each table.
     int           row = 0;
-    KoXmlElement  n;
+    KXmlElement  n;
     int           found = false;
     forEachElement (n, tableElement) {
-        if (n.namespaceURI() != KoXmlNS::table)
+        if (n.namespaceURI() != KOdfXmlNS::table)
             continue;
 
         if (n.localName() == "table-rows"
@@ -114,11 +114,11 @@ bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
         {
             found = true;
 
-            KoXmlElement  _n;
+            KXmlElement  _n;
             forEachElement (_n, n) {
 
                 // Must be a table:table-row, else go to next element.
-                if (_n.namespaceURI() != KoXmlNS::table
+                if (_n.namespaceURI() != KOdfXmlNS::table
                      || _n.localName() != "table-row")
                     continue;
 
@@ -127,12 +127,12 @@ bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
 
                 // Loop through all cells in a table row.
                 int           column = 0;
-                KoXmlElement  __n;
+                KXmlElement  __n;
                 forEachElement (__n, _n) {
 
                     // Must be a table:table-cell, otherwise go to
                     // next element.
-                    if (__n.namespaceURI() == KoXmlNS::table
+                    if (__n.namespaceURI() == KOdfXmlNS::table
                          && __n.localName() == "table-cell")
                     {
 //                         continue;
@@ -143,10 +143,10 @@ bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
                     if (column >= columnCount())
                         setColumnCount(columnCount() + 1);
 
-                    const QString valueType = __n.attributeNS(KoXmlNS::office, "value-type");
+                    const QString valueType = __n.attributeNS(KOdfXmlNS::office, "value-type");
 
-                    QString valueString = __n.attributeNS(KoXmlNS::office, "value");
-                    const KoXmlElement valueElement = __n.namedItemNS(KoXmlNS::text, "p").toElement();
+                    QString valueString = __n.attributeNS(KOdfXmlNS::office, "value");
+                    const KXmlElement valueElement = __n.namedItemNS(KOdfXmlNS::text, "p").toElement();
                     if ((valueElement.isNull() || !valueElement.isElement()) && valueString.isEmpty())
                     {
                         qWarning() << "ChartTableModel::loadOdf(): Cell contains no valid <text:p> element, cannnot load cell data.";
@@ -181,7 +181,7 @@ bool ChartTableModel::loadOdf(const KoXmlElement &tableElement,
     return found;
 }
 
-bool ChartTableModel::saveOdf(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) const
+bool ChartTableModel::saveOdf(KXmlWriter &bodyWriter, KOdfGenericStyles &mainStyles) const
 {
     Q_UNUSED(bodyWriter);
     Q_UNUSED(mainStyles);

@@ -37,12 +37,12 @@
 #include <KDebug>
 
 // KOffice
-#include <KoCanvasBase.h>
-#include <KoSelection.h>
-#include <KoShapeManager.h>
-#include <KoPointerEvent.h>
-#include <KoTextShapeData.h>
-#include <KoViewConverter.h>
+#include <KCanvasBase.h>
+#include <KSelection.h>
+#include <KShapeManager.h>
+#include <KPointerEvent.h>
+#include <KTextShapeData.h>
+#include <KViewConverter.h>
 
 // KDChart
 #include <KDChartChart>
@@ -84,8 +84,8 @@ ChartTool::Private::~Private()
 {
 }
 
-ChartTool::ChartTool(KoCanvasBase *canvas)
-    : KoToolBase(canvas),
+ChartTool::ChartTool(KCanvasBase *canvas)
+    : KToolBase(canvas),
       d(new Private())
 {
     // Create QActions here.
@@ -113,12 +113,12 @@ ChartTool::~ChartTool()
 
 void ChartTool::shapeSelectionChanged()
 {
-    KoShape *selectedShape = 0;
+    KShape *selectedShape = 0;
     
     // Get the chart shape that the tool is working on. 
     // Let d->shape point to it.
-    KoSelection  *selection = canvas()->shapeManager()->selection();
-    foreach (KoShape *shape, selection->selectedShapes()) {
+    KSelection  *selection = canvas()->shapeManager()->selection();
+    foreach (KShape *shape, selection->selectedShapes()) {
         // Find out which type of shape that the user clicked on.
         // We support several here, since the chart shape is comprised
         // of several subshapes (plotarea, legend)
@@ -145,7 +145,7 @@ void ChartTool::shapeSelectionChanged()
         // option widget.
         if (selectedShape) {
             foreach (QWidget *w, optionWidgets()) {
-                KoShapeConfigWidgetBase *widget = dynamic_cast<KoShapeConfigWidgetBase*>(w);
+                KShapeConfigWidgetBase *widget = dynamic_cast<KShapeConfigWidgetBase*>(w);
                 Q_ASSERT(widget);
                 if (widget)
                     widget->open(selectedShape);
@@ -166,13 +166,13 @@ void ChartTool::shapeSelectionChanged()
 }
 
 
-void ChartTool::paint(QPainter &painter, const KoViewConverter &converter)
+void ChartTool::paint(QPainter &painter, const KViewConverter &converter)
 {
     Q_UNUSED(painter);
     Q_UNUSED(converter);
 }
 
-void ChartTool::mousePressEvent(KoPointerEvent *event)
+void ChartTool::mousePressEvent(KPointerEvent *event)
 {
 #if 1  // disabled
     Q_UNUSED(event);
@@ -211,18 +211,18 @@ void ChartTool::mousePressEvent(KoPointerEvent *event)
 #endif
 }
 
-void ChartTool::mouseMoveEvent(KoPointerEvent *event)
+void ChartTool::mouseMoveEvent(KPointerEvent *event)
 {
     event->ignore();
 }
 
-void ChartTool::mouseReleaseEvent(KoPointerEvent *event)
+void ChartTool::mouseReleaseEvent(KPointerEvent *event)
 {
     event->ignore();
 }
 
 
-void ChartTool::activate(ToolActivation, const QSet<KoShape*> &)
+void ChartTool::activate(ToolActivation, const QSet<KShape*> &)
 {
     setCursor(Qt::ArrowCursor);
 }

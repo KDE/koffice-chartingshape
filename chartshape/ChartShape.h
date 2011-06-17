@@ -28,13 +28,13 @@
 #include <Qt>
 
 // KOffice
-#include <KoShapeContainer.h>
-#include <KoFrameShape.h>
+#include <KShapeContainer.h>
+#include <KFrameShape.h>
 
 // KChart
 #include "kchart_export.h"
 #include "kchart_global.h"
-#include "KoChartInterface.h"
+#include "KChartInterface.h"
 
 
 class QAbstractItemModel;
@@ -47,14 +47,14 @@ class QColor;
 class QString;
 class QFont;
 
-class KoResourceManager;
-class KoShapeLoadingContext;
-class KoShapeSavingContext;
-class KoStore;
-class KoXmlWriter;
-class KoGenStyles;
-class KoOdfStylesReader;
-class KoXmlDocument;
+class KResourceManager;
+class KShapeLoadingContext;
+class KShapeSavingContext;
+class KOdfStore;
+class KXmlWriter;
+class KOdfGenericStyles;
+class KOdfStylesReader;
+class KXmlDocument;
 
 // FIXME: Remove all mentions of KDChart from the public API.
 namespace KDChart {
@@ -67,10 +67,10 @@ namespace KDChart {
 }
 
 // Interface to SimpleTextShape plugin
-class KoTextShapeData;
+class KTextShapeData;
 #define TextShapeId "TextShapeID"
 #define OdfLoadingHelperId "OdfLoadingHelperId"
-typedef KoTextShapeData TextLabelData;
+typedef KTextShapeData TextLabelData;
 
 class DataSet;
 class ChartProxyModel;
@@ -88,32 +88,32 @@ extern const char *ODF_CHARTTYPES[ NUM_CHARTTYPES ];
 
 extern const ChartSubtype defaultSubtypes[ NUM_CHARTTYPES ];
 
-extern QString saveOdfFont(KoGenStyles& mainStyles, const QFont& font, const QColor& color);
+extern QString saveOdfFont(KOdfGenericStyles& mainStyles, const QFont& font, const QColor& color);
 extern QColor defaultDataSetColor(int dataSetNum);
 
 
 class CHARTSHAPE_TEST_EXPORT ChartShape
     : public QObject
-    , public KoChart::ChartInterface // The public interface within KOffice
-    , public KoFrameShape            // For saving as a frame
-    , public KoShapeContainer        // The chart shape embeds other shapes.
+    , public KChart::ChartInterface // The public interface within KOffice
+    , public KFrameShape            // For saving as a frame
+    , public KShapeContainer        // The chart shape embeds other shapes.
 {
     Q_OBJECT
-    Q_INTERFACES(KoChart::ChartInterface)
+    Q_INTERFACES(KChart::ChartInterface)
 
 public:
-    ChartShape(KoResourceManager *documentResourceManager);
+    ChartShape(KResourceManager *documentResourceManager);
     ~ChartShape();
 
     // Getter methods
     ChartProxyModel *proxyModel() const;
 
     // Parts of the chart
-    KoShape        *title() const;
+    KShape        *title() const;
     TextLabelData  *titleData() const;
-    KoShape        *subTitle() const;
+    KShape        *subTitle() const;
     TextLabelData  *subTitleData() const;
-    KoShape        *footer() const;
+    KShape        *footer() const;
     TextLabelData  *footerData() const;
     Legend         *legend() const;
     PlotArea       *plotArea() const;
@@ -124,7 +124,7 @@ public:
      * Use this method with caution, as it re-creates the list every
      * time you call it.
      */
-    QList<KoShape*> labels() const;
+    QList<KShape*> labels() const;
 
     void showTitle(bool doShow);
     void showSubTitle(bool doShow);
@@ -199,20 +199,20 @@ public:
     void setThreeD(bool threeD);
 
     /// reimplemented
-    void paintComponent(QPainter &painter, const KoViewConverter &converter);
-    void paintDecorations(QPainter &painter, const KoViewConverter &converter,
-                           const KoCanvasBase *canvas);
+    void paintComponent(QPainter &painter, const KViewConverter &converter);
+    void paintDecorations(QPainter &painter, const KViewConverter &converter,
+                           const KCanvasBase *canvas);
 
     /// reimplemented
-    bool loadOdf(const KoXmlElement &element, KoShapeLoadingContext &context);
-    bool loadOdfFrameElement(const KoXmlElement &element, KoShapeLoadingContext &context);
-    bool loadOdfData(const KoXmlElement &tableElement, KoShapeLoadingContext &context);
+    bool loadOdf(const KXmlElement &element, KShapeLoadingContext &context);
+    bool loadOdfFrameElement(const KXmlElement &element, KShapeLoadingContext &context);
+    bool loadOdfData(const KXmlElement &tableElement, KShapeLoadingContext &context);
 
-    bool loadEmbeddedDocument(KoStore *store, const KoXmlElement &objectElement, const KoXmlDocument &manifestDocument);
-    bool loadOdfChartElement(const KoXmlElement &chartElement, KoShapeLoadingContext &context);
+    bool loadEmbeddedDocument(KOdfStore *store, const KXmlElement &objectElement, const KXmlDocument &manifestDocument);
+    bool loadOdfChartElement(const KXmlElement &chartElement, KShapeLoadingContext &context);
     /// reimplemented
-    void saveOdf(KoShapeSavingContext &context) const;
-    void saveOdfData(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) const;
+    void saveOdf(KShapeSavingContext &context) const;
+    void saveOdfData(KXmlWriter &bodyWriter, KOdfGenericStyles &mainStyles) const;
 
     /**
      * Used by unit tests to disable popping up of message boxes.
@@ -221,7 +221,7 @@ public:
      */
     static void setEnableUserInteraction(bool enable);
 
-    using KoShapeContainer::update;
+    using KShapeContainer::update;
     /// reimplemented
     void update() const;
     void relayout() const;
@@ -229,7 +229,7 @@ public:
     void requestRepaint() const;
 
     /// the document resource manager we got on construction
-    KoResourceManager *resourceManager() const;
+    KResourceManager *resourceManager() const;
 
 signals:
     void chartTypeChanged(ChartType);

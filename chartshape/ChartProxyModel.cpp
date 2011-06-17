@@ -31,16 +31,16 @@
 #include <KDebug>
 
 // KOffice
-#include <KoXmlReader.h>
-#include <KoShapeLoadingContext.h>
-#include <KoShapeSavingContext.h>
-#include <KoXmlWriter.h>
-#include <KoGenStyles.h>
-#include <KoXmlNS.h>
-#include <KoOdfLoadingContext.h>
-#include <KoOdfStylesReader.h>
-#include <KoOdfGraphicStyles.h>
-#include <KoChartModel.h>
+#include <KXmlReader.h>
+#include <KShapeLoadingContext.h>
+#include <KShapeSavingContext.h>
+#include <KXmlWriter.h>
+#include <KOdfGenericStyles.h>
+#include <KOdfXmlNS.h>
+#include <KOdfLoadingContext.h>
+#include <KOdfStylesReader.h>
+#include <KOdf.h>
+#include <KChartModel.h>
 
 // KChart
 #include "Axis.h"
@@ -374,7 +374,7 @@ QList<DataSet*> ChartProxyModel::Private::createDataSetsFromRegion(QList<DataSet
     return createdDataSets;
 }
 
-void ChartProxyModel::saveOdf(KoShapeSavingContext &context) const
+void ChartProxyModel::saveOdf(KShapeSavingContext &context) const
 {
     foreach (DataSet *dataSet, d->dataSets)
         dataSet->saveOdf(context);
@@ -382,8 +382,8 @@ void ChartProxyModel::saveOdf(KoShapeSavingContext &context) const
 
 // This loads the properties of the datasets (chart:series).
 // FIXME: This is a strange place to load them (the proxy model)
-bool ChartProxyModel::loadOdf(const KoXmlElement &element,
-                               KoShapeLoadingContext &context)
+bool ChartProxyModel::loadOdf(const KXmlElement &element,
+                               KShapeLoadingContext &context)
 {
     Q_ASSERT(d->isLoading);
 
@@ -400,14 +400,14 @@ bool ChartProxyModel::loadOdf(const KoXmlElement &element,
 
     beginResetModel();
 
-    if (element.hasAttributeNS(KoXmlNS::chart, "style-name")) {
-        KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+    if (element.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
+        KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
         styleStack.clear();
-        context.odfLoadingContext().fillStyleStack(element, KoXmlNS::chart, "style-name", "chart");
+        context.odfLoadingContext().fillStyleStack(element, KOdfXmlNS::chart, "style-name", "chart");
 
         // Data direction: It's in the plotarea style.
-        if (styleStack.hasProperty(KoXmlNS::chart, "series-source")) {
-            QString seriesSource = styleStack.property(KoXmlNS::chart, "series-source");
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "series-source")) {
+            QString seriesSource = styleStack.property(KOdfXmlNS::chart, "series-source");
             // Check if the direction for data series is vertical or horizontal.
             if (seriesSource == "rows")
                 d->dataDirection = Qt::Horizontal;
@@ -427,9 +427,9 @@ bool ChartProxyModel::loadOdf(const KoXmlElement &element,
     // contains the chart:categories element, the category data region
     // will automatically be set on every data set attached to that
     // axis. See Axis::attachDataSet().
-    if (element.hasAttributeNS(KoXmlNS::chart, "data-source-has-labels")) {
+    if (element.hasAttributeNS(KOdfXmlNS::chart, "data-source-has-labels")) {
         const QString dataSourceHasLabels
-            = element.attributeNS(KoXmlNS::chart, "data-source-has-labels");
+            = element.attributeNS(KOdfXmlNS::chart, "data-source-has-labels");
         if (dataSourceHasLabels == "both") {
             d->firstRowIsLabel = true;
             d->firstColumnIsLabel = true;
@@ -462,9 +462,9 @@ bool ChartProxyModel::loadOdf(const KoXmlElement &element,
     // Note: In case ignoreCellRanges is true, ChartShape::loadOdf() has
     // already made sure the proxy is reset with data from the internal model.
     if (!ignoreCellRanges &&
-         element.hasAttributeNS(KoXmlNS::table, "cell-range-address"))
+         element.hasAttributeNS(KOdfXmlNS::table, "cell-range-address"))
     {
-        QString cellRangeAddress = element.attributeNS(KoXmlNS::table, "cell-range-address");
+        QString cellRangeAddress = element.attributeNS(KOdfXmlNS::table, "cell-range-address");
         d->selection = CellRegion(d->tableSource, cellRangeAddress);
     // Otherwise use all data from internal table
     } else if (helper->chartUsesInternalModelOnly) {
@@ -486,13 +486,13 @@ bool ChartProxyModel::loadOdf(const KoXmlElement &element,
 
     int loadedDataSetCount = 0;
 
-    KoXmlElement n;
+    KXmlElement n;
     QPen p;
     QBrush brush;
     bool penLoaded = false;
     bool brushLoaded = false;
     forEachElement (n, element) {
-        if (n.namespaceURI() != KoXmlNS::chart)
+        if (n.namespaceURI() != KOdfXmlNS::chart)
             continue;
 
         if (n.localName() == "series") {
@@ -517,20 +517,20 @@ bool ChartProxyModel::loadOdf(const KoXmlElement &element,
 
             ++loadedDataSetCount;
         } else if (n.localName() == "stock-range-line") {
-            KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+            KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
             styleStack.clear();
 
-            context.odfLoadingContext().fillStyleStack(n, KoXmlNS::chart, "style-name", "chart");
-            if (n.hasAttributeNS(KoXmlNS::chart, "style-name")) {
-                KoOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
+            context.odfLoadingContext().fillStyleStack(n, KOdfXmlNS::chart, "style-name", "chart");
+            if (n.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
+                KOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
                 brushLoaded = false;
                 penLoaded = false;
 
                 styleStack.setTypeProperties("graphic");
 
-                if (styleStack.hasProperty(KoXmlNS::svg, "stroke-color")) {
-                    QString stroke = "solid";/*styleStack.property(KoXmlNS::svg, "stroke-color");*/
-                    p = KoOdfGraphicStyles::loadOdfStrokeStyle(styleStack, stroke, odfLoadingContext.stylesReader());
+                if (styleStack.hasProperty(KOdfXmlNS::svg, "stroke-color")) {
+                    QString stroke = "solid";/*styleStack.property(KOdfXmlNS::svg, "stroke-color");*/
+                    p = KOdf::loadOdfStrokeStyle(styleStack, stroke, odfLoadingContext.stylesReader());
                     penLoaded = true;
                     Q_FOREACH(DataSet* set, d->dataSets)
                     {
@@ -538,13 +538,13 @@ bool ChartProxyModel::loadOdf(const KoXmlElement &element,
                     }
                 }
 
-                if (styleStack.hasProperty(KoXmlNS::draw, "fill")) {
-                    QString fill = styleStack.property(KoXmlNS::draw, "fill");
+                if (styleStack.hasProperty(KOdfXmlNS::draw, "fill")) {
+                    QString fill = styleStack.property(KOdfXmlNS::draw, "fill");
                     if (fill == "solid" || fill == "hatch") {
-                        brush = KoOdfGraphicStyles::loadOdfFillStyle(styleStack, fill, odfLoadingContext.stylesReader());
+                        brush = KOdf::loadOdfFillStyle(styleStack, fill, odfLoadingContext.stylesReader());
                         brushLoaded = true;
                     } else if (fill == "gradient") {
-                        brush = KoOdfGraphicStyles::loadOdfGradientStyle(styleStack, odfLoadingContext.stylesReader(), QSizeF(5.0, 60.0));
+                        brush = KOdf::loadOdfGradientStyle(styleStack, odfLoadingContext.stylesReader(), QSizeF(5.0, 60.0));
                         brushLoaded = true;
                     }
                     Q_FOREACH(DataSet* set, d->dataSets)

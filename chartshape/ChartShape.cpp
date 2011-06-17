@@ -64,32 +64,32 @@
 #include <KDChartPolarDiagram>
 
 // KOffice
-#include <KoShapeLoadingContext.h>
-#include <KoOdfLoadingContext.h>
-#include <KoEmbeddedDocumentSaver.h>
-#include <KoStore.h>
+#include <KShapeLoadingContext.h>
+#include <KOdfLoadingContext.h>
+#include <KOdfEmbeddedDocumentSaver.h>
+#include <KOdfStore.h>
 #include <KoDocument.h>
-#include <KoShapeSavingContext.h>
-#include <KoViewConverter.h>
-#include <KoXmlReader.h>
-#include <KoXmlWriter.h>
-#include <KoXmlNS.h>
-#include <KoGenStyles.h>
-#include <KoShapeRegistry.h>
-#include <KoToolRegistry.h>
-#include <KoTextShapeData.h>
-#include <KoTextDocumentLayout.h>
-#include <KoOdfReadStore.h>
+#include <KShapeSavingContext.h>
+#include <KViewConverter.h>
+#include <KXmlReader.h>
+#include <KXmlWriter.h>
+#include <KOdfXmlNS.h>
+#include <KOdfGenericStyles.h>
+#include <KShapeRegistry.h>
+#include <KToolRegistry.h>
+#include <KTextShapeData.h>
+#include <KTextDocumentLayout.h>
+#include <KOdfStoreReader.h>
 #include <KoDocumentEntry.h>
-#include <KoOdfStylesReader.h>
-#include <KoCanvasBase.h>
-#include <KoShapeManager.h>
-#include <KoSelection.h>
-#include <KoShapeBackground.h>
+#include <KOdfStylesReader.h>
+#include <KCanvasBase.h>
+#include <KShapeManager.h>
+#include <KSelection.h>
+#include <KShapeBackground.h>
 #include <KoInsets.h>
-#include <KoShapeBorderBase.h>
-#include <KoColorBackground.h>
-#include <KoLineBorder.h>
+#include <KShapeBorderBase.h>
+#include <KColorBackground.h>
+#include <KLineBorder.h>
 #include <KoOdfWorkaround.h>
 
 // KChart
@@ -146,12 +146,12 @@ const ChartSubtype  defaultSubtypes[ NUM_CHARTTYPES ] = {
 };
 
 
-QString saveOdfFont(KoGenStyles& mainStyles,
+QString saveOdfFont(KOdfGenericStyles& mainStyles,
                      const QFont& font,
                      const QColor& color)
 {
-    KoGenStyle::PropertyType tt = KoGenStyle::TextType;
-    KoGenStyle autoStyle(KoGenStyle::ParagraphAutoStyle, "chart", 0);
+    KOdfGenericStyle::PropertyType tt = KOdfGenericStyle::TextType;
+    KOdfGenericStyle autoStyle(KOdfGenericStyle::ParagraphAutoStyle, "chart", 0);
     autoStyle.addProperty("fo:font-family", font.family(), tt);
     autoStyle.addPropertyPt("fo:font-size", font.pointSize(), tt);
     autoStyle.addProperty("fo:color", color.isValid() ? color.name() : "#000000", tt);
@@ -162,8 +162,8 @@ QString saveOdfFont(KoGenStyles& mainStyles,
     return mainStyles.insert(autoStyle, "ch");
 }
 
-void saveOdfLabel(KoShape *label, KoXmlWriter &bodyWriter,
-                   KoGenStyles &mainStyles, LabelType labelType)
+void saveOdfLabel(KShape *label, KXmlWriter &bodyWriter,
+                   KOdfGenericStyles &mainStyles, LabelType labelType)
 {
     // Don't save hidden labels, as that's the way of removing them
     // from a chart.
@@ -229,13 +229,13 @@ public:
     Private(ChartShape *shape);
     ~Private();
 
-    bool loadOdfLabel(KoShape *label, KoXmlElement &labelElement);
-    void setChildVisible(KoShape *label, bool doShow);
+    bool loadOdfLabel(KShape *label, KXmlElement &labelElement);
+    void setChildVisible(KShape *label, bool doShow);
 
     // The components of a chart
-    KoShape   *title;
-    KoShape   *subTitle;
-    KoShape   *footer;
+    KShape   *title;
+    KShape   *subTitle;
+    KShape   *footer;
     Legend    *legend;
     PlotArea  *plotArea;
 
@@ -251,7 +251,7 @@ public:
 
     ChartShape *shape;		// The chart that owns this ChartShape::Private
 
-    KoResourceManager *resourceManager;
+    KResourceManager *resourceManager;
 };
 
 
@@ -284,19 +284,19 @@ ChartShape::Private::~Private()
 {
 }
 
-bool ChartShape::Private::loadOdfLabel(KoShape *label, KoXmlElement &labelElement)
+bool ChartShape::Private::loadOdfLabel(KShape *label, KXmlElement &labelElement)
 {
     TextLabelData *labelData = qobject_cast<TextLabelData*>(label->userData());
     if (!labelData)
         return false;
 
-    // Following will always return false cause KoTextShapeData::loadOdf will try to load
+    // Following will always return false cause KTextShapeData::loadOdf will try to load
     // a frame while our text:p is not within a frame. So, let's just not call loadOdf then...
     //label->loadOdf(labelElement, context);
 
     // 1. set the text
-    KoXmlElement  pElement = KoXml::namedItemNS(labelElement,
-                                                 KoXmlNS::text, "p");
+    KXmlElement  pElement = KoXml::namedItemNS(labelElement,
+                                                 KOdfXmlNS::text, "p");
 
     QTextDocument* doc = labelData->document();
     doc->setPlainText(pElement.text());
@@ -304,12 +304,12 @@ bool ChartShape::Private::loadOdfLabel(KoShape *label, KoXmlElement &labelElemen
     // 2. set the position
     QPointF pos = label->position();
     bool posChanged = false;
-    if (labelElement.hasAttributeNS(KoXmlNS::svg, "x")) {
-        pos.setX(KoUnit::parseValue(labelElement.attributeNS(KoXmlNS::svg, "x", QString())));
+    if (labelElement.hasAttributeNS(KOdfXmlNS::svg, "x")) {
+        pos.setX(KUnit::parseValue(labelElement.attributeNS(KOdfXmlNS::svg, "x", QString())));
         posChanged = true;
     }
-    if (labelElement.hasAttributeNS(KoXmlNS::svg, "y")) {
-        pos.setY(KoUnit::parseValue(labelElement.attributeNS(KoXmlNS::svg, "y", QString())));
+    if (labelElement.hasAttributeNS(KOdfXmlNS::svg, "y")) {
+        pos.setY(KUnit::parseValue(labelElement.attributeNS(KOdfXmlNS::svg, "y", QString())));
         posChanged = true;
     }
     if (posChanged) {
@@ -333,7 +333,7 @@ bool ChartShape::Private::loadOdfLabel(KoShape *label, KoXmlElement &labelElemen
 //
 // If there is too little room, then make space by shrinking the Plotarea.
 //
-void ChartShape::Private::setChildVisible(KoShape *child, bool doShow)
+void ChartShape::Private::setChildVisible(KShape *child, bool doShow)
 {
     Q_ASSERT(child);
 
@@ -341,7 +341,7 @@ void ChartShape::Private::setChildVisible(KoShape *child, bool doShow)
         return;
 
     child->setVisible(doShow);
-    // FIXME: Shouldn't there be a KoShape::VisibilityChanged for KoShape::shapeChanged()?
+    // FIXME: Shouldn't there be a KShape::VisibilityChanged for KShape::shapeChanged()?
     shape->layout()->scheduleRelayout();
 }
 
@@ -351,9 +351,9 @@ void ChartShape::Private::setChildVisible(KoShape *child, bool doShow)
 // ================================================================
 
 
-ChartShape::ChartShape(KoResourceManager *resourceManager)
-    : KoFrameShape(KoXmlNS::draw, "object")
-    , KoShapeContainer(new Layout)
+ChartShape::ChartShape(KResourceManager *resourceManager)
+    : KFrameShape(KOdfXmlNS::draw, "object")
+    , KShapeContainer(new Layout)
     , d (new Private(this))
 {
     d->resourceManager = resourceManager;
@@ -386,7 +386,7 @@ ChartShape::ChartShape(KoResourceManager *resourceManager)
     setChartSubType(NormalChartSubtype);
 
     // Create the Title, which is a standard TextShape.
-    KoShapeFactoryBase *textShapeFactory = KoShapeRegistry::instance()->value(TextShapeId);
+    KShapeFactoryBase *textShapeFactory = KShapeRegistry::instance()->value(TextShapeId);
     if (textShapeFactory)
         d->title = textShapeFactory->createDefaultShape(resourceManager);
     // Potential problem 1) No TextShape installed
@@ -401,12 +401,12 @@ ChartShape::ChartShape(KoResourceManager *resourceManager)
             KMessageBox::error(0, i18n("The plugin needed for displaying text labels is not compatible with the current version of the chart Flake shape."),
                                    i18n("Plugin Incompatible"));
 
-    // In both cases we need a KoTextShapeData instance to function. This is
+    // In both cases we need a KTextShapeData instance to function. This is
     // enough for unit tests, so there has to be no TextShape plugin doing the
-    // actual text rendering, we just need KoTextShapeData which is in the libs.
+    // actual text rendering, we just need KTextShapeData which is in the libs.
     if (dynamic_cast<TextLabelData*>(d->title->userData()) == 0) {
         TextLabelData *dataDummy = new TextLabelData;
-        KoTextDocumentLayout *documentLayout = new KoTextDocumentLayout(dataDummy->document());
+        KTextDocumentLayout *documentLayout = new KTextDocumentLayout(dataDummy->document());
         dataDummy->document()->setDocumentLayout(documentLayout);
         d->title->setUserData(dataDummy);
     }
@@ -437,7 +437,7 @@ ChartShape::ChartShape(KoResourceManager *resourceManager)
     }
     if (dynamic_cast<TextLabelData*>(d->subTitle->userData()) == 0) {
         TextLabelData *dataDummy = new TextLabelData;
-        KoTextDocumentLayout *documentLayout = new KoTextDocumentLayout(dataDummy->document());
+        KTextDocumentLayout *documentLayout = new KTextDocumentLayout(dataDummy->document());
         dataDummy->document()->setDocumentLayout(documentLayout);
         d->subTitle->setUserData(dataDummy);
     }
@@ -464,7 +464,7 @@ ChartShape::ChartShape(KoResourceManager *resourceManager)
     }
     if (dynamic_cast<TextLabelData*>(d->footer->userData()) == 0) {
         TextLabelData *dataDummy = new TextLabelData;
-        KoTextDocumentLayout *documentLayout = new KoTextDocumentLayout(dataDummy->document());
+        KTextDocumentLayout *documentLayout = new KTextDocumentLayout(dataDummy->document());
         dataDummy->document()->setDocumentLayout(documentLayout);
         d->footer->setUserData(dataDummy);
     }
@@ -484,16 +484,16 @@ ChartShape::ChartShape(KoResourceManager *resourceManager)
     setInheritsTransform(d->footer, true);
 
     // Enable auto-resizing of chart labels
-    foreach(KoShape *label, labels()) {
+    foreach(KShape *label, labels()) {
         TextLabelData *labelData = qobject_cast<TextLabelData*>(label->userData());
-        KoTextDocument doc(labelData->document());
-        doc.setResizeMethod(KoTextDocument::AutoResize);
+        KTextDocument doc(labelData->document());
+        doc.setResizeMethod(KTextDocument::AutoResize);
     }
 
-    KoColorBackground *background = new KoColorBackground(Qt::white);
+    KColorBackground *background = new KColorBackground(Qt::white);
     setBackground(background);
 
-    KoLineBorder *border = new KoLineBorder(0, Qt::black);
+    KLineBorder *border = new KLineBorder(0, Qt::black);
     setBorder(border);
 
     Layout *l = layout();
@@ -528,7 +528,7 @@ ChartProxyModel *ChartShape::proxyModel() const
     return d->proxyModel;
 }
 
-KoShape *ChartShape::title() const
+KShape *ChartShape::title() const
 {
     return d->title;
 }
@@ -540,7 +540,7 @@ TextLabelData *ChartShape::titleData() const
 }
 
 
-KoShape *ChartShape::subTitle() const
+KShape *ChartShape::subTitle() const
 {
     return d->subTitle;
 }
@@ -551,7 +551,7 @@ TextLabelData *ChartShape::subTitleData() const
     return data;
 }
 
-KoShape *ChartShape::footer() const
+KShape *ChartShape::footer() const
 {
     return d->footer;
 }
@@ -562,9 +562,9 @@ TextLabelData *ChartShape::footerData() const
     return data;
 }
 
-QList<KoShape*> ChartShape::labels() const
+QList<KShape*> ChartShape::labels() const
 {
-    QList<KoShape*> labels;
+    QList<KShape*> labels;
     labels.append(d->title);
     labels.append(d->footer);
     labels.append(d->subTitle);
@@ -588,7 +588,7 @@ PlotArea *ChartShape::plotArea() const
 
 Layout *ChartShape::layout() const
 {
-    Layout *l = dynamic_cast<Layout*>(KoShapeContainer::model());
+    Layout *l = dynamic_cast<Layout*>(KShapeContainer::model());
     Q_ASSERT(l);
     return l;
 }
@@ -672,7 +672,7 @@ void ChartShape::reset(const QString &region,
                         bool firstColumnIsLabel,
                         Qt::Orientation dataDirection)
 {
-    // This method is provided via KoChartInterface, which is
+    // This method is provided via KChartInterface, which is
     // used by embedding applications.
     d->usesInternalModelOnly = false;
     d->proxyModel->setFirstRowIsLabel(firstRowIsLabel);
@@ -706,7 +706,7 @@ void ChartShape::setThreeD(bool threeD)
 
 
 void ChartShape::paintComponent(QPainter &painter,
-                                 const KoViewConverter &converter)
+                                 const KViewConverter &converter)
 {
     // Only does a relayout if scheduled
     layout()->layout();
@@ -726,8 +726,8 @@ void ChartShape::paintComponent(QPainter &painter,
 }
 
 void ChartShape::paintDecorations(QPainter &painter,
-                                   const KoViewConverter &converter,
-                                   const KoCanvasBase *canvas)
+                                   const KViewConverter &converter,
+                                   const KCanvasBase *canvas)
 {
     // This only is a helper decoration, do nothing if we're already
     // painting handles anyway.
@@ -750,16 +750,16 @@ void ChartShape::paintDecorations(QPainter &painter,
 //                         Loading and Saving
 
 
-bool ChartShape::loadEmbeddedDocument(KoStore *store,
-                                       const KoXmlElement &objectElement,
-                                       const KoXmlDocument &manifestDocument)
+bool ChartShape::loadEmbeddedDocument(KOdfStore *store,
+                                       const KXmlElement &objectElement,
+                                       const KXmlDocument &manifestDocument)
 {
-    if (!objectElement.hasAttributeNS(KoXmlNS::xlink, "href")) {
+    if (!objectElement.hasAttributeNS(KOdfXmlNS::xlink, "href")) {
         kError() << "Object element has no valid xlink:href attribute";
         return false;
     }
 
-    QString url = objectElement.attributeNS(KoXmlNS::xlink, "href");
+    QString url = objectElement.attributeNS(KOdfXmlNS::xlink, "href");
 
     // It can happen that the url is empty e.g. when it is a
     // presentation:placeholder.
@@ -791,7 +791,7 @@ bool ChartShape::loadEmbeddedDocument(KoStore *store,
     if (!path.endsWith('/'))
         path += '/';
 
-    const QString mimeType = KoOdfReadStore::mimeForPath(manifestDocument, path);
+    const QString mimeType = KOdfStoreReader::mimeForPath(manifestDocument, path);
     //kDebug(35001) << "path for manifest file=" << path << "mimeType=" << mimeType;
     if (mimeType.isEmpty()) {
         //kDebug(35001) << "Manifest doesn't have media-type for" << path;
@@ -885,8 +885,8 @@ bool ChartShape::loadEmbeddedDocument(KoStore *store,
     return res;
 }
 
-bool ChartShape::loadOdf(const KoXmlElement &element,
-                          KoShapeLoadingContext &context)
+bool ChartShape::loadOdf(const KXmlElement &element,
+                          KShapeLoadingContext &context)
 {
     // Load common attributes of (frame) shapes.  If you change here,
     // don't forget to also change in saveOdf().
@@ -896,8 +896,8 @@ bool ChartShape::loadOdf(const KoXmlElement &element,
 
 // Used to load the actual contents from the ODF frame that surrounds
 // the chart in the ODF file.
-bool ChartShape::loadOdfFrameElement(const KoXmlElement &element,
-                                      KoShapeLoadingContext &context)
+bool ChartShape::loadOdfFrameElement(const KXmlElement &element,
+                                      KShapeLoadingContext &context)
 {
     if (element.tagName() == "object")
         return loadEmbeddedDocument(context.odfLoadingContext().store(),
@@ -908,13 +908,13 @@ bool ChartShape::loadOdfFrameElement(const KoXmlElement &element,
     return false;
 }
 
-bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
-                                      KoShapeLoadingContext &context)
+bool ChartShape::loadOdfChartElement(const KXmlElement &chartElement,
+                                      KShapeLoadingContext &context)
 {
     proxyModel()->beginLoading();
 
     // The shared data will automatically be deleted in the destructor
-    // of KoShapeLoadingContext
+    // of KShapeLoadingContext
     OdfLoadingHelper *helper = new OdfLoadingHelper;
     helper->tableSource = &d->tableSource;
     helper->chartUsesInternalModelOnly = d->usesInternalModelOnly;
@@ -934,10 +934,10 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
     }
     context.addSharedData(OdfLoadingHelperId, helper);
 
-    KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+    KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
     styleStack.clear();
-    if (chartElement.hasAttributeNS(KoXmlNS::chart, "style-name")) {
-        context.odfLoadingContext().fillStyleStack(chartElement, KoXmlNS::chart, "style-name", "chart");
+    if (chartElement.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
+        context.odfLoadingContext().fillStyleStack(chartElement, KOdfXmlNS::chart, "style-name", "chart");
         styleStack.setTypeProperties("graphic");
     }
     // Also load the size here as it, if specified here, overwrites the frame's size,
@@ -948,13 +948,13 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
 #ifndef NWORKAROUND_ODF_BUGS
     if (!background()) {
         const QColor color = KoOdfWorkaround::fixMissingFillColor(chartElement, context);
-        if (color.isValid()) // invalid color means do not set KoColorBackground but be transparent instead
-            setBackground(new KoColorBackground(color));
+        if (color.isValid()) // invalid color means do not set KColorBackground but be transparent instead
+            setBackground(new KColorBackground(color));
     }
 #endif
 
     // Check if we're loading an embedded document
-    if (!chartElement.hasAttributeNS(KoXmlNS::chart, "class")) {
+    if (!chartElement.hasAttributeNS(KOdfXmlNS::chart, "class")) {
         kDebug(35001) << "Error: Embedded document has no chart:class attribute.";
         return false;
     }
@@ -963,7 +963,7 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
 
 
     // 1. Load the chart type.
-    const QString chartClass = chartElement.attributeNS(KoXmlNS::chart,
+    const QString chartClass = chartElement.attributeNS(KOdfXmlNS::chart,
                                                          "class", QString());
     ChartType chartType = BarChartType;
     // Find out what charttype the chart class corresponds to.
@@ -984,31 +984,31 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
     // If we can't find out what charttype it is, we might as well end here.
     if (!knownType) {
         // FIXME: Find out what the equivalent of
-        //        KoDocument::setErrorMessage() is for KoShape.
+        //        KoDocument::setErrorMessage() is for KShape.
         //setErrorMessage(i18n("Unknown chart type %1" ,chartClass));
         return false;
     }
 
 
     // 2. Load the data
-    KoXmlElement  dataElem = KoXml::namedItemNS(chartElement,
-                                                 KoXmlNS::table, "table");
+    KXmlElement  dataElem = KoXml::namedItemNS(chartElement,
+                                                 KOdfXmlNS::table, "table");
     if (!dataElem.isNull()) {
         if (!loadOdfData(dataElem, context))
             return false;
     }
 
     // 3. Load the plot area (this is where the meat is!).
-    KoXmlElement  plotareaElem = KoXml::namedItemNS(chartElement,
-                                                     KoXmlNS::chart, "plot-area");
+    KXmlElement  plotareaElem = KoXml::namedItemNS(chartElement,
+                                                     KOdfXmlNS::chart, "plot-area");
     if (!plotareaElem.isNull()) {
         if (!d->plotArea->loadOdf(plotareaElem, context))
             return false;
     }
 
     // 4. Load the title.
-    KoXmlElement titleElem = KoXml::namedItemNS(chartElement,
-                                                 KoXmlNS::chart, "title");
+    KXmlElement titleElem = KoXml::namedItemNS(chartElement,
+                                                 KOdfXmlNS::chart, "title");
     d->setChildVisible(d->title, !titleElem.isNull());
     if (!titleElem.isNull()) {
         if (!d->loadOdfLabel(d->title, titleElem))
@@ -1016,8 +1016,8 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
     }
 
     // 5. Load the subtitle.
-    KoXmlElement subTitleElem = KoXml::namedItemNS(chartElement,
-                                                    KoXmlNS::chart, "subtitle");
+    KXmlElement subTitleElem = KoXml::namedItemNS(chartElement,
+                                                    KOdfXmlNS::chart, "subtitle");
     d->setChildVisible(d->subTitle, !subTitleElem.isNull());
     if (!subTitleElem.isNull()) {
         if (!d->loadOdfLabel(d->subTitle, subTitleElem))
@@ -1025,8 +1025,8 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
     }
 
     // 6. Load the footer.
-    KoXmlElement footerElem = KoXml::namedItemNS(chartElement,
-                                                  KoXmlNS::chart, "footer");
+    KXmlElement footerElem = KoXml::namedItemNS(chartElement,
+                                                  KOdfXmlNS::chart, "footer");
     d->setChildVisible(d->footer, !footerElem.isNull());
     if (!footerElem.isNull()) {
         if (!d->loadOdfLabel(d->footer, footerElem))
@@ -1034,7 +1034,7 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
     }
 
     // 7. Load the legend.
-    KoXmlElement legendElem = KoXml::namedItemNS(chartElement, KoXmlNS::chart,
+    KXmlElement legendElem = KoXml::namedItemNS(chartElement, KOdfXmlNS::chart,
                           "legend");
     d->setChildVisible(d->legend, !legendElem.isNull());
     if (!legendElem.isNull()) {
@@ -1054,8 +1054,8 @@ bool ChartShape::loadOdfChartElement(const KoXmlElement &chartElement,
     return true;
 }
 
-bool ChartShape::loadOdfData(const KoXmlElement &tableElement,
-                              KoShapeLoadingContext &context)
+bool ChartShape::loadOdfData(const KXmlElement &tableElement,
+                              KShapeLoadingContext &context)
 {
     // There is no table element to load
     if (tableElement.isNull() || !tableElement.isElement())
@@ -1074,7 +1074,7 @@ bool ChartShape::loadOdfData(const KoXmlElement &tableElement,
     ChartTableModel *internalModel = new ChartTableModel;
     internalModel->loadOdf(tableElement, context);
 
-    QString tableName = tableElement.attributeNS(KoXmlNS::table, "name");
+    QString tableName = tableElement.attributeNS(KOdfXmlNS::table, "name");
     d->tableSource.add(tableName, internalModel);
     // TODO: d->tableSource.setAvoidNameClash(tableName)
     setInternalModel(internalModel);
@@ -1082,11 +1082,11 @@ bool ChartShape::loadOdfData(const KoXmlElement &tableElement,
     return true;
 }
 
-void ChartShape::saveOdf(KoShapeSavingContext & context) const
+void ChartShape::saveOdf(KShapeSavingContext & context) const
 {
     Q_ASSERT(d->plotArea);
 
-    KoXmlWriter&  bodyWriter = context.xmlWriter();
+    KXmlWriter&  bodyWriter = context.xmlWriter();
 
     // Check if we're saving to a chart document. If not, embed a
     // chart document.  ChartShape::saveOdf() will then be called
@@ -1118,14 +1118,14 @@ void ChartShape::saveOdf(KoShapeSavingContext & context) const
         return;
     }
 
-    KoGenStyles&  mainStyles(context.mainStyles());
+    KOdfGenericStyles&  mainStyles(context.mainStyles());
 
     bodyWriter.startElement("chart:chart");
 
     saveOdfAttributes(context, OdfAllAttributes ^ OdfMandatories);
 
-    KoGenStyle style;
-    style = KoGenStyle(KoGenStyle::GraphicAutoStyle, "chart");
+    KOdfGenericStyle style;
+    style = KOdfGenericStyle(KOdfGenericStyle::GraphicAutoStyle, "chart");
     bodyWriter.addAttribute("chart:style-name", saveStyle(style, context));
 
     // 1. Write the chart type.
@@ -1152,7 +1152,7 @@ void ChartShape::saveOdf(KoShapeSavingContext & context) const
     bodyWriter.endElement(); // chart:chart
 }
 
-static void saveOdfDataRow(KoXmlWriter &bodyWriter, QAbstractItemModel *table, int row)
+static void saveOdfDataRow(KXmlWriter &bodyWriter, QAbstractItemModel *table, int row)
 {
     bodyWriter.startElement("table:table-row");
     const int cols = table->columnCount();
@@ -1203,7 +1203,7 @@ static void saveOdfDataRow(KoXmlWriter &bodyWriter, QAbstractItemModel *table, i
     bodyWriter.endElement(); // table:table-row
 }
 
-void ChartShape::saveOdfData(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) const
+void ChartShape::saveOdfData(KXmlWriter &bodyWriter, KOdfGenericStyles &mainStyles) const
 {
     Q_UNUSED(mainStyles);
 
@@ -1254,14 +1254,14 @@ void ChartShape::saveOdfData(KoXmlWriter &bodyWriter, KoGenStyles &mainStyles) c
 
 void ChartShape::update() const
 {
-    KoShape::update();
+    KShape::update();
 }
 
 void ChartShape::relayout() const
 {
     Q_ASSERT(d->plotArea);
     d->plotArea->relayout();
-    KoShape::update();
+    KShape::update();
 }
 
 void ChartShape::requestRepaint() const
@@ -1270,7 +1270,7 @@ void ChartShape::requestRepaint() const
     d->plotArea->requestRepaint();
 }
 
-KoResourceManager *ChartShape::resourceManager() const
+KResourceManager *ChartShape::resourceManager() const
 {
     return d->resourceManager;
 }

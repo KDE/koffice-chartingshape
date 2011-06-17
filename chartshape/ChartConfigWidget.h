@@ -25,14 +25,14 @@
 
 
 // KOffice
-#include <KoShapeConfigWidgetBase.h>
+#include <KShapeConfigWidgetBase.h>
 
 // KChart
 #include "ChartShape.h"
 #include "ui_ChartConfigWidget.h"
 
 
-class KoShape;
+class KShape;
 
 namespace KDChart
 {
@@ -45,7 +45,7 @@ class ChartShape;
 /**
  * Chart type configuration widget.
  */
-class CHARTSHAPE_TEST_EXPORT ChartConfigWidget : public KoShapeConfigWidgetBase
+class CHARTSHAPE_TEST_EXPORT ChartConfigWidget : public KShapeConfigWidgetBase
 {
     Q_OBJECT
 
@@ -53,7 +53,7 @@ public:
     ChartConfigWidget();
     ~ChartConfigWidget();
 
-    void open(KoShape* shape);
+    void open(KShape* shape);
     void save();
     KAction* createAction();
 

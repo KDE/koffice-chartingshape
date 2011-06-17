@@ -32,17 +32,17 @@
 #include <QImage>
 
 // KOffice
-#include <KoXmlReader.h>
-#include <KoXmlWriter.h>
-#include <KoShapeLoadingContext.h>
-#include <KoShapeSavingContext.h>
-#include <KoOdfLoadingContext.h>
-#include <KoOdfStylesReader.h>
-#include <KoXmlNS.h>
-#include <KoGenStyles.h>
-#include <KoUnit.h>
-#include <KoColorBackground.h>
-#include <KoLineBorder.h>
+#include <KXmlReader.h>
+#include <KXmlWriter.h>
+#include <KShapeLoadingContext.h>
+#include <KShapeSavingContext.h>
+#include <KOdfLoadingContext.h>
+#include <KOdfStylesReader.h>
+#include <KOdfXmlNS.h>
+#include <KOdfGenericStyles.h>
+#include <KUnit.h>
+#include <KColorBackground.h>
+#include <KLineBorder.h>
 
 // KDChart
 #include <KDChartChart>
@@ -77,7 +77,7 @@ public:
     QFont titleFont;
     QColor fontColor;
     Qt::Alignment alignment;
-    KoLineBorder *lineBorder;
+    KLineBorder *lineBorder;
 
     // The connection to KDChart
     KDChart::Legend *kdLegend;
@@ -92,7 +92,7 @@ public:
 
 Legend::Private::Private()
 {
-    lineBorder = new KoLineBorder(0.5, Qt::black);
+    lineBorder = new KLineBorder(0.5, Qt::black);
     showFrame = true;
     framePen = QPen();
     backgroundBrush = QBrush();
@@ -349,11 +349,11 @@ void Legend::setSize(const QSizeF &newSize)
     QSize newSizePx = ScreenConversions::scaleFromPtToPx(newSize);
     d->kdLegend->resize(newSizePx);
     d->kdLegend->resizeLayout(newSizePx);
-    KoShape::setSize(newSize);
+    KShape::setSize(newSize);
 }
 
 
-void Legend::paintPixmap(QPainter &painter, const KoViewConverter &converter)
+void Legend::paintPixmap(QPainter &painter, const KViewConverter &converter)
 {
     // Adjust the size of the painting area to the current zoom level
     const QSize paintRectSize = converter.documentToView(d->lastSize).toSize();
@@ -369,7 +369,7 @@ void Legend::paintPixmap(QPainter &painter, const KoViewConverter &converter)
     d->kdLegend->paint(&pixmapPainter);
 }
 
-void Legend::paint(QPainter &painter, const KoViewConverter &converter)
+void Legend::paint(QPainter &painter, const KViewConverter &converter)
 {
     //painter.save();
 
@@ -421,44 +421,44 @@ void Legend::paint(QPainter &painter, const KoViewConverter &converter)
 }
 
 
-// Only reimplemented because pure virtual in KoShape, but not needed
-bool Legend::loadOdf(const KoXmlElement &legendElement,
-                      KoShapeLoadingContext &context)
+// Only reimplemented because pure virtual in KShape, but not needed
+bool Legend::loadOdf(const KXmlElement &legendElement,
+                      KShapeLoadingContext &context)
 {
-    KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+    KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
     styleStack.clear();
 
     // FIXME: If the style isn't present we shouldn't care about it at all
     // and move everything related to the legend style in this if clause
-    if (legendElement.hasAttributeNS(KoXmlNS::chart, "style-name")) {
-        context.odfLoadingContext().fillStyleStack(legendElement, KoXmlNS::chart, "style-name", "chart");
+    if (legendElement.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
+        context.odfLoadingContext().fillStyleStack(legendElement, KOdfXmlNS::chart, "style-name", "chart");
         styleStack.setTypeProperties("graphic");
     }
 
     if (!legendElement.isNull()) {
         QString lp;
         int attributesToLoad = OdfAllAttributes;
-        if (legendElement.hasAttributeNS(KoXmlNS::chart, "legend-position")) {
+        if (legendElement.hasAttributeNS(KOdfXmlNS::chart, "legend-position")) {
             attributesToLoad ^= OdfPosition;
-            lp = legendElement.attributeNS(KoXmlNS::chart, "legend-position", QString());
+            lp = legendElement.attributeNS(KOdfXmlNS::chart, "legend-position", QString());
         }
 
         // The exact position defined in ODF overwrites the default layout position
-        if (legendElement.hasAttributeNS(KoXmlNS::svg, "x") ||
-             legendElement.hasAttributeNS(KoXmlNS::svg, "y") ||
-             legendElement.hasAttributeNS(KoXmlNS::svg, "width") ||
-             legendElement.hasAttributeNS(KoXmlNS::svg, "height"))
+        if (legendElement.hasAttributeNS(KOdfXmlNS::svg, "x") ||
+             legendElement.hasAttributeNS(KOdfXmlNS::svg, "y") ||
+             legendElement.hasAttributeNS(KOdfXmlNS::svg, "width") ||
+             legendElement.hasAttributeNS(KOdfXmlNS::svg, "height"))
             d->shape->layout()->setPosition(this, FloatingPosition);
 
         loadOdfAttributes(legendElement, context, attributesToLoad);
 
         QString lalign;
-        if (legendElement.hasAttributeNS(KoXmlNS::chart, "legend-align")) {
-            lalign = legendElement.attributeNS(KoXmlNS::chart, "legend-align", QString());
+        if (legendElement.hasAttributeNS(KOdfXmlNS::chart, "legend-align")) {
+            lalign = legendElement.attributeNS(KOdfXmlNS::chart, "legend-align", QString());
         }
 
-        if (legendElement.hasAttributeNS(KoXmlNS::style, "legend-expansion")) {
-            QString lexpansion = legendElement.attributeNS(KoXmlNS::style, "legend-expansion", QString());
+        if (legendElement.hasAttributeNS(KOdfXmlNS::style, "legend-expansion")) {
+            QString lexpansion = legendElement.attributeNS(KOdfXmlNS::style, "legend-expansion", QString());
             if (lexpansion == "wide")
                 setExpansion(WideLegendExpansion);
             else if (lexpansion == "high")
@@ -502,15 +502,15 @@ bool Legend::loadOdf(const KoXmlElement &legendElement,
             setLegendPosition(EndPosition);
         }
 
-        if (legendElement.hasAttributeNS(KoXmlNS::koffice, "title")) {
-            setTitle(legendElement.attributeNS(KoXmlNS::koffice,
+        if (legendElement.hasAttributeNS(KOdfXmlNS::koffice, "title")) {
+            setTitle(legendElement.attributeNS(KOdfXmlNS::koffice,
                                                        "title", QString()));
         }
 
         styleStack.setTypeProperties("text");
 
-        if (styleStack.hasProperty(KoXmlNS::fo, "font-size")) {
-            setFontSize(KoUnit::parseValue(styleStack.property(KoXmlNS::fo, "font-size")));
+        if (styleStack.hasProperty(KOdfXmlNS::fo, "font-size")) {
+            setFontSize(KUnit::parseValue(styleStack.property(KOdfXmlNS::fo, "font-size")));
         }
     }
     else {
@@ -527,10 +527,10 @@ bool Legend::loadOdf(const KoXmlElement &legendElement,
     return true;
 }
 
-void Legend::saveOdf(KoShapeSavingContext &context) const
+void Legend::saveOdf(KShapeSavingContext &context) const
 {
-    KoXmlWriter &bodyWriter = context.xmlWriter();
-    KoGenStyles &mainStyles = context.mainStyles();
+    KXmlWriter &bodyWriter = context.xmlWriter();
+    KOdfGenericStyles &mainStyles = context.mainStyles();
 
     bodyWriter.startElement("chart:legend");
 
@@ -550,7 +550,7 @@ void Legend::saveOdf(KoShapeSavingContext &context) const
     QString styleName = saveOdfFont(mainStyles, d->font, d->fontColor);
     bodyWriter.addAttribute("chart:style-name", styleName);
 
-    KoGenStyle *style = (KoGenStyle*)(mainStyles.style(styleName));
+    KOdfGenericStyle *style = (KOdfGenericStyle*)(mainStyles.style(styleName));
     Q_ASSERT(style);
     if (style)
         saveStyle(*style, context);
@@ -590,7 +590,7 @@ void Legend::rebuild()
 void Legend::update() const
 {
     d->pixmapRepaintRequested = true;
-    KoShape::update();
+    KShape::update();
 }
 
 void Legend::slotKdLegendChanged()

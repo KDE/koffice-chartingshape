@@ -26,7 +26,7 @@
 #include <QMap>
 
 // KOffice
-#include <KoShapeContainerModel.h>
+#include <KShapeContainerModel.h>
 
 #include "kchart_global.h"
 
@@ -60,7 +60,7 @@ class QSizeF;
  * Layout elements with the same position that are in one of the positions B, D, G or E
  * will be placed more towards the center based on a "weight".
  */
-class Layout : public KoShapeContainerModel
+class Layout : public KShapeContainerModel
 {
 public:
     Layout();
@@ -69,7 +69,7 @@ public:
     /**
      * Adds a floating shape to the layout.
      */
-    void add(KoShape *shape);
+    void add(KShape *shape);
 
     /**
      * Adds a shape to the layout.
@@ -80,27 +80,27 @@ public:
      *               A shape with a higher weight will be placed more towards
      *               the center (i.e., it "sinks" due to its higher weight)
      */
-    void add(KoShape *shape, Position pos, int weight = 0);
+    void add(KShape *shape, Position pos, int weight = 0);
 
     /**
      * Removes a shape from the layout.
      */
-    void remove(KoShape *shape);
+    void remove(KShape *shape);
 
     /**
      * Turns clipping of a shape on or off.
      */
-    void setClipped(const KoShape *shape, bool clipping);
+    void setClipped(const KShape *shape, bool clipping);
 
     /**
      * @see setClipping
      */
-    bool isClipped(const KoShape *shape) const;
+    bool isClipped(const KShape *shape) const;
 
     /// reimplemented
-    virtual void setInheritsTransform(const KoShape *shape, bool inherit);
+    virtual void setInheritsTransform(const KShape *shape, bool inherit);
     /// reimplemented
-    virtual bool inheritsTransform(const KoShape *shape) const;
+    virtual bool inheritsTransform(const KShape *shape) const;
 
     /**
      * Returns the number of shapes in this layout.
@@ -110,30 +110,30 @@ public:
     /**
      * Returns a list of shapes in this layout.
      */
-    QList<KoShape*> shapes() const;
+    QList<KShape*> shapes() const;
 
     /**
      * Called whenever a property of the container (i.e. the ChartShape) is changed.
      */
-    void containerChanged(KoShapeContainer *container, KoShape::ChangeType type);
+    void containerChanged(KShapeContainer *container, KShape::ChangeType type);
 
     /**
      * Returns whether a shape is locked for user modifications.
      */
-    bool isChildLocked(const KoShape *shape) const;
+    bool isChildLocked(const KShape *shape) const;
 
     /**
      * Changes the layout position of a shape that is already contained
      * in this layout.
      */
-    void setPosition(const KoShape *shape, Position pos, int weight = 0);
+    void setPosition(const KShape *shape, Position pos, int weight = 0);
 
     /**
      * Called whenever a property of a shape in this layout has changed.
      *
      * All layout items effected by this change will be re-layouted.
      */
-    void childChanged(KoShape *shape, KoShape::ChangeType type);
+    void childChanged(KShape *shape, KShape::ChangeType type);
 
     /**
      * Does the layouting of shapes that have changed its size or position or
@@ -158,36 +158,36 @@ private:
      * Lays out all items in TopPosition, and returns the y value of
      * the bottom-most item's bottom.
      */
-    qreal layoutTop(const QMap<int, KoShape*>& shapes);
+    qreal layoutTop(const QMap<int, KShape*>& shapes);
 
     /**
      * Lays out all items in BottomPosition, and returns the y value of
      * the top-most item's top.
      */
-    qreal layoutBottom(const QMap<int, KoShape*>& shapes);
+    qreal layoutBottom(const QMap<int, KShape*>& shapes);
 
     /**
      * Lays out all items in StartPosition, and returns the x value of
      * the right-most item's right.
      */
-    qreal layoutStart(const QMap<int, KoShape*>& shapes);
+    qreal layoutStart(const QMap<int, KShape*>& shapes);
 
     /**
      * Lays out all items in EndPosition, and returns the x value of
      * the left-most item's left.
      */
-    qreal layoutEnd(const QMap<int, KoShape*>& shapes);
+    qreal layoutEnd(const QMap<int, KShape*>& shapes);
 
-    void layoutTopStart(KoShape *shape);
-    void layoutBottomStart(KoShape *shape);
-    void layoutTopEnd(KoShape *shape);
-    void layoutBottomEnd(KoShape *shape);
+    void layoutTopStart(KShape *shape);
+    void layoutBottomStart(KShape *shape);
+    void layoutTopEnd(KShape *shape);
+    void layoutBottomEnd(KShape *shape);
 
     class LayoutData;
     bool m_doingLayout;
     bool m_relayoutScheduled;
     QSizeF m_containerSize;
-    QMap<KoShape*, LayoutData*> m_layoutItems;
+    QMap<KShape*, LayoutData*> m_layoutItems;
 };
 
 #endif // KCHART_CHARTLAYOUT_H

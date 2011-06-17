@@ -51,7 +51,7 @@ public:
     ~Axis();
 	
     PlotArea *plotArea() const;
-    KoShape *title() const;
+    KShape *title() const;
     QString titleText() const;
     bool showLabels() const;
     QString id() const;
@@ -110,11 +110,11 @@ public:
     void setFont(const QFont &font);
     void setVisible(bool visible);
 
-    bool loadOdf(const KoXmlElement &axisElement, KoShapeLoadingContext &context);
-    bool loadOdfChartSubtypeProperties(const KoXmlElement &axisElement,
-                                        KoShapeLoadingContext &context);
-    void saveOdf(KoShapeSavingContext &context);
-    void saveOdfGrid(KoShapeSavingContext &context, OdfGridClass gridClass);
+    bool loadOdf(const KXmlElement &axisElement, KShapeLoadingContext &context);
+    bool loadOdfChartSubtypeProperties(const KXmlElement &axisElement,
+                                        KShapeLoadingContext &context);
+    void saveOdf(KShapeSavingContext &context);
+    void saveOdfGrid(KShapeSavingContext &context, OdfGridClass gridClass);
 
     // KDChart stuff
     KDChart::CartesianAxis *kdAxis() const;

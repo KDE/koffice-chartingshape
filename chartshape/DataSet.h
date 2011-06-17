@@ -39,7 +39,7 @@ namespace KDChart {
     class MarkerAttributes;
 }
 
-class KoShapeLoadingContext;
+class KShapeLoadingContext;
 
 class KDChartModel;
 
@@ -218,12 +218,12 @@ public:
     void setKdChartModel(KDChartModel *model);
     KDChartModel *kdChartModel() const;
 
-    bool loadOdf(const KoXmlElement &n,
-                  KoShapeLoadingContext &context);
+    bool loadOdf(const KXmlElement &n,
+                  KShapeLoadingContext &context);
     /**
      * Saves a series to ODF. Creates a new chart:series element.
      */
-    void saveOdf(KoShapeSavingContext &context) const;
+    void saveOdf(KShapeSavingContext &context) const;
 
 private:
     class Private;

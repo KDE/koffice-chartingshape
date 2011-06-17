@@ -30,10 +30,10 @@
 #include <klocale.h>
 
 // KOffice
-#include <KoProperties.h>
-#include <KoToolRegistry.h>
-#include <KoShapeRegistry.h>
-#include <KoShapeLoadingContext.h>
+#include <KProperties.h>
+#include <KToolRegistry.h>
+#include <KShapeRegistry.h>
+#include <KShapeLoadingContext.h>
 
 // Chart shape
 #include "ChartToolFactory.h"
@@ -51,15 +51,15 @@ K_EXPORT_PLUGIN(ChartShapePluginFactory("ChartShape"))
 ChartShapePlugin::ChartShapePlugin(QObject * parent,  const QVariantList&)
 {
     // Register the chart shape factory.
-    KoShapeRegistry::instance()->add(new ChartShapeFactory(parent));
+    KShapeRegistry::instance()->add(new ChartShapeFactory(parent));
 
     // Register all tools for the chart shape.
-    KoToolRegistry::instance()->add(new ChartToolFactory(parent));
+    KToolRegistry::instance()->add(new ChartToolFactory(parent));
 }
 
 
 ChartShapeFactory::ChartShapeFactory(QObject* parent)
-    : KoShapeFactoryBase(parent, ChartShapeId, i18n("Chart"))
+    : KShapeFactoryBase(parent, ChartShapeId, i18n("Chart"))
 {
     setOdfElementNames("urn:oasis:names:tc:opendocument:xmlns:drawing:1.0", QStringList("object"));
     setToolTip(i18n("Business charts"));
@@ -69,14 +69,14 @@ ChartShapeFactory::ChartShapeFactory(QObject* parent)
 }
 
 
-bool ChartShapeFactory::supports(const KoXmlElement &element, KoShapeLoadingContext &context) const
+bool ChartShapeFactory::supports(const KXmlElement &element, KShapeLoadingContext &context) const
 {
     Q_UNUSED(context);
     return element.namespaceURI() == "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
         && element.tagName() == "object";
 }
 
-KoShape *ChartShapeFactory::createDefaultShape(KoResourceManager *documentResources) const
+KShape *ChartShapeFactory::createDefaultShape(KResourceManager *documentResources) const
 {
     ChartShape* shape = new ChartShape(documentResources);
     ChartProxyModel *proxyModel = shape->proxyModel();
@@ -138,7 +138,7 @@ KoShape *ChartShapeFactory::createDefaultShape(KoResourceManager *documentResour
     plotAreaSize.rwidth() -= legendSize.width();
 
     Axis    *xAxis      = shape->plotArea()->xAxis();
-    KoShape *xAxisTitle = xAxis->title();
+    KShape *xAxisTitle = xAxis->title();
     if (xAxis) {
         xAxis->setTitleText(i18n("Month"));
         xAxisTitle->setPosition(QPointF(shapeSize.width() / 2.0 - xAxisTitle->size().width() / 2.0,
@@ -147,7 +147,7 @@ KoShape *ChartShapeFactory::createDefaultShape(KoResourceManager *documentResour
     }
 
     Axis    *yAxis      = shape->plotArea()->yAxis();
-    KoShape *yAxisTitle = yAxis->title();
+    KShape *yAxisTitle = yAxis->title();
     if (yAxis) {
         yAxis->setTitleText(i18n("Growth in %"));
         yAxisTitle->setPosition(QPointF(-yAxisTitle->size().width() / 2.0 + yAxisTitle->size().height() / 2.0,
@@ -169,12 +169,12 @@ KoShape *ChartShapeFactory::createDefaultShape(KoResourceManager *documentResour
     return shape;
 }
 
-QList<KoShapeConfigWidgetBase*> ChartShapeFactory::createShapeOptionPanels()
+QList<KShapeConfigWidgetBase*> ChartShapeFactory::createShapeOptionPanels()
 {
-    return QList<KoShapeConfigWidgetBase*>();
+    return QList<KShapeConfigWidgetBase*>();
 }
 
-void ChartShapeFactory::newDocumentResourceManager(KoResourceManager *manager)
+void ChartShapeFactory::newDocumentResourceManager(KResourceManager *manager)
 {
     Q_UNUSED(manager);
 }

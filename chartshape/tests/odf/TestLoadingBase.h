@@ -33,7 +33,7 @@
 // KChart
 #include "CellRegion.h"
 
-class KoShape;
+class KShape;
 
 class ChartShape;
 class Table;
@@ -66,7 +66,7 @@ protected:
     // Helper methods to be used by test functions
 
     // 0) Generics
-    void testElementIsVisible(KoShape *element, bool shouldBeVisible);
+    void testElementIsVisible(KShape *element, bool shouldBeVisible);
 
     // 1) Legend
     void testLegendElements(QStringList labels);

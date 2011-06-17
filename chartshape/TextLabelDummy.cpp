@@ -21,15 +21,15 @@
 
 #include "TextLabelDummy.h"
 
-void TextLabelDummy::paint(QPainter&, const KoViewConverter&)
+void TextLabelDummy::paint(QPainter&, const KViewConverter&)
 {
 }
 
-bool TextLabelDummy::loadOdf(const KoXmlElement&, KoShapeLoadingContext&)
+bool TextLabelDummy::loadOdf(const KXmlElement&, KShapeLoadingContext&)
 {
     return false;
 }
 
-void TextLabelDummy::saveOdf(KoShapeSavingContext&) const
+void TextLabelDummy::saveOdf(KShapeSavingContext&) const
 {
 }

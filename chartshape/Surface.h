@@ -25,8 +25,8 @@
 // Local
 #include "ChartShape.h"
 
-class KoStyleStack;
-class KoOdfLoadingContext;
+class KOdfStyleStack;
+class KOdfLoadingContext;
 class QSizeF;
 
 
@@ -44,10 +44,10 @@ public:
     ~Surface();
 
     /**
-     * Old method of loading a pattern style; Use the Flake KoPatternBackground now.
+     * Old method of loading a pattern style; Use the Flake KPatternBackground now.
      * Not all properties can be stored in a QBrush so this concept is obsolete.
      */
-    KDE_DEPRECATED static QBrush loadOdfPatternStyle(const KoStyleStack &styleStack, KoOdfLoadingContext &context, const QSizeF &size);
+    KDE_DEPRECATED static QBrush loadOdfPatternStyle(const KOdfStyleStack &styleStack, KOdfLoadingContext &context, const QSizeF &size);
 
     QPointF position() const;
     int width() const;
@@ -59,8 +59,8 @@ public:
     void setBrush(const QBrush &brush);
     void setFramePen(const QPen &pen);
 
-    bool loadOdf(const KoXmlElement &surfaceElement, KoShapeLoadingContext &context);
-    void saveOdf(KoShapeSavingContext &context,
+    bool loadOdf(const KXmlElement &surfaceElement, KShapeLoadingContext &context);
+    void saveOdf(KShapeSavingContext &context,
                   const char *elementName);
 
 private:

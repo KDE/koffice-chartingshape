@@ -24,8 +24,8 @@
 #include "OdfLoadingHelper.h"
 
 // KOffice
-#include "KoOdfStylesReader.h"
-#include "KoStyleStack.h"
+#include "KOdfStylesReader.h"
+#include "KOdfStyleStack.h"
 
 OdfLoadingHelper::OdfLoadingHelper()
     : tableSource(0)

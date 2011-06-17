@@ -53,7 +53,7 @@ namespace KDChart {
  * in the <chart:plotarea> element.
  */
 
-class CHARTSHAPE_TEST_EXPORT PlotArea : public QObject, public KoShape
+class CHARTSHAPE_TEST_EXPORT PlotArea : public QObject, public KShape
 {
     friend class Surface;
     friend class Axis;
@@ -122,11 +122,11 @@ public:
      */
     void setPieAngleOffset(qreal angle);
 
-    bool loadOdf(const KoXmlElement &plotAreaElement, KoShapeLoadingContext &context);
-    bool loadOdfSeries(const KoXmlElement &seriesElement, KoShapeLoadingContext &context);
+    bool loadOdf(const KXmlElement &plotAreaElement, KShapeLoadingContext &context);
+    bool loadOdfSeries(const KXmlElement &seriesElement, KShapeLoadingContext &context);
 
-    void saveOdf(KoShapeSavingContext &context) const;
-    void saveOdfSubType(KoXmlWriter &bodyWriter, KoGenStyle &plotAreaStyle) const;
+    void saveOdf(KShapeSavingContext &context) const;
+    void saveOdfSubType(KXmlWriter &bodyWriter, KOdfGenericStyle &plotAreaStyle) const;
 
 
     void setThreeD(bool threeD);
@@ -143,7 +143,7 @@ public:
 
     ChartShape *parent() const;
 
-    void paint(QPainter &painter, const KoViewConverter &converter);
+    void paint(QPainter &painter, const KViewConverter &converter);
 
     bool registerKdDiagram(KDChart::AbstractDiagram *diagram);
     bool deregisterKdDiagram(KDChart::AbstractDiagram *diagram);
@@ -161,7 +161,7 @@ signals:
     void pieAngleOffsetChanged(qreal);
 
 private:
-    void paintPixmap(QPainter &painter, const KoViewConverter &converter);
+    void paintPixmap(QPainter &painter, const KViewConverter &converter);
 
     // For class Axis
     KDChart::CartesianCoordinatePlane *kdCartesianPlane(Axis *axis = 0) const;

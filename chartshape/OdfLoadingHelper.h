@@ -27,16 +27,16 @@
 #include <QString>
 
 // KOffice
-#include "KoSharedLoadingData.h"
-#include "KoXmlReader.h"
+#include "KSharedLoadingData.h"
+#include "KXmlReader.h"
 
 // KChart
 #include "TableSource.h"
 
-class KoStyleStack;
+class KOdfStyleStack;
 class KoodfStylesReader;
 
-class OdfLoadingHelper : public KoSharedLoadingData
+class OdfLoadingHelper : public KSharedLoadingData
 {
 public:
     OdfLoadingHelper();

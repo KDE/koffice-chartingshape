@@ -25,12 +25,12 @@
 #include <QValidator>
 
 // Interface
-#include <KoChartModel.h>
+#include <KChartModel.h>
 
 class CellRegionStringValidator : public QValidator
 {
  public:
-    CellRegionStringValidator(KoChart::ChartModel *model);
+    CellRegionStringValidator(KChart::ChartModel *model);
     ~CellRegionStringValidator();
 	
     State validate(QString &string, int & pos) const;

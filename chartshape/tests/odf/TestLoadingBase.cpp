@@ -30,9 +30,9 @@
 #include <qtest_kde.h>
 
 // KOffice
-#include <KoStore.h>
-#include <KoOdfReadStore.h>
-#include <KoTextShapeData.h>
+#include <KOdfStore.h>
+#include <KOdfStoreReader.h>
+#include <KTextShapeData.h>
 
 // KChart
 #include "ChartShape.h"
@@ -59,10 +59,10 @@ TestLoadingBase::TestLoadingBase()
 void TestLoadingBase::initTestCase()
 {
     ChartDocument document(m_chart);
-    KoStore *store = KoStore::createStore(QString(KDESRCDIR) + "/doc", KoStore::Read);
+    KOdfStore *store = KOdfStore::createStore(QString(KDESRCDIR) + "/doc", KOdfStore::Read);
     QVERIFY(store->enterDirectory("doc"));
     QString errorMsg;
-    KoOdfReadStore odfReadStore(store);
+    KOdfStoreReader odfReadStore(store);
     bool success = odfReadStore.loadAndParse(errorMsg);
     if (!success)
         qDebug() << "Error in odfReadStore.loadAndParse(): " << errorMsg;
@@ -70,7 +70,7 @@ void TestLoadingBase::initTestCase()
     QVERIFY(document.loadOdf(odfReadStore));
 }
 
-void TestLoadingBase::testElementIsVisible(KoShape *element, bool shouldBeVisible)
+void TestLoadingBase::testElementIsVisible(KShape *element, bool shouldBeVisible)
 {
     QVERIFY(element);
     QCOMPARE(element->isVisible(), shouldBeVisible);
@@ -141,7 +141,7 @@ void TestLoadingBase::testInternalTableSize(int rowCount, int colCount)
 void TestLoadingBase::testTitleText(const QString &text)
 {
     QVERIFY(m_chart->title());
-    KoTextShapeData *data = dynamic_cast<KoTextShapeData*>(m_chart->title()->userData());
+    KTextShapeData *data = dynamic_cast<KTextShapeData*>(m_chart->title()->userData());
     QVERIFY(data);
     QVERIFY(data->document());
     QCOMPARE(data->document()->toPlainText(), text);
@@ -150,7 +150,7 @@ void TestLoadingBase::testTitleText(const QString &text)
 void TestLoadingBase::testSubTitleText(const QString &text)
 {
     QVERIFY(m_chart->subTitle());
-    KoTextShapeData *data = dynamic_cast<KoTextShapeData*>(m_chart->subTitle()->userData());
+    KTextShapeData *data = dynamic_cast<KTextShapeData*>(m_chart->subTitle()->userData());
     QVERIFY(data);
     QVERIFY(data->document());
     QCOMPARE(data->document()->toPlainText(), text);
@@ -159,7 +159,7 @@ void TestLoadingBase::testSubTitleText(const QString &text)
 void TestLoadingBase::testFooterText(const QString &text)
 {
     QVERIFY(m_chart->footer());
-    KoTextShapeData *data = dynamic_cast<KoTextShapeData*>(m_chart->footer()->userData());
+    KTextShapeData *data = dynamic_cast<KTextShapeData*>(m_chart->footer()->userData());
     QVERIFY(data);
     QVERIFY(data->document());
     QCOMPARE(data->document()->toPlainText(), text);
@@ -169,7 +169,7 @@ void TestLoadingBase::testAxisTitle(Axis *axis, const QString &text)
 {
     QVERIFY(axis);
     QVERIFY(axis->title());
-    KoTextShapeData *data = dynamic_cast<KoTextShapeData*>(axis->title()->userData());
+    KTextShapeData *data = dynamic_cast<KTextShapeData*>(axis->title()->userData());
     QVERIFY(data);
     QVERIFY(data->document());
     QCOMPARE(data->document()->toPlainText(), text);

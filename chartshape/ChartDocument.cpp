@@ -29,16 +29,16 @@
 
 // KOffice
 #include <KoDocument.h>
-#include <KoXmlWriter.h>
-#include <KoOdfReadStore.h>
-#include <KoOdfWriteStore.h>
-#include <KoOdfLoadingContext.h>
-#include <KoShapeLoadingContext.h>
-#include <KoShapeSavingContext.h>
-#include <KoXmlNS.h>
-#include <KoOdfStylesReader.h>
-#include <KoGenStyles.h>
-#include <KoEmbeddedDocumentSaver.h>
+#include <KXmlWriter.h>
+#include <KOdfStoreReader.h>
+#include <KOdfWriteStore.h>
+#include <KOdfLoadingContext.h>
+#include <KShapeLoadingContext.h>
+#include <KShapeSavingContext.h>
+#include <KOdfXmlNS.h>
+#include <KOdfStylesReader.h>
+#include <KOdfGenericStyles.h>
+#include <KOdfEmbeddedDocumentSaver.h>
 #include <KoView.h>
 #include <KComponentData>
 #include <KDebug>
@@ -68,7 +68,7 @@ ChartDocument::ChartDocument(ChartShape *parent)
 {
     d->parent = parent;
     // Needed by KoDocument::nativeOasisMimeType().
-    // KoEmbeddedDocumentSaver uses that method to
+    // KOdfEmbeddedDocumentSaver uses that method to
     // get the mimetype of the embedded document.
     setComponentData(KComponentData("kchart"));
 }
@@ -79,31 +79,31 @@ ChartDocument::~ChartDocument()
 }
 
 
-bool ChartDocument::loadOdf(KoOdfReadStore &odfStore)
+bool ChartDocument::loadOdf(KOdfStoreReader &odfStore)
 {
-    KoXmlDocument doc = odfStore.contentDoc();
-    KoXmlNode bodyNode = doc.documentElement().namedItemNS(KoXmlNS::office, "body");
+    KXmlDocument doc = odfStore.contentDoc();
+    KXmlNode bodyNode = doc.documentElement().namedItemNS(KOdfXmlNS::office, "body");
     if (bodyNode.isNull()) {
         kError(35001) << "No <office:body> element found.";
         return false;
     }
-    KoXmlNode chartElementParentNode = bodyNode.namedItemNS(KoXmlNS::office, "chart");
+    KXmlNode chartElementParentNode = bodyNode.namedItemNS(KOdfXmlNS::office, "chart");
     if (chartElementParentNode.isNull()) {
         kError(35001) << "No <office:chart> element found.";
         return false;
     }
-    KoXmlElement chartElement = chartElementParentNode.namedItemNS(KoXmlNS::chart, "chart").toElement();
+    KXmlElement chartElement = chartElementParentNode.namedItemNS(KOdfXmlNS::chart, "chart").toElement();
     if (chartElement.isNull()) {
         kError(35001) << "No <chart:chart> element found.";
         return false;
     }
-    KoOdfLoadingContext odfLoadingContext(odfStore.styles(), odfStore.store());
-    KoShapeLoadingContext context(odfLoadingContext, d->parent->resourceManager());
+    KOdfLoadingContext odfLoadingContext(odfStore.styles(), odfStore.store());
+    KShapeLoadingContext context(odfLoadingContext, d->parent->resourceManager());
 
     return d->parent->loadOdfChartElement(chartElement, context);
 }
 
-bool ChartDocument::loadXML(const KoXmlDocument &doc, KoStore *)
+bool ChartDocument::loadXML(const KXmlDocument &doc, KOdfStore *)
 {
     Q_UNUSED(doc);
 
@@ -113,21 +113,21 @@ bool ChartDocument::loadXML(const KoXmlDocument &doc, KoStore *)
 
 bool ChartDocument::saveOdf(SavingContext &context)
 {
-    KoOdfWriteStore &odfStore = context.odfStore;
-    KoStore *store = odfStore.store();
-    KoXmlWriter *manifestWriter = odfStore.manifestWriter();
-    KoXmlWriter *contentWriter  = odfStore.contentWriter();
+    KOdfWriteStore &odfStore = context.odfStore;
+    KOdfStore *store = odfStore.store();
+    KXmlWriter *manifestWriter = odfStore.manifestWriter();
+    KXmlWriter *contentWriter  = odfStore.contentWriter();
     if (!contentWriter)
         return false;
 
-    KoGenStyles mainStyles;
-    KoXmlWriter *bodyWriter = odfStore.bodyWriter();
+    KOdfGenericStyles mainStyles;
+    KXmlWriter *bodyWriter = odfStore.bodyWriter();
     if (!bodyWriter)
         return false;
 
-    KoEmbeddedDocumentSaver& embeddedSaver = context.embeddedSaver;
+    KOdfEmbeddedDocumentSaver& embeddedSaver = context.embeddedSaver;
 
-    KoShapeSavingContext savingContext(*bodyWriter, mainStyles, embeddedSaver);
+    KShapeSavingContext savingContext(*bodyWriter, mainStyles, embeddedSaver);
 
     bodyWriter->startElement("office:body");
     bodyWriter->startElement("office:chart");
@@ -137,7 +137,7 @@ bool ChartDocument::saveOdf(SavingContext &context)
     bodyWriter->endElement(); // office:chart
     bodyWriter->endElement(); // office:body
 
-    mainStyles.saveOdfStyles(KoGenStyles::DocumentAutomaticStyles, contentWriter);
+    mainStyles.saveOdfStyles(KOdfGenericStyles::DocumentAutomaticStyles, contentWriter);
     odfStore.closeContentWriter();
 
     // Add manifest line for content.xml and styles.xml

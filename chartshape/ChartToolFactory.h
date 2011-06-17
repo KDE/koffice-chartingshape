@@ -23,9 +23,9 @@
 
 #include "kchart_export.h"
 
-#include <KoToolFactoryBase.h>
+#include <KToolFactoryBase.h>
 
-class CHARTSHAPE_TEST_EXPORT ChartToolFactory : public KoToolFactoryBase
+class CHARTSHAPE_TEST_EXPORT ChartToolFactory : public KToolFactoryBase
 {
     Q_OBJECT
 
@@ -33,7 +33,7 @@ public:
     explicit ChartToolFactory(QObject *parent);
     ~ChartToolFactory();
 
-    KoToolBase * createTool(KoCanvasBase *canvas);
+    KToolBase * createTool(KCanvasBase *canvas);
 };
 
 

@@ -28,12 +28,12 @@
 #include <QStringList>
 
 // KOffice
-#include <KoShapeFactoryBase.h>
+#include <KShapeFactoryBase.h>
 #include <QVariantList>
 
 
-class KoShape;
-class KoShapeConfigWidgetBase;
+class KShape;
+class KShapeConfigWidgetBase;
 
 
 class ChartShapePlugin : public QObject
@@ -46,19 +46,19 @@ public:
 };
 
 
-class ChartShapeFactory : public KoShapeFactoryBase
+class ChartShapeFactory : public KShapeFactoryBase
 {
     Q_OBJECT
 public:
     ChartShapeFactory(QObject* parent);
     ~ChartShapeFactory() {}
 
-    bool supports(const KoXmlElement &element, KoShapeLoadingContext &context) const;
+    bool supports(const KXmlElement &element, KShapeLoadingContext &context) const;
 
-    virtual KoShape *createDefaultShape(KoResourceManager *documentResources = 0) const;
-    virtual void newDocumentResourceManager(KoResourceManager *manager);
+    virtual KShape *createDefaultShape(KResourceManager *documentResources = 0) const;
+    virtual void newDocumentResourceManager(KResourceManager *manager);
 
-    QList<KoShapeConfigWidgetBase*> createShapeOptionPanels();
+    QList<KShapeConfigWidgetBase*> createShapeOptionPanels();
 };
 
 

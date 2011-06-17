@@ -26,12 +26,12 @@
 #include <QObject>
 
 // KOffice
-#include <KoShape.h>
+#include <KShape.h>
 
 #include "ChartShape.h"
 
 
-class CHARTSHAPE_TEST_EXPORT Legend : public QObject, public KoShape
+class CHARTSHAPE_TEST_EXPORT Legend : public QObject, public KShape
 {
     Q_OBJECT
 
@@ -68,16 +68,16 @@ public:
     void setLegendPosition(Position position);
     void setSize(const QSizeF &size);
 
-    void paint(QPainter &painter, const KoViewConverter &converter);
-    void paintPixmap(QPainter &painter, const KoViewConverter &converter);
+    void paint(QPainter &painter, const KViewConverter &converter);
+    void paintPixmap(QPainter &painter, const KViewConverter &converter);
 
-    bool loadOdf(const KoXmlElement &legendElement, KoShapeLoadingContext &context);
-    void saveOdf(KoShapeSavingContext &context) const;
+    bool loadOdf(const KXmlElement &legendElement, KShapeLoadingContext &context);
+    void saveOdf(KShapeSavingContext &context) const;
 
     KDChart::Legend *kdLegend() const;
 
     void rebuild();
-    using KoShape::update;
+    using KShape::update;
     void update() const;
 
 private slots:

@@ -19,7 +19,7 @@
 */
 
 // KOffice
-#include <KoUnit.h>
+#include <KUnit.h>
 #include <KoDpi.h>
 
 // KChart
@@ -34,27 +34,27 @@
 
 qreal ScreenConversions::pxToPtX(qreal px)
 {
-    return KoUnit(KoUnit::Inch).fromUserValue(px / KoDpi::dpiX());
+    return KUnit(KUnit::Inch).fromUserValue(px / KoDpi::dpiX());
 }
 
 qreal ScreenConversions::pxToPtY(qreal px)
 {
-    return KoUnit(KoUnit::Inch).fromUserValue(px / KoDpi::dpiY());
+    return KUnit(KUnit::Inch).fromUserValue(px / KoDpi::dpiY());
 }
 
 qreal ScreenConversions::ptToPxX(qreal pt)
 {
-    return KoUnit::toInch(pt) * KoDpi::dpiX();
+    return KUnit::toInch(pt) * KoDpi::dpiX();
 }
 
 qreal ScreenConversions::ptToPxY(qreal pt)
 {
-    return KoUnit::toInch(pt) * KoDpi::dpiY();
+    return KUnit::toInch(pt) * KoDpi::dpiY();
 }
 
 void ScreenConversions::scaleFromPtToPx(QPainter &painter)
 {
-    const qreal inPerPt = KoUnit::toInch(1.0);
+    const qreal inPerPt = KUnit::toInch(1.0);
     painter.scale(1.0 / (inPerPt * KoDpi::dpiX()), 1.0 / (inPerPt * KoDpi::dpiY()));
 }
 

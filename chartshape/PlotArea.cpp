@@ -31,19 +31,19 @@
 #include <kdebug.h>
 
 // KOffice
-#include <KoXmlReader.h>
-#include <KoXmlWriter.h>
-#include <KoShapeLoadingContext.h>
-#include <KoShapeSavingContext.h>
-#include <KoGenStyles.h>
-#include <KoXmlNS.h>
-#include <KoTextShapeData.h>
-#include <KoOdfLoadingContext.h>
-#include <KoOdfStylesReader.h>
-#include <KoUnit.h>
-#include <KoViewConverter.h>
-#include <KoShapeBackground.h>
-#include <KoOdfGraphicStyles.h>
+#include <KXmlReader.h>
+#include <KXmlWriter.h>
+#include <KShapeLoadingContext.h>
+#include <KShapeSavingContext.h>
+#include <KOdfGenericStyles.h>
+#include <KOdfXmlNS.h>
+#include <KTextShapeData.h>
+#include <KOdfLoadingContext.h>
+#include <KOdfStylesReader.h>
+#include <KUnit.h>
+#include <KViewConverter.h>
+#include <KShapeBackground.h>
+#include <KOdf.h>
 
 // KDChart
 #include <KDChartChart>
@@ -107,7 +107,7 @@ public:
 
     // The axes
     QList<Axis*>     axes;
-    QList<KoShape*>  automaticallyHiddenAxisTitles;
+    QList<KShape*>  automaticallyHiddenAxisTitles;
 
     // 3D properties
     bool          threeD;
@@ -242,7 +242,7 @@ void PlotArea::Private::initAxes()
 
 PlotArea::PlotArea(ChartShape *parent)
     : QObject()
-    , KoShape()
+    , KShape()
     , d(new Private(this, parent))
 {
     setShapeId(ChartShapeId);
@@ -529,7 +529,7 @@ void PlotArea::setChartType(ChartType type)
         }
     }
     else if (isPolar(d->chartType) && !isPolar(type)) {
-        foreach (KoShape *title, d->automaticallyHiddenAxisTitles) {
+        foreach (KShape *title, d->automaticallyHiddenAxisTitles) {
             title->setVisible(true);
         }
         d->automaticallyHiddenAxisTitles.clear();
@@ -589,16 +589,16 @@ void PlotArea::setVertical(bool vertical)
 //                         loading and saving
 
 
-bool PlotArea::loadOdf(const KoXmlElement &plotAreaElement,
-                        KoShapeLoadingContext &context)
+bool PlotArea::loadOdf(const KXmlElement &plotAreaElement,
+                        KShapeLoadingContext &context)
 {
-    KoStyleStack &styleStack = context.odfLoadingContext().styleStack();
+    KOdfStyleStack &styleStack = context.odfLoadingContext().styleStack();
 
     // The exact position defined in ODF overwrites the default layout position
-    if (plotAreaElement.hasAttributeNS(KoXmlNS::svg, "x") ||
-         plotAreaElement.hasAttributeNS(KoXmlNS::svg, "y") ||
-         plotAreaElement.hasAttributeNS(KoXmlNS::svg, "width") ||
-         plotAreaElement.hasAttributeNS(KoXmlNS::svg, "height"))
+    if (plotAreaElement.hasAttributeNS(KOdfXmlNS::svg, "x") ||
+         plotAreaElement.hasAttributeNS(KOdfXmlNS::svg, "y") ||
+         plotAreaElement.hasAttributeNS(KOdfXmlNS::svg, "width") ||
+         plotAreaElement.hasAttributeNS(KOdfXmlNS::svg, "height"))
         parent()->layout()->setPosition(this, FloatingPosition);
 
     loadOdfAttributes(plotAreaElement, context, OdfAllAttributes);
@@ -617,16 +617,16 @@ bool PlotArea::loadOdf(const KoXmlElement &plotAreaElement,
         delete axis;
     }
 
-    KoXmlElement n;
+    KXmlElement n;
     forEachElement (n, plotAreaElement) {
-        if (n.namespaceURI() != KoXmlNS::chart)
+        if (n.namespaceURI() != KOdfXmlNS::chart)
             continue;
 
         if (n.localName() == "axis") {
-            if (!n.hasAttributeNS(KoXmlNS::chart, "dimension"))
+            if (!n.hasAttributeNS(KOdfXmlNS::chart, "dimension"))
                 // We have to know what dimension the axis is supposed to be..
                 continue;
-            const QString dimension = n.attributeNS(KoXmlNS::chart, "dimension", QString());
+            const QString dimension = n.attributeNS(KOdfXmlNS::chart, "dimension", QString());
             AxisDimension dim;
             if      (dimension == "x") dim = XAxisDimension;
             else if (dimension == "y") dim = YAxisDimension;
@@ -651,39 +651,39 @@ bool PlotArea::loadOdf(const KoXmlElement &plotAreaElement,
     //
     // These things include chart subtype, special things for some
     // chart types like line charts, stock charts, etc.
-    if (plotAreaElement.hasAttributeNS(KoXmlNS::chart, "style-name")) {
+    if (plotAreaElement.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
         styleStack.clear();
-        context.odfLoadingContext().fillStyleStack(plotAreaElement, KoXmlNS::chart, "style-name", "chart");
+        context.odfLoadingContext().fillStyleStack(plotAreaElement, KOdfXmlNS::chart, "style-name", "chart");
 
         styleStack.setTypeProperties("graphic");
         styleStack.setTypeProperties("chart");
 
-        if (styleStack.hasProperty(KoXmlNS::chart, "angle-offset")) {
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "angle-offset")) {
             bool ok;
-            const int angleOffset = styleStack.property(KoXmlNS::chart, "angle-offset").toInt(&ok);
+            const int angleOffset = styleStack.property(KOdfXmlNS::chart, "angle-offset").toInt(&ok);
             if (ok)
                 setPieAngleOffset(angleOffset);
         }
 
-        if (styleStack.hasProperty(KoXmlNS::chart, "three-dimensional"))
-            setThreeD(styleStack.property(KoXmlNS::chart, "three-dimensional") == "true");
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "three-dimensional"))
+            setThreeD(styleStack.property(KOdfXmlNS::chart, "three-dimensional") == "true");
 
         // Set subtypes stacked or percent.
         // These are valid for Bar, Line, Area and Radar types.
-        if (styleStack.hasProperty(KoXmlNS::chart, "percentage")
-             && styleStack.property(KoXmlNS::chart, "percentage") == "true")
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "percentage")
+             && styleStack.property(KOdfXmlNS::chart, "percentage") == "true")
         {
             setChartSubType(PercentChartSubtype);
         }
-        else if (styleStack.hasProperty(KoXmlNS::chart, "stacked")
-                  && styleStack.property(KoXmlNS::chart, "stacked") == "true")
+        else if (styleStack.hasProperty(KOdfXmlNS::chart, "stacked")
+                  && styleStack.property(KOdfXmlNS::chart, "stacked") == "true")
         {
             setChartSubType(StackedChartSubtype);
         }
 
         // Data specific to bar charts
-        if (styleStack.hasProperty(KoXmlNS::chart, "vertical"))
-            setVertical(styleStack.property(KoXmlNS::chart, "vertical") == "true");
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "vertical"))
+            setVertical(styleStack.property(KOdfXmlNS::chart, "vertical") == "true");
 
         // Special properties for various chart types
 #if 0
@@ -705,7 +705,7 @@ bool PlotArea::loadOdf(const KoXmlElement &plotAreaElement,
     // Now load the surfaces (wall and possibly floor)
     // FIXME: Use named tags instead of looping?
     forEachElement (n, plotAreaElement) {
-        if (n.namespaceURI() != KoXmlNS::chart)
+        if (n.namespaceURI() != KOdfXmlNS::chart)
             continue;
 
         if (n.localName() == "wall") {
@@ -726,12 +726,12 @@ bool PlotArea::loadOdf(const KoXmlElement &plotAreaElement,
             // FIXME
         }
         else if (d->chartType == StockChartType && n.localName() == "stock-range-line") {
-            if (n.hasAttributeNS(KoXmlNS::chart, "style-name")) {
+            if (n.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
                 styleStack.clear();
-                context.odfLoadingContext().fillStyleStack(n, KoXmlNS::chart, "style-name", "chart");
+                context.odfLoadingContext().fillStyleStack(n, KOdfXmlNS::chart, "style-name", "chart");
 
                 // stroke-color
-                const QString strokeColor = styleStack.property(KoXmlNS::svg, "stroke-color");
+                const QString strokeColor = styleStack.property(KOdfXmlNS::svg, "stroke-color");
                 // FIXME: There seem to be no way to set this for the StockChart in KDChart. :-/
                 //QPen(QColor(strokeColor));
 
@@ -748,15 +748,15 @@ bool PlotArea::loadOdf(const KoXmlElement &plotAreaElement,
     return true;
 }
 
-void PlotArea::saveOdf(KoShapeSavingContext &context) const
+void PlotArea::saveOdf(KShapeSavingContext &context) const
 {
-    KoXmlWriter &bodyWriter = context.xmlWriter();
-    //KoGenStyles &mainStyles = context.mainStyles();
+    KXmlWriter &bodyWriter = context.xmlWriter();
+    //KOdfGenericStyles &mainStyles = context.mainStyles();
     bodyWriter.startElement("chart:plot-area");
 
     // FIXME: Somehow this style gets the name gr2 instead of ch2.
     //        Fix that as well.
-    KoGenStyle plotAreaStyle(KoGenStyle::ChartAutoStyle, "chart");
+    KOdfGenericStyle plotAreaStyle(KOdfGenericStyle::ChartAutoStyle, "chart");
 
     // Data direction
     const Qt::Orientation direction = proxyModel()->dataDirection();
@@ -814,8 +814,8 @@ void PlotArea::saveOdf(KoShapeSavingContext &context) const
     bodyWriter.endElement(); // chart:plot-area
 }
 
-void PlotArea::saveOdfSubType(KoXmlWriter& xmlWriter,
-                               KoGenStyle& plotAreaStyle) const
+void PlotArea::saveOdfSubType(KXmlWriter& xmlWriter,
+                               KOdfGenericStyle& plotAreaStyle) const
 {
     Q_UNUSED(xmlWriter);
 
@@ -1004,7 +1004,7 @@ void PlotArea::plotAreaUpdate() const
     foreach(Axis* axis, d->axes)
         axis->update();
 
-    KoShape::update();
+    KShape::update();
 }
 
 void PlotArea::requestRepaint() const
@@ -1012,7 +1012,7 @@ void PlotArea::requestRepaint() const
     d->pixmapRepaintRequested = true;
 }
 
-void PlotArea::paintPixmap(QPainter &painter, const KoViewConverter &converter)
+void PlotArea::paintPixmap(QPainter &painter, const KViewConverter &converter)
 {
     // Adjust the size of the painting area to the current zoom level
     const QSize paintRectSize = converter.documentToView(size()).toSize();
@@ -1042,7 +1042,7 @@ void PlotArea::paintPixmap(QPainter &painter, const KoViewConverter &converter)
     }
 }
 
-void PlotArea::paint(QPainter& painter, const KoViewConverter& converter)
+void PlotArea::paint(QPainter& painter, const KViewConverter& converter)
 {
     //painter.save();
 

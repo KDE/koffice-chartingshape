@@ -30,7 +30,7 @@
 #include "CellRegion.h"
 
 
-namespace KoChart
+namespace KChart
 {
     class ChartModel;
 }
@@ -92,8 +92,8 @@ public:
     /**
     * Load series from ODF
     */
-    bool loadOdf(const KoXmlElement &element, KoShapeLoadingContext &context);
-    void saveOdf(KoShapeSavingContext &context) const;
+    bool loadOdf(const KXmlElement &element, KShapeLoadingContext &context);
+    void saveOdf(KShapeSavingContext &context) const;
 
     /**
      * Returns data or properties of a data point.

@@ -39,7 +39,7 @@
 #include <KColorButton>
 
 // KOffice
-#include <KoChartModel.h>
+#include <KChartModel.h>
 
 // KDChart
 #include <KDChartChart>
@@ -450,7 +450,7 @@ void ChartConfigWidget::deleteSubDialogs()
     }
 }
 
-void ChartConfigWidget::open(KoShape* shape)
+void ChartConfigWidget::open(KShape* shape)
 {
     if (! shape) {
         return;
@@ -489,7 +489,7 @@ void ChartConfigWidget::open(KoShape* shape)
     d->tableSource = d->shape->tableSource();
 
 // NOTE: There's no single source table anymore, a KSpread workbook allows multiple to be used with a chart.
-//    KoChart::ChartModel *spreadSheetModel = qobject_cast<KoChart::ChartModel*>(d->shape->internalModel());
+//    KChart::ChartModel *spreadSheetModel = qobject_cast<KChart::ChartModel*>(d->shape->internalModel());
 // NOTE: This is obsolete, ChartShape::usesInternalModelOnly() is now used instead.
 //    ChartTableModel *tableModel = qobject_cast<ChartTableModel*>(d->shape->model());
 //    d->isExternalDataSource = (spreadSheetModel != 0 && tableModel == 0);

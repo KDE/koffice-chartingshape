@@ -23,7 +23,7 @@
 #define KCHART_CHARTTOOL_H
 
 // KOffice
-#include <KoToolBase.h>
+#include <KToolBase.h>
 
 // KChart
 #include "ChartShape.h"
@@ -35,24 +35,24 @@ class QAction;
  * This is the tool for the chart shape, which is a flake-based plugin.
  */
 
-class CHARTSHAPE_TEST_EXPORT ChartTool : public KoToolBase
+class CHARTSHAPE_TEST_EXPORT ChartTool : public KToolBase
 {
     Q_OBJECT
 public:
-    explicit ChartTool(KoCanvasBase *canvas);
+    explicit ChartTool(KCanvasBase *canvas);
     ~ChartTool();
 
     /// reimplemented from superclass
-    virtual void paint(QPainter &painter, const KoViewConverter &converter);
+    virtual void paint(QPainter &painter, const KViewConverter &converter);
 
     /// reimplemented from superclass
-    virtual void mousePressEvent(KoPointerEvent *event) ;
+    virtual void mousePressEvent(KPointerEvent *event) ;
     /// reimplemented from superclass
-    virtual void mouseMoveEvent(KoPointerEvent *event);
+    virtual void mouseMoveEvent(KPointerEvent *event);
     /// reimplemented from superclass
-    virtual void mouseReleaseEvent(KoPointerEvent *event);
+    virtual void mouseReleaseEvent(KPointerEvent *event);
     /// reimplemented from superclass
-    virtual void activate(ToolActivation toolActivation, const QSet<KoShape*> &shapes);
+    virtual void activate(ToolActivation toolActivation, const QSet<KShape*> &shapes);
     /// reimplemented from superclass
     virtual void deactivate();
     /// reimplemented from superclass

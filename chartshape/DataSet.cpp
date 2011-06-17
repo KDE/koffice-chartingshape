@@ -52,17 +52,17 @@
 #include "OdfLoadingHelper.h"
 
 // KOffice
-#include <KoXmlNS.h>
-#include <KoOdfGraphicStyles.h>
-#include <KoGenStyle.h>
-#include <KoXmlReader.h>
-#include <KoShapeLoadingContext.h>
-#include <KoShapeSavingContext.h>
-#include <KoOdfLoadingContext.h>
+#include <KOdfXmlNS.h>
+#include <KOdf.h>
+#include <KOdfGenericStyle.h>
+#include <KXmlReader.h>
+#include <KShapeLoadingContext.h>
+#include <KShapeSavingContext.h>
+#include <KOdfLoadingContext.h>
 #include <KoOdfWorkaround.h>
-#include <KoGenStyle.h>
-#include <KoGenStyles.h>
-#include <KoXmlWriter.h>
+#include <KOdfGenericStyle.h>
+#include <KOdfGenericStyles.h>
+#include <KXmlWriter.h>
 
 const int numDefaultMarkerTypes = 8;
 
@@ -1031,29 +1031,29 @@ DataSet::ValueLabelType DataSet::valueLabelType(int section /* = -1 */) const
     return PercentageValueLabel;
 }
 
-bool loadBrushAndPen(KoStyleStack &styleStack, KoShapeLoadingContext &context,
-                      const KoXmlElement &n, QBrush& brush, bool& brushLoaded, QPen& pen, bool& penLoaded)
+bool loadBrushAndPen(KOdfStyleStack &styleStack, KShapeLoadingContext &context,
+                      const KXmlElement &n, QBrush& brush, bool& brushLoaded, QPen& pen, bool& penLoaded)
 {
-    if (n.hasAttributeNS(KoXmlNS::chart, "style-name")) {
-        KoOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
+    if (n.hasAttributeNS(KOdfXmlNS::chart, "style-name")) {
+        KOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
         brushLoaded = false;
         penLoaded = false;
 
         styleStack.setTypeProperties("graphic");
 
-        if (styleStack.hasProperty(KoXmlNS::draw, "stroke")) {
-            QString stroke = styleStack.property(KoXmlNS::draw, "stroke");
-            pen = KoOdfGraphicStyles::loadOdfStrokeStyle(styleStack, stroke, odfLoadingContext.stylesReader());
+        if (styleStack.hasProperty(KOdfXmlNS::draw, "stroke")) {
+            QString stroke = styleStack.property(KOdfXmlNS::draw, "stroke");
+            pen = KOdf::loadOdfStrokeStyle(styleStack, stroke, odfLoadingContext.stylesReader());
             penLoaded = true;
         }
 
-        if (styleStack.hasProperty(KoXmlNS::draw, "fill")) {
-            QString fill = styleStack.property(KoXmlNS::draw, "fill");
+        if (styleStack.hasProperty(KOdfXmlNS::draw, "fill")) {
+            QString fill = styleStack.property(KOdfXmlNS::draw, "fill");
             if (fill == "solid" || fill == "hatch") {
-                brush = KoOdfGraphicStyles::loadOdfFillStyle(styleStack, fill, odfLoadingContext.stylesReader());
+                brush = KOdf::loadOdfFillStyle(styleStack, fill, odfLoadingContext.stylesReader());
                 brushLoaded = true;
             } else if (fill == "gradient") {
-                brush = KoOdfGraphicStyles::loadOdfGradientStyle(styleStack, odfLoadingContext.stylesReader(), QSizeF(5.0, 60.0));
+                brush = KOdf::loadOdfGradientStyle(styleStack, odfLoadingContext.stylesReader(), QSizeF(5.0, 60.0));
                 brushLoaded = true;
             } else if (fill == "bitmap") {
                 brush = Surface::loadOdfPatternStyle(styleStack, odfLoadingContext, QSizeF(5.0, 60.0));
@@ -1087,14 +1087,14 @@ static DataSet::ValueLabelType valueLabelTypeFromString(const QString &format)
     return type;
 }
 
-bool DataSet::loadOdf(const KoXmlElement &n,
-                       KoShapeLoadingContext &context)
+bool DataSet::loadOdf(const KXmlElement &n,
+                       KShapeLoadingContext &context)
 {
     d->symbolsActivated = false;
-    KoOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
-    KoStyleStack &styleStack = odfLoadingContext.styleStack();
+    KOdfLoadingContext &odfLoadingContext = context.odfLoadingContext();
+    KOdfStyleStack &styleStack = odfLoadingContext.styleStack();
     styleStack.clear();
-    odfLoadingContext.fillStyleStack(n, KoXmlNS::chart, "style-name", "chart");
+    odfLoadingContext.fillStyleStack(n, KOdfXmlNS::chart, "style-name", "chart");
 
     OdfLoadingHelper *helper = (OdfLoadingHelper*)context.sharedData(OdfLoadingHelperId);
     // OOo assumes that if we use an internal model only, the columns are
@@ -1108,7 +1108,7 @@ bool DataSet::loadOdf(const KoXmlElement &n,
 // Find out which documents exactly and only use fix for as few cases as possible.
 #if 0
 #ifndef NWORKAROUND_ODF_BUGS
-    if (context.odfLoadingContext().generatorType() == KoOdfLoadingContext::OpenOffice)
+    if (context.odfLoadingContext().generatorType() == KOdfLoadingContext::OpenOffice)
         ignoreCellRanges = helper->chartUsesInternalModelOnly;
 #endif
 #endif
@@ -1124,12 +1124,12 @@ bool DataSet::loadOdf(const KoXmlElement &n,
         if (brushLoaded)
             setBrush(brush);
         styleStack.setTypeProperties("chart");
-        if (styleStack.hasProperty(KoXmlNS::chart, "pie-offset"))
-            setPieExplodeFactor(styleStack.property(KoXmlNS::chart, "pie-offset").toInt());
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "pie-offset"))
+            setPieExplodeFactor(styleStack.property(KOdfXmlNS::chart, "pie-offset").toInt());
     }
     bool bubbleChart = false;
-    if (n.hasAttributeNS(KoXmlNS::chart, "class")) {
-        bubbleChart = n.attributeNS(KoXmlNS::chart, "class", QString()) == "chart:bubble";
+    if (n.hasAttributeNS(KOdfXmlNS::chart, "class")) {
+        bubbleChart = n.attributeNS(KOdfXmlNS::chart, "class", QString()) == "chart:bubble";
     }
     
     // FIXME: Maybe it's easier to understand this if we simply have a counter
@@ -1139,17 +1139,17 @@ bool DataSet::loadOdf(const KoXmlElement &n,
     bool fullDataDefinition = false;
     
     if (n.hasChildNodes()){
-        KoXmlNode cn = n.firstChild();
+        KXmlNode cn = n.firstChild();
         while (!cn.isNull()){
-            KoXmlElement elem = cn.toElement();
+            KXmlElement elem = cn.toElement();
             const QString name = elem.tagName();
-            if (name == "domain" && elem.hasAttributeNS(KoXmlNS::table, "cell-range-address") && !ignoreCellRanges) {
+            if (name == "domain" && elem.hasAttributeNS(KOdfXmlNS::table, "cell-range-address") && !ignoreCellRanges) {
                 if (maybeCompleteDataDefinition){
-                    const QString region = elem.attributeNS(KoXmlNS::table, "cell-range-address", QString());
+                    const QString region = elem.attributeNS(KOdfXmlNS::table, "cell-range-address", QString());
                     setXDataRegion(CellRegion(helper->tableSource, region));
                     fullDataDefinition = true;
                 }else{
-                    const QString region = elem.attributeNS(KoXmlNS::table, "cell-range-address", QString());                    
+                    const QString region = elem.attributeNS(KOdfXmlNS::table, "cell-range-address", QString());                    
                     // as long as there is not default table for missing data series the same region is used twice
                     // to ensure the diagram is displayed, even if not as expected from o office or ms office
                     setYDataRegion(CellRegion(helper->tableSource, region));
@@ -1161,30 +1161,30 @@ bool DataSet::loadOdf(const KoXmlElement &n,
         }
     }
 
-    if (n.hasAttributeNS(KoXmlNS::chart, "values-cell-range-address") && !ignoreCellRanges) {
-        const QString regionString = n.attributeNS(KoXmlNS::chart, "values-cell-range-address", QString());
+    if (n.hasAttributeNS(KOdfXmlNS::chart, "values-cell-range-address") && !ignoreCellRanges) {
+        const QString regionString = n.attributeNS(KOdfXmlNS::chart, "values-cell-range-address", QString());
         const CellRegion region(helper->tableSource, regionString);
         if (bubbleChart)
             setCustomDataRegion(region);
         else
             setYDataRegion(region);
     }
-    if (n.hasAttributeNS(KoXmlNS::chart, "label-cell-address") && !ignoreCellRanges) {
-        const QString region = n.attributeNS(KoXmlNS::chart, "label-cell-address", QString());
+    if (n.hasAttributeNS(KOdfXmlNS::chart, "label-cell-address") && !ignoreCellRanges) {
+        const QString region = n.attributeNS(KOdfXmlNS::chart, "label-cell-address", QString());
         setLabelDataRegion(CellRegion(helper->tableSource, region));
     }
-    if (n.hasAttributeNS(KoXmlNS::chart, "data-label-text")) {
-        const QString enable = n.attributeNS(KoXmlNS::chart, "data-label-text", QString());
+    if (n.hasAttributeNS(KOdfXmlNS::chart, "data-label-text")) {
+        const QString enable = n.attributeNS(KOdfXmlNS::chart, "data-label-text", QString());
         setShowLabels(enable == "true");
     }
-    if (styleStack.hasProperty(KoXmlNS::chart, "data-label-number")) {
-        const QString format = styleStack.property(KoXmlNS::chart, "data-label-number");
+    if (styleStack.hasProperty(KOdfXmlNS::chart, "data-label-number")) {
+        const QString format = styleStack.property(KOdfXmlNS::chart, "data-label-number");
         setValueLabelType(valueLabelTypeFromString(format));
     }
     
-    if (styleStack.hasProperty(KoXmlNS::chart, "symbol-type"))
+    if (styleStack.hasProperty(KOdfXmlNS::chart, "symbol-type"))
     {
-        const QString name = styleStack.property(KoXmlNS::chart, "symbol-type");
+        const QString name = styleStack.property(KOdfXmlNS::chart, "symbol-type");
         if (name == "automatic")
         {
             d->symbolsActivated = true;
@@ -1193,8 +1193,8 @@ bool DataSet::loadOdf(const KoXmlElement &n,
         else if (name == "named-symbol")
         {
             d->symbolsActivated = true;
-            if (styleStack.hasProperty(KoXmlNS::chart, "symbol-name")) {
-                const QString type = styleStack.property(KoXmlNS::chart, "symbol-name");
+            if (styleStack.hasProperty(KOdfXmlNS::chart, "symbol-name")) {
+                const QString type = styleStack.property(KOdfXmlNS::chart, "symbol-name");
                 if (type == "square")
                     d->symbolID = 0;
                 else if (type == "diamond")
@@ -1214,16 +1214,16 @@ bool DataSet::loadOdf(const KoXmlElement &n,
     }
 
     // load data points
-    KoXmlElement m;
+    KXmlElement m;
     int loadedDataPointCount = 0;
     forEachElement (m, n) {
-        if (m.namespaceURI() != KoXmlNS::chart)
+        if (m.namespaceURI() != KOdfXmlNS::chart)
             continue;
         if (m.localName() != "data-point")
             continue;
 
         styleStack.clear();
-        odfLoadingContext.fillStyleStack(m, KoXmlNS::chart, "style-name", "chart");
+        odfLoadingContext.fillStyleStack(m, KOdfXmlNS::chart, "style-name", "chart");
 
         QBrush brush(Qt::NoBrush);
         QPen pen(Qt::NoPen);
@@ -1237,10 +1237,10 @@ bool DataSet::loadOdf(const KoXmlElement &n,
 
         //load pie explode factor
         styleStack.setTypeProperties("chart");
-        if (styleStack.hasProperty(KoXmlNS::chart, "pie-offset"))
-            setPieExplodeFactor(loadedDataPointCount, styleStack.property(KoXmlNS::chart, "pie-offset").toInt());
-        if (styleStack.hasProperty(KoXmlNS::chart, "data-label-number")) {
-            const QString format = styleStack.property(KoXmlNS::chart, "data-label-number");
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "pie-offset"))
+            setPieExplodeFactor(loadedDataPointCount, styleStack.property(KOdfXmlNS::chart, "pie-offset").toInt());
+        if (styleStack.hasProperty(KOdfXmlNS::chart, "data-label-number")) {
+            const QString format = styleStack.property(KOdfXmlNS::chart, "data-label-number");
             setValueLabelType(valueLabelTypeFromString(format), loadedDataPointCount);
         }
 
@@ -1249,22 +1249,22 @@ bool DataSet::loadOdf(const KoXmlElement &n,
     return true;
 }
 
-void DataSet::saveOdf(KoShapeSavingContext &context) const
+void DataSet::saveOdf(KShapeSavingContext &context) const
 {
-    KoXmlWriter &bodyWriter = context.xmlWriter();
-    KoGenStyles &mainStyles = context.mainStyles();
+    KXmlWriter &bodyWriter = context.xmlWriter();
+    KOdfGenericStyles &mainStyles = context.mainStyles();
 
     bodyWriter.startElement("chart:series");
 
-    // We need GraphicsAutoStyle here so that KoOdfGraphicStyles::saveOdfFillStyle()
+    // We need GraphicsAutoStyle here so that KOdf::saveOdfFillStyle()
     // uses <style:graphics-properties> as parent.
-    KoGenStyle style(KoGenStyle::GraphicAutoStyle, "chart");
+    KOdfGenericStyle style(KOdfGenericStyle::GraphicAutoStyle, "chart");
 
-    style.addProperty("chart:data-label-text", showLabels() ? "true" : "false", KoGenStyle::ChartType );
-    style.addProperty("chart:family", ODF_CHARTTYPES[ chartType() ], KoGenStyle::ChartType);
+    style.addProperty("chart:data-label-text", showLabels() ? "true" : "false", KOdfGenericStyle::ChartType );
+    style.addProperty("chart:family", ODF_CHARTTYPES[ chartType() ], KOdfGenericStyle::ChartType);
 
-    KoOdfGraphicStyles::saveOdfFillStyle(style, mainStyles, brush());
-    KoOdfGraphicStyles::saveOdfStrokeStyle(style, mainStyles, pen());
+    KOdf::saveOdfFillStyle(style, mainStyles, brush());
+    KOdf::saveOdfStrokeStyle(style, mainStyles, pen());
 
     const QString styleName = mainStyles.insert(style, "ch");
     bodyWriter.addAttribute("chart:style-name", styleName);

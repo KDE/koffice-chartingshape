@@ -26,8 +26,8 @@
 #include <kmessagebox.h>
 
 #include <KoFilterChain.h>
-#include <KoStore.h>
-//#include <KoStoreDevice.h>
+#include <KOdfStore.h>
+//#include <KOdfStorageDevice.h>
 #include <kpluginfactory.h>
 
 #include "KChartPart.h"
@@ -56,7 +56,7 @@ SvgExport::convert(const QByteArray& from, const QByteArray& to)
         return KoFilter::NotImplemented;
 
     // Read the contents of the KChart file
-    KoStoreDevice* storeIn = m_chain->storageFile("root", KoStore::Read);
+    KOdfStorageDevice* storeIn = m_chain->storageFile("root", KOdfStore::Read);
     if (!storeIn) {
         KMessageBox::error(0, i18n("Failed to read data."),
                            i18n("SVG Export Error"));
@@ -64,9 +64,9 @@ SvgExport::convert(const QByteArray& from, const QByteArray& to)
     }
 
     // Get the XML tree.
-    KoXmlDocument  domIn;
+    KXmlDocument  domIn;
     domIn.setContent(storeIn);
-    KoXmlElement   docNode = domIn.documentElement();
+    KXmlElement   docNode = domIn.documentElement();
 
     // Read the document from the XML tree.
     KChart::KChartPart  kchartDoc;

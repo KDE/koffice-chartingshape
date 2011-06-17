@@ -23,15 +23,15 @@
 #define TEXTLABELDUMMY_H
 
 
-#include <KoShape.h>
+#include <KShape.h>
 
 
-class TextLabelDummy : public KoShape
+class TextLabelDummy : public KShape
 {
 public:
-    void paint(QPainter&, const KoViewConverter&);
-    bool loadOdf(const KoXmlElement&, KoShapeLoadingContext&);
-    void saveOdf(KoShapeSavingContext&) const;
+    void paint(QPainter&, const KViewConverter&);
+    bool loadOdf(const KXmlElement&, KShapeLoadingContext&);
+    void saveOdf(KShapeSavingContext&) const;
 };
 
 #endif
