@@ -86,7 +86,6 @@
 #include <KShapeManager.h>
 #include <KSelection.h>
 #include <KShapeBackground.h>
-#include <KoInsets.h>
 #include <KShapeBorderBase.h>
 #include <KColorBackground.h>
 #include <KLineBorder.h>

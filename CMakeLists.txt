@@ -5,7 +5,7 @@ find_package(KOfficeLibs REQUIRED)
 
 include (KDE4Defaults)
 
-include_directories(${KDE4_INCLUDES} ${QT_INCLUDES} ${KOFFICELIBS_INCLUDE_DIR})
+include_directories(${KDE4_INCLUDES} ${QT_INCLUDES} ${KOFFICELIBS_INCLUDE_DIR} ${KOFFICELIBS_INCLUDE_DIR}/private)
 
 add_subdirectory(doc)
 add_subdirectory(chartshape)
