@@ -42,7 +42,7 @@
 #include <KOdfStylesReader.h>
 #include <KUnit.h>
 #include <KViewConverter.h>
-#include <KShapeBackground.h>
+#include <KShapeBackgroundBase.h>
 #include <KOdf.h>
 
 // KDChart
