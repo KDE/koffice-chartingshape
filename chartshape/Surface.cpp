@@ -39,7 +39,7 @@
 #include <KOdfStyleStack.h>
 #include <KOdf.h>
 #include <KOdfGenericStyles.h>
-#include <KoOdfWorkaround.h>
+#include <KOdfWorkaround.h>
 
 #include <KImageData.h>
 #include <KOdfStore.h>
@@ -207,7 +207,7 @@ bool Surface::loadOdf(const KXmlElement &surfaceElement,
 #ifndef NWORKAROUND_ODF_BUGS
     if (!brushLoaded) {
         KDChart::BackgroundAttributes backgroundAttributes = d->kdPlane->backgroundAttributes();
-        QColor fillColor = KoOdfWorkaround::fixMissingFillColor(surfaceElement, context);
+        QColor fillColor = KOdfWorkaround::fixMissingFillColor(surfaceElement, context);
         if (fillColor.isValid()) {
             backgroundAttributes.setVisible(true);
             backgroundAttributes.setBrush(fillColor);

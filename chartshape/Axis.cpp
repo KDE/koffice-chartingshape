@@ -42,7 +42,7 @@
 #include <KOdfLoadingContext.h>
 #include <KCharacterStyle.h>
 #include <KOdf.h>
-#include <KoOdfWorkaround.h>
+#include <KOdfWorkaround.h>
 #include <KTextDocumentLayout.h>
 
 // KDChart
@@ -1312,7 +1312,7 @@ bool Axis::loadOdf(const KXmlElement &axisElement, KShapeLoadingContext &context
                 d->kdPlane->setHorizontalRange(qMakePair(minimum, maximum));
         }
     } else {
-        setShowLabels(KoOdfWorkaround::fixMissingStyle_DisplayLabel(axisElement, context));
+        setShowLabels(KOdfWorkaround::fixMissingStyle_DisplayLabel(axisElement, context));
     }
 
     KDChart::GridAttributes gridAttr = d->kdPlane->gridAttributes(orientation());

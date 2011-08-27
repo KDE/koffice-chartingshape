@@ -38,7 +38,7 @@
 
 // KOffice
 #include <KCanvasBase.h>
-#include <KSelection.h>
+#include <KShapeSelection.h>
 #include <KShapeManager.h>
 #include <KPointerEvent.h>
 #include <KTextShapeData.h>
@@ -117,7 +117,7 @@ void ChartTool::shapeSelectionChanged()
     
     // Get the chart shape that the tool is working on. 
     // Let d->shape point to it.
-    KSelection  *selection = canvas()->shapeManager()->selection();
+    KShapeSelection  *selection = canvas()->shapeManager()->selection();
     foreach (KShape *shape, selection->selectedShapes()) {
         // Find out which type of shape that the user clicked on.
         // We support several here, since the chart shape is comprised

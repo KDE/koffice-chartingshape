@@ -84,11 +84,11 @@
 #include <KOdfStylesReader.h>
 #include <KCanvasBase.h>
 #include <KShapeManager.h>
-#include <KSelection.h>
+#include <KShapeSelection.h>
 #include <KShapeBorderBase.h>
 #include <KColorBackground.h>
 #include <KLineBorder.h>
-#include <KoOdfWorkaround.h>
+#include <KOdfWorkaround.h>
 
 // KChart
 #include "Axis.h"
@@ -945,7 +945,7 @@ bool ChartShape::loadOdfChartElement(const KXmlElement &chartElement,
 
 #ifndef NWORKAROUND_ODF_BUGS
     if (!background()) {
-        const QColor color = KoOdfWorkaround::fixMissingFillColor(chartElement, context);
+        const QColor color = KOdfWorkaround::fixMissingFillColor(chartElement, context);
         if (color.isValid()) // invalid color means do not set KColorBackground but be transparent instead
             setBackground(new KColorBackground(color));
     }

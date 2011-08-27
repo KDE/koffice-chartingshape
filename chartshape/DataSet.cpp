@@ -59,7 +59,7 @@
 #include <KShapeLoadingContext.h>
 #include <KShapeSavingContext.h>
 #include <KOdfLoadingContext.h>
-#include <KoOdfWorkaround.h>
+#include <KOdfWorkaround.h>
 #include <KOdfGenericStyle.h>
 #include <KOdfGenericStyles.h>
 #include <KXmlWriter.h>
@@ -1064,10 +1064,10 @@ bool loadBrushAndPen(KOdfStyleStack &styleStack, KShapeLoadingContext &context,
 
 #ifndef NWORKAROUND_ODF_BUGS
     if (! penLoaded) {
-        penLoaded = KoOdfWorkaround::fixMissingStroke(pen, n, context);
+        penLoaded = KOdfWorkaround::fixMissingStroke(pen, n, context);
     }
     if (! brushLoaded) {
-        QColor fixedColor = KoOdfWorkaround::fixMissingFillColor(n, context);
+        QColor fixedColor = KOdfWorkaround::fixMissingFillColor(n, context);
         if (fixedColor.isValid()) {
             brush = fixedColor;
             brushLoaded = true;
