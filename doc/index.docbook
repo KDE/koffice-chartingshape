@@ -7,9 +7,9 @@
   <!ENTITY dataeditor "Data Editor">
 ]>
 
-<book lang="&language;">
+<book id="koffice-chartingshape" lang="&language;">
 
-<bookinfo>
+<book id="koffice-chartingshape"info>
 <title>The &kchart; Handbook</title>
 
 <!-- CURRENTLY MAINTAINED BY RAPHAEL LANGERHORST -->
