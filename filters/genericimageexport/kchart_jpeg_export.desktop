@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=KChart JPEG Export Filter
+Name[bs]=KChart JPEG izvozni filter
 Name[cs]=Exportní filtr do formátu JPEG pro KChart
 Name[de]=KChart-JPEG-Exportfilter
 Name[es]=Filtro de exportación JPEG de KChart

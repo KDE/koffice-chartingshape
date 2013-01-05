@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=KChart BMP Export Filter
+Name[bs]=KChart BMP izvozni filter
 Name[cs]=Exportní filtr do formátu BMP pro KChart
 Name[de]=KChart-BMP-Exportfilter
 Name[es]=Filtro de exportación BMP de KChart

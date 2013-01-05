@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=KChart XBM Export Filter
+Name[bs]=KChart XBM izvozni filter
 Name[cs]=Exportní filtr do formátu XBM pro KChart
 Name[de]=KChart-XBM-Exportfilter
 Name[es]=Filtro de exportación XBM de KChart
